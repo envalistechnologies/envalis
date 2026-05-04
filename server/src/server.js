@@ -42,7 +42,14 @@ connectDB().then(() => {
 // CORS — must be first so all responses (including rate-limit errors) carry the headers
 app.use(
   cors({
-    origin: [process.env.WEBAPP_URL, process.env.ADMIN_URL],
+    origin: [
+      process.env.WEBAPP_URL, 
+      process.env.ADMIN_URL, 
+      "https://envalis-admin.vercel.app", 
+      "envalis-admin.vercel.app",
+      "https://envalis.vercel.app",
+      "envalis.vercel.app"
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
