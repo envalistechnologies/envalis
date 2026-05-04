@@ -1,14 +1,17 @@
 import { createAuditLog } from "../services/auditService.js";
 
 export const requestLogger = (req, res, next) => {
-    req.requestTime = new Date().toISOString();
-    req.ipAddress = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress;
-    req.userAgent = req.headers["user-agent"] || "Unknown";
     try {
-        const origin = req.headers.origin || req.headers.referer || "<none>";
-        console.log(`[req] ${req.method} ${req.path} origin=${origin} ip=${req.ipAddress}`);
+        req.requestTime = new Date().toISOString();
+        req.ipAddress = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket?.remoteAddress || "unknown";
+        req.userAgent = req.headers["user-agent"] || "Unknown";
+        
+        if (process.env.NODE_ENV === "development") {
+            const origin = req.headers.origin || req.headers.referer || "<none>";
+            console.log(`[req] ${req.method} ${req.path} origin=${origin}`);
+        }
     } catch (err) {
-        console.log("[req] requestLogger error", err?.message || err);
+        console.error("[requestLogger] Error:", err?.message || err);
     }
     next();
 };

@@ -17,6 +17,11 @@ let isRedirecting = false;
 api.interceptors.response.use(
     (res) => res,
     (error) => {
+        // Log CORS errors
+        if (error.message === "Network Error" && !error.response) {
+            console.error("CORS or Network Error:", error);
+        }
+        
         if (error.response?.status === 401 && !isRedirecting) {
             isRedirecting = true;
             localStorage.removeItem("enovalis_token");
