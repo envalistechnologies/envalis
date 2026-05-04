@@ -43,18 +43,41 @@ connectDB().then(() => {
 });
 
 // CORS — must be first so all responses (including rate-limit errors) carry the headers
-const allowed = [process.env.WEBAPP_URL, process.env.ADMIN_URL, "https://envalis-admin.vercel.app", "https://envalis.vercel.app"];
+const allowedOrigins = [
+  process.env.WEBAPP_URL,
+  process.env.ADMIN_URL,
+  "https://envalis-admin.vercel.app",
+  "https://envalis.vercel.app",
+];
+
 app.use(cors({
   origin: (origin, cb) => {
     console.log('[cors] origin=', origin);
     if (!origin) return cb(null, true); // allow non-browser requests (optional)
-    if (allowed.includes(origin)) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
     return cb(new Error('Not allowed by CORS'));
   },
   credentials: true,
   methods: ["GET","POST","PUT","DELETE","PATCH","OPTIONS"],
   allowedHeaders: ["Content-Type","Authorization"]
 }));
+
+// Fallback: ensure CORS headers are present on every response for allowed origins.
+// This helps ensure error responses also include the CORS headers the browser expects.
+app.use((req, res, next) => {
+  try {
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.includes(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+      res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
+    }
+  } catch (err) {
+    console.error("CORS fallback error:", err?.message || err);
+  }
+  next();
+});
 
 // Security Middleware
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
