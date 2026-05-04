@@ -32,54 +32,31 @@ dotenv.config();
 
 const app = express();
 
-// Trust proxy (required on Vercel / other proxies so req.ip and rate-limit use forwarded IPs)
+// Trust proxy (important for Vercel)
 app.set("trust proxy", 1);
 
-// Connect Database + seed super admin in dev
+// Connect DB
 connectDB().then(() => {
   if (process.env.NODE_ENV === "development") {
-    seedSuperAdmin().catch((err) => console.error("Seed error:", err.message));
+    seedSuperAdmin().catch((err) =>
+      console.error("Seed error:", err.message)
+    );
   }
 });
-
-// CORS — must be first so all responses (including rate-limit errors) carry the headers
-const allowedOrigins = [
-  "https://envalis-admin.vercel.app",
-  "envalis-admin.vercel.app",
-  "https://envalis.vercel.app",
-  "envalis.vercel.app",
-  "http://localhost:5173",
-  "http://localhost:5174",
-];
 
 app.use(cors({
-  origin: (origin, cb) => {
-    console.log('[cors] origin=', origin);
-    if (!origin) return cb(null, true); // allow non-browser requests (optional)
-    if (allowedOrigins.includes(origin)) return cb(null, true);
-    return cb(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-  methods: ["GET","POST","PUT","DELETE","PATCH","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"]
+  origin: [
+    "https://envalis-admin.vercel.app",
+    "https://envalis.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:5174"
+  ],
+  credentials: true
 }));
 
-// Fallback: ensure CORS headers are present on every response for allowed origins.
-// This helps ensure error responses also include the CORS headers the browser expects.
-app.use((req, res, next) => {
-  try {
-    const origin = req.headers.origin;
-    if (origin && allowedOrigins.includes(origin)) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-      res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
-      res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
-    }
-  } catch (err) {
-    console.error("CORS fallback error:", err?.message || err);
-  }
-  next();
-});
+// Handle preflight requests
+app.options("*", cors());
+
 
 // Security Middleware
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
@@ -89,15 +66,21 @@ app.use(compression());
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  message: { success: false, message: "Too many requests, please try again later." },
+  message: {
+    success: false,
+    message: "Too many requests, please try again later."
+  },
 });
 app.use("/api", limiter);
 
-// Strict limiter only on login/register/password-reset — not on /me or other reads
+// Strict limiter (login)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
-  message: { success: false, message: "Too many login attempts, please try again later." },
+  message: {
+    success: false,
+    message: "Too many login attempts, please try again later."
+  },
 });
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/forgot-password", authLimiter);
@@ -107,15 +90,15 @@ app.use("/api/auth/reset-password", authLimiter);
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Request Logger
+// Logger
 app.use(requestLogger);
 
-// Morgan Logging
+// Dev logs
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// Health Check
+// Health route
 app.get("/health", (req, res) => {
   res.status(200).json({
     success: true,
@@ -125,7 +108,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-// API Routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/admins", adminRoutes);
 app.use("/api/employees", employeeRoutes);
@@ -147,6 +130,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
+// Start server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
