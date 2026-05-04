@@ -61,7 +61,7 @@ const BlogList = () => {
                             Insights, ideas, and practical guides
                         </h1>
                         <p className="text-white/70 text-lg max-w-2xl">
-                            Explore the latest in technology, design, and digital strategy from the Enovalis team.
+                            Explore the latest in technology, design, and digital strategy from the Envalis Technologies team.
                         </p>
                     </div>
                 </div>

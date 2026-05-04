@@ -170,7 +170,7 @@ const AdminForm = () => {
                                 <Input {...register("lastName")} placeholder="Doe" />
                             </FormField>
                             <FormField label="Email" required error={errors.email?.message}>
-                                <Input type="email" {...register("email")} placeholder="admin@enovalis.com" disabled={isEdit} />
+                                <Input type="email" {...register("email")} placeholder="admin@envalis.com" disabled={isEdit} />
                             </FormField>
                             <FormField label="Phone" error={errors.phone?.message}>
                                 <Input {...register("phone")} placeholder="+91 98765 43210" />

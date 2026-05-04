@@ -90,11 +90,11 @@ export const createService = asyncHandler(async (req, res) => {
         serviceData.content = serviceData.description || "";
     }
     if (req.files?.coverImage?.[0]) {
-        const img = await uploadSingleImage(req.files.coverImage[0], "enovalis/services");
+        const img = await uploadSingleImage(req.files.coverImage[0], "envalis/services");
         serviceData.coverImage = { ...img, alt: req.body.coverImageAlt || serviceData.title };
     }
     if (req.files?.bannerImage?.[0]) {
-        const img = await uploadSingleImage(req.files.bannerImage[0], "enovalis/services");
+        const img = await uploadSingleImage(req.files.bannerImage[0], "envalis/services");
         serviceData.bannerImage = { ...img, alt: req.body.bannerImageAlt || serviceData.title };
     }
     const service = await Service.create(serviceData);
@@ -116,12 +116,12 @@ export const updateService = asyncHandler(async (req, res) => {
     const before = { title: service.title, status: service.status };
     if (req.files?.coverImage?.[0]) {
         if (service.coverImage?.publicId) await deleteMedia(service.coverImage.publicId).catch(() => {});
-        const img = await uploadSingleImage(req.files.coverImage[0], "enovalis/services");
+        const img = await uploadSingleImage(req.files.coverImage[0], "envalis/services");
         body.coverImage = { ...img, alt: body.coverImageAlt || service.title };
     }
     if (req.files?.bannerImage?.[0]) {
         if (service.bannerImage?.publicId) await deleteMedia(service.bannerImage.publicId).catch(() => {});
-        const img = await uploadSingleImage(req.files.bannerImage[0], "enovalis/services");
+        const img = await uploadSingleImage(req.files.bannerImage[0], "envalis/services");
         body.bannerImage = { ...img, alt: body.bannerImageAlt || service.title };
     }
     Object.assign(service, { ...body, updatedBy: req.admin._id });

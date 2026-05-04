@@ -57,11 +57,11 @@ export const applyForJob = asyncHandler(async (req, res) => {
     const html = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
     <h2 style="color:#1a1a2e;">Application Received!</h2>
     <p>Dear ${applicantName},</p>
-    <p>Thank you for applying for <strong>${job.title}</strong> at Enovalis.</p>
+    <p>Thank you for applying for <strong>${job.title}</strong> at Envalis Technologies.</p>
     <p>We have received your application and will review it carefully. If your profile matches our requirements, we'll reach out to you soon.</p>
-    <p>Best regards,<br/><strong>Enovalis HR Team</strong></p>
+    <p>Best regards,<br/><strong>Envalis Technologies HR Team</strong></p>
   </div>`;
-    await sendEmail({ to: applicantEmail, subject: `Application Received - ${job.title} | Enovalis`, html, category: "hr_notice" }).catch(() => { });
+    await sendEmail({ to: applicantEmail, subject: `Application Received - ${job.title} | Envalis Technologies`, html, category: "hr_notice" }).catch(() => { });
 
     successResponse(res, {}, "Application submitted successfully! You'll hear from us soon.", 201);
 });
@@ -150,9 +150,9 @@ export const updateApplicationStatus = asyncHandler(async (req, res) => {
       <p>Dear ${application.applicantName},</p>
       <p>${statusMessages[status]}</p>
       ${notes ? `<p><strong>Note:</strong> ${notes}</p>` : ""}
-      <p>Best regards,<br/><strong>Enovalis HR Team</strong></p>
+            <p>Best regards,<br/><strong>Envalis Technologies HR Team</strong></p>
     </div>`;
-        await sendEmail({ to: application.applicantEmail, subject: `Application Update - ${job.title} | Enovalis`, html, category: "hr_notice" }).catch(() => { });
+                await sendEmail({ to: application.applicantEmail, subject: `Application Update - ${job.title} | Envalis Technologies`, html, category: "hr_notice" }).catch(() => { });
     }
 
     await createAuditLog({ action: "APPLICATION_STATUS_CHANGED", entity: "Career", entityId: job._id, entityName: `${job.title} - ${application.applicantName}`, performedBy: req.admin, description: `Application status changed from ${oldStatus} to ${status}` });

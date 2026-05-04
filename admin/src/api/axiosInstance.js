@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("enovalis_token");
+    const token = localStorage.getItem("envalis_token");
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 }, (error) => Promise.reject(error));
@@ -24,8 +24,8 @@ api.interceptors.response.use(
         
         if (error.response?.status === 401 && !isRedirecting) {
             isRedirecting = true;
-            localStorage.removeItem("enovalis_token");
-            localStorage.removeItem("enovalis-admin-store");
+            localStorage.removeItem("envalis_token");
+            localStorage.removeItem("envalis-admin-store");
             window.location.href = "/auth/login";
         }
         return Promise.reject(error);

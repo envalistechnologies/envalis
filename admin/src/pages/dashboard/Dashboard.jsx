@@ -65,7 +65,7 @@ const Dashboard = () => {
         <div className="space-y-6">
             <PageHeader
                 title={`Welcome back, ${admin?.firstName ?? "Admin"} 👋`}
-                description="Here's what's happening across Enovalis today."
+                description="Here's what's happening across Envalis Technologies today."
                 actions={
                     <Button asChild variant="outline">
                         <Link to="/analytics"><ChartLineUp size={16} className="mr-1.5" /> View Analytics</Link>

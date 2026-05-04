@@ -81,7 +81,7 @@ const Contact = () => {
                                 <div className="space-y-4 text-sm text-muted-foreground">
                                     <div className="flex items-center gap-2">
                                         <EnvelopeSimple size={16} className="text-primary" />
-                                        hello@enovalis.com
+                                        hello@envalis.com
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Phone size={16} className="text-primary" />

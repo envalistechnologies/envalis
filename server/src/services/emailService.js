@@ -3,16 +3,29 @@ import EmailLog from "../models/EmailLog.js";
 import EmailTemplate from "../models/EmailTemplate.js";
 import { compileTemplate } from "../utils/templateCompiler.js";
 
+const normalizeUrl = (url) => String(url || "").trim().replace(/\/+$/, "");
+
+const defaultAppUrls = {
+    admin: process.env.NODE_ENV === "production" ? "https://envalis-admin.vercel.app" : "http://localhost:5174",
+    webapp: process.env.NODE_ENV === "production" ? "https://envalis.vercel.app" : "http://localhost:5173",
+};
+
 export const emailAppUrls = {
-    admin: process.env.ADMIN_URL || "http://localhost:5174",
-    webapp: process.env.WEBAPP_URL || "http://localhost:5173",
+    admin: normalizeUrl(process.env.ADMIN_URL) || defaultAppUrls.admin,
+    webapp: normalizeUrl(process.env.WEBAPP_URL) || defaultAppUrls.webapp,
 };
 
 const getAppUrl = (app) => emailAppUrls[app] || emailAppUrls.webapp;
 
+const rewriteLocalhostTemplateUrls = (content = "") => {
+    return content
+        .replace(/http:\/\/localhost:5174/gi, getAppUrl("admin"))
+        .replace(/http:\/\/localhost:5173/gi, getAppUrl("webapp"));
+};
+
 export const sendEmail = async ({ to, subject, html, text, cc, bcc, attachments, category, type, sentBy, templateId, templateName }) => {
     const mailOptions = {
-        from: `"Enovalis" <${process.env.GMAIL_USER}>`,
+        from: `"Envalis Technologies" <${process.env.GMAIL_USER}>`,
         to: Array.isArray(to) ? to.join(", ") : to,
         subject,
         html,
@@ -74,8 +87,8 @@ export const sendEmailFromTemplate = async ({ templateId, to, variables, sentBy,
         webappUrl: getAppUrl("webapp"),
     };
 
-    const html = compileTemplate(template.htmlContent, templateVariables);
-    const subject = compileTemplate(template.subject, templateVariables);
+    const html = rewriteLocalhostTemplateUrls(compileTemplate(template.htmlContent, templateVariables));
+    const subject = rewriteLocalhostTemplateUrls(compileTemplate(template.subject, templateVariables));
 
     const allTo = additionalTo ? [...(Array.isArray(to) ? to : [to]), ...additionalTo] : to;
 
@@ -103,21 +116,21 @@ export const sendPasswordResetEmail = async (admin, resetToken) => {
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #1a1a2e;">Password Reset Request</h2>
       <p>Hello ${admin.firstName},</p>
-      <p>You requested a password reset for your Enovalis Admin account.</p>
+            <p>You requested a password reset for your Envalis Technologies Admin account.</p>
       <p>Click the button below to reset your password (expires in 10 minutes):</p>
       <a href="${resetUrl}" style="background:#4f46e5;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;margin:16px 0;">Reset Password</a>
       <p>If you didn't request this, please ignore this email or contact support immediately.</p>
-      <p>Best regards,<br/>Enovalis Security Team</p>
+            <p>Best regards,<br/>Envalis Technologies Security Team</p>
     </div>
   `;
-    return sendEmail({ to: admin.email, subject: "Password Reset - Enovalis Admin", html, category: "other" });
+        return sendEmail({ to: admin.email, subject: "Password Reset - Envalis Technologies Admin", html, category: "other" });
 };
 
 export const sendWelcomeAdminEmail = async (admin, tempPassword) => {
     const loginUrl = `${getAppUrl("admin")}/auth/login`;
     const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #1a1a2e;">Welcome to Enovalis Admin Panel</h2>
+            <h2 style="color: #1a1a2e;">Welcome to Envalis Technologies Admin Panel</h2>
       <p>Hello ${admin.firstName} ${admin.lastName},</p>
       <p>Your admin account has been created with the following credentials:</p>
       <div style="background:#f5f5f5;padding:16px;border-radius:8px;margin:16px 0;">
@@ -127,8 +140,8 @@ export const sendWelcomeAdminEmail = async (admin, tempPassword) => {
       </div>
       <p>Please log in and change your password immediately.</p>
       <a href="${loginUrl}" style="background:#4f46e5;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;">Login Now</a>
-      <p>Best regards,<br/>Enovalis Super Admin</p>
+            <p>Best regards,<br/>Envalis Technologies Super Admin</p>
     </div>
   `;
-    return sendEmail({ to: admin.email, subject: "Welcome to Enovalis Admin", html, category: "welcome" });
+        return sendEmail({ to: admin.email, subject: "Welcome to Envalis Technologies Admin", html, category: "welcome" });
 };

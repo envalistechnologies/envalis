@@ -1,7 +1,7 @@
 import Admin from "../models/Admin.js";
 
 export const seedSuperAdmin = async () => {
-    const email = process.env.SUPER_ADMIN_EMAIL || "superadmin@enovalis.com";
+    const email = process.env.SUPER_ADMIN_EMAIL || "superadmin@envalis.com";
     const password = process.env.SUPER_ADMIN_PASSWORD || "SuperAdmin@2024!";
     
     let admin = await Admin.findOne({ email });

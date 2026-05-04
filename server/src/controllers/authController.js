@@ -222,7 +222,7 @@ export const updateProfileAvatar = asyncHandler(async (req, res) => {
     const { uploadSingleImage, deleteMedia } = await import("../services/uploadService.js");
     const currentAdmin = await Admin.findById(req.admin._id);
     if (currentAdmin?.avatar?.publicId) await deleteMedia(currentAdmin.avatar.publicId).catch(() => {});
-    const img = await uploadSingleImage(req.file, "enovalis/admin-avatars");
+    const img = await uploadSingleImage(req.file, "envalis/admin-avatars");
     const admin = await Admin.findByIdAndUpdate(req.admin._id, { avatar: img }, { new: true }).select("-password -twoFactorSecret -twoFactorBackupCodes");
     successResponse(res, { admin }, "Avatar updated successfully");
 });

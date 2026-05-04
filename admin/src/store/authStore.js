@@ -20,7 +20,7 @@ const useAuth = create(
                     set({ requires2FA: true, tempToken: data.tempToken });
                     return { requires2FA: true };
                 }
-                localStorage.setItem("enovalis_token", data.accessToken);
+                localStorage.setItem("envalis_token", data.accessToken);
                 api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
                 set({ admin: data.admin, token: data.accessToken, requires2FA: false, tempToken: null });
                 return { requires2FA: false };
@@ -29,14 +29,14 @@ const useAuth = create(
             verify2FA: async (token, backupCode) => {
                 const { tempToken } = get();
                 const { data } = await authAPI.verify2FA({ token, backupCode }, tempToken);
-                localStorage.setItem("enovalis_token", data.accessToken);
+                localStorage.setItem("envalis_token", data.accessToken);
                 api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
                 set({ admin: data.admin, token: data.accessToken, requires2FA: false, tempToken: null });
             },
 
             logout: async () => {
                 try { await authAPI.logout(); } catch { }
-                localStorage.removeItem("enovalis_token");
+                localStorage.removeItem("envalis_token");
                 delete api.defaults.headers.common.Authorization;
                 set({ admin: null, token: null, requires2FA: false, tempToken: null });
             },
@@ -66,7 +66,7 @@ const useAuth = create(
             isSuperAdmin: () => get().admin?.role === "super_admin",
         }),
         {
-            name: "enovalis-admin-store",
+            name: "envalis-admin-store",
             partialize: (state) => ({ admin: state.admin, token: state.token }),
         }
     )

@@ -78,7 +78,7 @@ export const createArticle = asyncHandler(async (req, res) => {
     
     const articleData = { ...body, author: req.admin._id, createdBy: req.admin._id };
     if (req.file) {
-        const img = await uploadSingleImage(req.file, "enovalis/articles");
+        const img = await uploadSingleImage(req.file, "envalis/articles");
         articleData.coverImage = { ...img, alt: body.coverImageAlt || articleData.title };
     }
     const article = await Article.create(articleData);
@@ -94,7 +94,7 @@ export const updateArticle = asyncHandler(async (req, res) => {
     
     if (req.file) {
         if (article.coverImage?.publicId) await deleteMedia(article.coverImage.publicId).catch(() => { });
-        const img = await uploadSingleImage(req.file, "enovalis/articles");
+        const img = await uploadSingleImage(req.file, "envalis/articles");
         body.coverImage = { ...img, alt: body.coverImageAlt || article.title };
     }
     Object.assign(article, { ...body, updatedBy: req.admin._id });

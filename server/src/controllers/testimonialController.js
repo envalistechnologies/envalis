@@ -100,7 +100,7 @@ export const getTestimonialById = asyncHandler(async (req, res) => {
 export const createTestimonial = asyncHandler(async (req, res) => {
   const data = normalizeTestimonialBody({ ...req.body, createdBy: req.admin._id });
   if (req.file) {
-    const img = await uploadSingleImage(req.file, "enovalis/testimonials");
+    const img = await uploadSingleImage(req.file, "envalis/testimonials");
     data.clientAvatar = img;
   }
   const testimonial = await Testimonial.create(data);
@@ -114,7 +114,7 @@ export const updateTestimonial = asyncHandler(async (req, res) => {
   const data = normalizeTestimonialBody(req.body);
   if (req.file) {
     if (testimonial.clientAvatar?.publicId) await deleteMedia(testimonial.clientAvatar.publicId).catch(() => {});
-    const img = await uploadSingleImage(req.file, "enovalis/testimonials");
+    const img = await uploadSingleImage(req.file, "envalis/testimonials");
     data.clientAvatar = img;
   }
   Object.assign(testimonial, { ...data, updatedBy: req.admin._id });

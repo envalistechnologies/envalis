@@ -65,19 +65,19 @@ export const createCaseStudy = asyncHandler(async (req, res) => {
   data.createdBy = req.admin._id;
   const files = req.files || {};
   if (files.coverImage?.[0]) {
-    const img = await uploadSingleImage(files.coverImage[0], "enovalis/case-studies");
+    const img = await uploadSingleImage(files.coverImage[0], "envalis/case-studies");
     data.coverImage = { ...img, alt: data.title };
   }
   if (files.bannerImage?.[0]) {
-    const img = await uploadSingleImage(files.bannerImage[0], "enovalis/case-studies");
+    const img = await uploadSingleImage(files.bannerImage[0], "envalis/case-studies");
     data.bannerImage = { ...img, alt: data.title };
   }
   if (files.gallery) {
-    const imgs = await uploadMultipleImages(files.gallery, "enovalis/case-studies/gallery");
+    const imgs = await uploadMultipleImages(files.gallery, "envalis/case-studies/gallery");
     data.gallery = imgs.map((img) => ({ ...img, alt: data.title }));
   }
   if (files["client.logo"]?.[0]) {
-    const logo = await uploadSingleImage(files["client.logo"][0], "enovalis/client-logos");
+    const logo = await uploadSingleImage(files["client.logo"][0], "envalis/client-logos");
     data.client = { ...(data.client || {}), logo };
   }
   const caseStudy = await CaseStudy.create(data);
@@ -93,12 +93,12 @@ export const updateCaseStudy = asyncHandler(async (req, res) => {
   const files = req.files || {};
   if (files.coverImage?.[0]) {
     if (caseStudy.coverImage?.publicId) await deleteMedia(caseStudy.coverImage.publicId).catch(() => {});
-    const img = await uploadSingleImage(files.coverImage[0], "enovalis/case-studies");
+    const img = await uploadSingleImage(files.coverImage[0], "envalis/case-studies");
     data.coverImage = { ...img, alt: data.title || caseStudy.title };
   }
   if (files.bannerImage?.[0]) {
     if (caseStudy.bannerImage?.publicId) await deleteMedia(caseStudy.bannerImage.publicId).catch(() => {});
-    const img = await uploadSingleImage(files.bannerImage[0], "enovalis/case-studies");
+    const img = await uploadSingleImage(files.bannerImage[0], "envalis/case-studies");
     data.bannerImage = { ...img, alt: data.title || caseStudy.title };
   }
   Object.assign(caseStudy, { ...data, updatedBy: req.admin._id });

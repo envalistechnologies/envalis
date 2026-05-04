@@ -71,7 +71,7 @@ const ForgotPassword = () => {
                         <Input
                             id="email"
                             type="email"
-                            placeholder="admin@enovalis.com"
+                            placeholder="admin@envalis.com"
                             className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus-visible:bg-white/10"
                             {...register("email")}
                         />

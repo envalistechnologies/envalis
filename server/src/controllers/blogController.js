@@ -80,11 +80,11 @@ export const createBlog = asyncHandler(async (req, res) => {
     parseBlogBody(body);
     const blogData = { ...body, author: req.admin._id, createdBy: req.admin._id };
     if (req.files?.coverImage?.[0]) {
-        const img = await uploadSingleImage(req.files.coverImage[0], "enovalis/blogs");
+        const img = await uploadSingleImage(req.files.coverImage[0], "envalis/blogs");
         blogData.coverImage = { ...img, alt: body.coverImageAlt || blogData.title };
     }
     if (req.files?.gallery?.length) {
-        const imgs = await uploadMultipleImages(req.files.gallery, "enovalis/blogs/gallery");
+        const imgs = await uploadMultipleImages(req.files.gallery, "envalis/blogs/gallery");
         blogData.gallery = imgs.map((img, i) => ({ ...img, alt: `Gallery ${i + 1}` }));
     }
     const blog = await Blog.create(blogData);
@@ -100,11 +100,11 @@ export const updateBlog = asyncHandler(async (req, res) => {
     const before = { title: blog.title, status: blog.status };
     if (req.files?.coverImage?.[0]) {
         if (blog.coverImage?.publicId) await deleteMedia(blog.coverImage.publicId).catch(() => { });
-        const img = await uploadSingleImage(req.files.coverImage[0], "enovalis/blogs");
+        const img = await uploadSingleImage(req.files.coverImage[0], "envalis/blogs");
         body.coverImage = { ...img, alt: body.coverImageAlt || blog.title };
     }
     if (req.files?.gallery?.length) {
-        const imgs = await uploadMultipleImages(req.files.gallery, "enovalis/blogs/gallery");
+        const imgs = await uploadMultipleImages(req.files.gallery, "envalis/blogs/gallery");
         const newItems = imgs.map((img, i) => ({ ...img, alt: `Gallery ${i + 1}` }));
         body.gallery = [...(blog.gallery || []), ...newItems];
     }

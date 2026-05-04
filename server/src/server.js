@@ -114,7 +114,7 @@ if (process.env.NODE_ENV === "development") {
 app.get("/health", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Enovalis API is running",
+    message: "Envalis Technologies API is running",
     environment: process.env.NODE_ENV,
     timestamp: new Date().toISOString(),
   });
@@ -147,7 +147,7 @@ const PORT = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV === "development") {
   app.listen(PORT, () => {
-    console.log(`Enovalis Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+    console.log(`Envalis Technologies Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
   });
 }
 

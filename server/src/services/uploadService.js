@@ -1,6 +1,6 @@
 import { uploadBufferToCloudinary, deleteFromCloudinary } from "../config/cloudinary.js";
 
-export const uploadSingleImage = async (file, folder = "enovalis/images", options = {}) => {
+export const uploadSingleImage = async (file, folder = "envalis/images", options = {}) => {
     if (!file) throw new Error("No file provided");
     const result = await uploadBufferToCloudinary(file.buffer, folder, {
         transformation: [{ quality: "auto", fetch_format: "auto" }],
@@ -9,7 +9,7 @@ export const uploadSingleImage = async (file, folder = "enovalis/images", option
     return result;
 };
 
-export const uploadMultipleImages = async (files, folder = "enovalis/images") => {
+export const uploadMultipleImages = async (files, folder = "envalis/images") => {
     if (!files || files.length === 0) throw new Error("No files provided");
     const uploads = files.map((file) => uploadBufferToCloudinary(file.buffer, folder, {
         transformation: [{ quality: "auto", fetch_format: "auto" }],
@@ -17,7 +17,7 @@ export const uploadMultipleImages = async (files, folder = "enovalis/images") =>
     return Promise.all(uploads);
 };
 
-export const uploadDocument = async (file, folder = "enovalis/documents") => {
+export const uploadDocument = async (file, folder = "envalis/documents") => {
     if (!file) throw new Error("No file provided");
     return uploadBufferToCloudinary(file.buffer, folder, {
         resource_type: "raw",
@@ -27,7 +27,7 @@ export const uploadDocument = async (file, folder = "enovalis/documents") => {
 };
 
 export const uploadResume = async (file) => {
-    return uploadDocument(file, "enovalis/resumes");
+    return uploadDocument(file, "envalis/resumes");
 };
 
 export const deleteMedia = async (publicId) => {

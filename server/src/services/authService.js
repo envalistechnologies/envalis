@@ -13,7 +13,7 @@ export const generateRefreshToken = (id) => {
 
 export const generate2FASecret = async (adminEmail) => {
     const secret = speakeasy.generateSecret({
-        name: `Enovalis Admin (${adminEmail})`,
+        name: `Envalis Technologies Admin (${adminEmail})`,
         length: 32,
     });
     const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url);

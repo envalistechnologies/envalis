@@ -228,7 +228,7 @@ const EmployeeForm = () => {
                                     <Input {...register("lastName")} placeholder="Doe" />
                                 </FormField>
                                 <FormField label="Work Email" required error={errors.email?.message}>
-                                    <Input type="email" {...register("email")} placeholder="john@enovalis.com" disabled={isEdit} />
+                                    <Input type="email" {...register("email")} placeholder="john@envalis.com" disabled={isEdit} />
                                 </FormField>
                                 <FormField label="Personal Email" error={errors.personalEmail?.message}>
                                     <Input type="email" {...register("personalEmail")} placeholder="john@gmail.com" />

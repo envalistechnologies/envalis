@@ -111,7 +111,7 @@ export const updateAdminAvatar = asyncHandler(async (req, res) => {
     const admin = await Admin.findById(req.params.id);
     if (!admin) return errorResponse(res, "Admin not found", 404);
     if (admin.avatar?.publicId) await deleteMedia(admin.avatar.publicId).catch(() => { });
-    const result = await uploadSingleImage(req.file, "enovalis/admin-avatars");
+    const result = await uploadSingleImage(req.file, "envalis/admin-avatars");
     await Admin.findByIdAndUpdate(admin._id, { avatar: result });
     successResponse(res, { avatar: result }, "Avatar updated successfully");
 });

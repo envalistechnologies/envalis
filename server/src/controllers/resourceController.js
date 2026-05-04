@@ -82,11 +82,11 @@ export const createResource = asyncHandler(async (req, res) => {
     const resourceData = { ...req.body, createdBy: req.admin._id };
     parseResourceBody(resourceData);
     if (req.files?.coverImage?.[0]) {
-        const img = await uploadSingleImage(req.files.coverImage[0], "enovalis/resources");
+        const img = await uploadSingleImage(req.files.coverImage[0], "envalis/resources");
         resourceData.coverImage = { ...img, alt: req.body.coverImageAlt || resourceData.title };
     }
     if (req.files?.file?.[0]) {
-        const doc = await uploadDocument(req.files.file[0], "enovalis/resources");
+        const doc = await uploadDocument(req.files.file[0], "envalis/resources");
         resourceData.file = { url: doc.url, publicId: doc.publicId, name: req.files.file[0].originalname, size: req.files.file[0].size, format: doc.format };
     }
     const resource = await Resource.create(resourceData);
@@ -102,12 +102,12 @@ export const updateResource = asyncHandler(async (req, res) => {
     parseResourceBody(body);
     if (req.files?.coverImage?.[0]) {
         if (resource.coverImage?.publicId) await deleteMedia(resource.coverImage.publicId).catch(() => {});
-        const img = await uploadSingleImage(req.files.coverImage[0], "enovalis/resources");
+        const img = await uploadSingleImage(req.files.coverImage[0], "envalis/resources");
         body.coverImage = { ...img, alt: body.coverImageAlt || resource.title };
     }
     if (req.files?.file?.[0]) {
         if (resource.file?.publicId) await deleteMedia(resource.file.publicId).catch(() => {});
-        const doc = await uploadDocument(req.files.file[0], "enovalis/resources");
+        const doc = await uploadDocument(req.files.file[0], "envalis/resources");
         body.file = { url: doc.url, publicId: doc.publicId, name: req.files.file[0].originalname, size: req.files.file[0].size, format: doc.format };
     }
     Object.assign(resource, { ...body, updatedBy: req.admin._id });

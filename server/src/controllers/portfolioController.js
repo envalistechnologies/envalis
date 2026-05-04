@@ -85,11 +85,11 @@ export const createPortfolio = asyncHandler(async (req, res) => {
   const portfolioData = { ...body, createdBy: req.admin._id };
   const files = req.files || {};
   if (files.coverImage?.[0]) {
-    const img = await uploadSingleImage(files.coverImage[0], "enovalis/portfolios");
+    const img = await uploadSingleImage(files.coverImage[0], "envalis/portfolios");
     portfolioData.coverImage = { ...img, alt: portfolioData.title };
   }
   if (files.gallery) {
-    const imgs = await uploadMultipleImages(files.gallery, "enovalis/portfolios/gallery");
+    const imgs = await uploadMultipleImages(files.gallery, "envalis/portfolios/gallery");
     portfolioData.gallery = imgs.map((img) => ({ ...img, alt: portfolioData.title }));
   }
   const portfolio = await Portfolio.create(portfolioData);
@@ -105,11 +105,11 @@ export const updatePortfolio = asyncHandler(async (req, res) => {
   const files = req.files || {};
   if (files.coverImage?.[0]) {
     if (portfolio.coverImage?.publicId) await deleteMedia(portfolio.coverImage.publicId).catch(() => {});
-    const img = await uploadSingleImage(files.coverImage[0], "enovalis/portfolios");
+    const img = await uploadSingleImage(files.coverImage[0], "envalis/portfolios");
     body.coverImage = { ...img, alt: body.title || portfolio.title };
   }
   if (files.gallery) {
-    const imgs = await uploadMultipleImages(files.gallery, "enovalis/portfolios/gallery");
+    const imgs = await uploadMultipleImages(files.gallery, "envalis/portfolios/gallery");
     body.gallery = [...(portfolio.gallery || []), ...imgs.map((img) => ({ ...img, alt: portfolio.title }))];
   }
   Object.assign(portfolio, { ...body, updatedBy: req.admin._id });

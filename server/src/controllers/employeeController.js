@@ -69,7 +69,7 @@ export const createEmployee = asyncHandler(async (req, res) => {
   const data = { ...req.body, createdBy: req.admin._id };
   parseEmployeeBody(data);
   if (req.file) {
-    const img = await uploadSingleImage(req.file, "enovalis/employee-avatars");
+    const img = await uploadSingleImage(req.file, "envalis/employee-avatars");
     data.avatar = img;
   }
   const employee = await Employee.create(data);
@@ -85,7 +85,7 @@ export const updateEmployee = asyncHandler(async (req, res) => {
   parseEmployeeBody(body);
   if (req.file) {
     if (employee.avatar?.publicId) await deleteMedia(employee.avatar.publicId).catch(() => {});
-    const img = await uploadSingleImage(req.file, "enovalis/employee-avatars");
+    const img = await uploadSingleImage(req.file, "envalis/employee-avatars");
     body.avatar = img;
   }
   Object.assign(employee, { ...body, updatedBy: req.admin._id });
@@ -106,7 +106,7 @@ export const uploadEmployeeDocument = asyncHandler(async (req, res) => {
   if (!req.file) return errorResponse(res, "No document file provided", 400);
   const employee = await Employee.findOne({ _id: req.params.id, isDeleted: false });
   if (!employee) return errorResponse(res, "Employee not found", 404);
-  const doc = await uploadDocument(req.file, "enovalis/employee-documents");
+  const doc = await uploadDocument(req.file, "envalis/employee-documents");
   employee.documents.push({ name: req.body.name || req.file.originalname, type: req.body.type || "other", ...doc, uploadedAt: new Date() });
   await employee.save();
   successResponse(res, { documents: employee.documents }, "Document uploaded successfully");

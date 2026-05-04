@@ -110,7 +110,7 @@ const WhyUsSection = () => (
       <div className="grid lg:grid-cols-2 gap-16 items-center">
         <div>
           <HeroHeader
-            badge="Why Enovalis"
+            badge="Why Envalis Technologies"
             title="We Don't Just Build —"
             highlight="We Craft Excellence"
             description="Every project is a collaboration built on transparency, innovation, and a relentless pursuit of quality that exceeds expectations."
@@ -366,7 +366,7 @@ const CTASection = () => (
         Ready to Transform Your <span className="text-yellow-300">Business?</span>
       </h2>
       <p className="text-white/60 text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-        Join 50+ companies that have scaled their digital presence with Enovalis. Let's build something remarkable together.
+        Join 50+ companies that have scaled their digital presence with Envalis Technologies. Let's build something remarkable together.
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link to="/contact">

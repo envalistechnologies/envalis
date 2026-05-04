@@ -9,7 +9,7 @@ cloudinary.config({
   secure: true,
 });
 
-export const uploadToCloudinary = async (filePath, folder = "enovalis", options = {}) => {
+export const uploadToCloudinary = async (filePath, folder = "envalis", options = {}) => {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
       folder,
@@ -31,7 +31,7 @@ export const deleteFromCloudinary = async (publicId) => {
   }
 };
 
-export const uploadBufferToCloudinary = async (buffer, folder = "enovalis", options = {}) => {
+export const uploadBufferToCloudinary = async (buffer, folder = "envalis", options = {}) => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       { folder, resource_type: "auto", ...options },
