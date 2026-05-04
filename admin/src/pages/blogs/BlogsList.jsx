@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     Plus, Article as ArticleIcon, Eye, Star, FileText, DotsThreeVertical,
-    Pencil, Trash, BroadcastIcon, BroadcastIcon, ArrowsClockwise, BookmarkSimple,
+    Pencil, Trash, BroadcastIcon, ArrowsClockwise, BookmarkSimple,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 

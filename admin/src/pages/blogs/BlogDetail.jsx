@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
     Pencil, Trash, Eye, Heart, Clock, Calendar, Tag, BookmarkSimple, Star,
-    BroadcastIcon, BroadCastIcon, Article as ArticleIcon, ShareNetwork,
+    BroadcastIcon, Article as ArticleIcon, ShareNetwork,
 } from "@phosphor-icons/react";
 
 import { blogsAPI } from "@/api/blogsApi";
@@ -80,7 +80,7 @@ const BlogDetail = () => {
                     <>
                         {blog.status === "published" ? (
                             <Button variant="outline" onClick={() => publishMut.mutate({ action: "unpublish" })}>
-                                <BroadCastIcon size={15} className="mr-1.5" /> Unpublish
+                                <BroadcastIcon size={15} className="mr-1.5" /> Unpublish
                             </Button>
                         ) : (
                             <Button variant="outline" onClick={() => publishMut.mutate({ action: "publish" })}>
