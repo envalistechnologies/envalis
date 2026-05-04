@@ -32,6 +32,9 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy (required on Vercel / other proxies so req.ip and rate-limit use forwarded IPs)
+app.set("trust proxy", 1);
+
 // Connect Database + seed super admin in dev
 connectDB().then(() => {
   if (process.env.NODE_ENV === "development") {
