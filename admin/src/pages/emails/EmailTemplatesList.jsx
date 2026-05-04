@@ -21,7 +21,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { formatDate, humanize, formatNumber, truncate } from "@/lib/utils";
+import { formatDate, humanize, formatNumber, truncate, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["welcome", "announcement", "newsletter", "hr_notice", "policy", "event", "recognition", "reminder", "other"];
 
@@ -48,7 +48,7 @@ const EmailTemplatesList = () => {
             qc.invalidateQueries({ queryKey: ["email-templates"] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Could not delete");
+            toast.error(getApiErrorMessage(e, "Unable to delete the email template. Please try again."));
             setDeletingId(null);
         },
     });

@@ -21,7 +21,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { humanize, buildFormData, getFormErrorHandler } from "@/lib/utils";
+import { humanize, buildFormData, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["web_development", "mobile_app", "ui_ux", "branding", "ecommerce", "saas", "enterprise", "other"];
 const STATUSES = ["draft", "published", "archived"];
@@ -141,6 +141,8 @@ const PortfolioForm = () => {
             navigate("/portfolios");
         },
         onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+            onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the portfolio. Please check the form and try again.")),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the portfolio. Please check the form and try again.")),
     });
 
     const onFormError = getFormErrorHandler(toast);

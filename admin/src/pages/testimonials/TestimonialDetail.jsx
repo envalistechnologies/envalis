@@ -20,7 +20,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { formatDate, formatDateTime, humanize, getInitials } from "@/lib/utils";
+import { formatDate, formatDateTime, humanize, getInitials, getApiErrorMessage } from "@/lib/utils";
 
 const RatingStars = ({ rating }) => (
     <div className="flex items-center gap-0.5">
@@ -60,7 +60,7 @@ const TestimonialDetail = () => {
             qc.invalidateQueries({ queryKey: ["testimonial", id] });
             qc.invalidateQueries({ queryKey: ["testimonials"] });
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to approve the testimonial.")),
     });
 
     const reject = useMutation({
@@ -70,7 +70,7 @@ const TestimonialDetail = () => {
             qc.invalidateQueries({ queryKey: ["testimonial", id] });
             qc.invalidateQueries({ queryKey: ["testimonials"] });
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to reject the testimonial.")),
     });
 
     const toggleFeatured = useMutation({
@@ -80,7 +80,7 @@ const TestimonialDetail = () => {
             qc.invalidateQueries({ queryKey: ["testimonial", id] });
             qc.invalidateQueries({ queryKey: ["testimonials"] });
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the featured status.")),
     });
 
     const remove = useMutation({
@@ -90,7 +90,7 @@ const TestimonialDetail = () => {
             qc.invalidateQueries({ queryKey: ["testimonials"] });
             navigate("/testimonials");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to delete the testimonial. Please try again.")),
     });
 
     if (isLoading) return <PageLoader />;

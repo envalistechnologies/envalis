@@ -22,7 +22,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { humanize, buildFormData, getFormErrorHandler } from "@/lib/utils";
+import { humanize, buildFormData, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["consulting", "development", "design", "marketing", "support", "training", "other"];
 const STATUSES = ["draft", "published", "archived"];
@@ -130,7 +130,7 @@ const ServiceForm = () => {
             if (isEdit) qc.invalidateQueries({ queryKey: ["service", id] });
             navigate("/services");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the service. Please check the form and try again.")),
     });
 
     const onFormError = getFormErrorHandler(toast);

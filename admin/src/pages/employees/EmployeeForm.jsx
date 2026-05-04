@@ -21,7 +21,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { humanize, buildFormData, getFormErrorHandler } from "@/lib/utils";
+import { humanize, buildFormData, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
 const DEPARTMENTS = ["engineering", "design", "marketing", "hr", "finance", "operations", "sales", "management", "other"];
 const STATUSES = ["active", "on_leave", "resigned", "terminated", "retired"];
@@ -166,6 +166,8 @@ const EmployeeForm = () => {
             navigate("/employees");
         },
         onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+            onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the employee. Please check the form and try again.")),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the employee. Please check the form and try again.")),
     });
 
     const onFormError = getFormErrorHandler(toast);

@@ -1,3 +1,4 @@
+import { getApiErrorMessage } from "@/lib/utils";
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -43,7 +44,7 @@ const Login = () => {
                 navigate(from, { replace: true });
             }
         } catch (err) {
-            toast.error(err?.response?.data?.message || "Invalid credentials");
+            toast.error(getApiErrorMessage(err, "Invalid credentials"));
         } finally {
             setSubmitting(false);
         }

@@ -23,7 +23,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { formatDate, humanize, formatNumber } from "@/lib/utils";
+import { formatDate, humanize, formatNumber, getApiErrorMessage } from "@/lib/utils";
 
 const DEPARTMENTS = ["engineering", "design", "marketing", "hr", "finance", "operations", "sales", "management", "other"];
 const TYPES = ["full_time", "part_time", "contract", "internship", "remote", "hybrid"];
@@ -58,7 +58,7 @@ const CareersList = () => {
             qc.invalidateQueries({ queryKey: ["careers"] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Could not delete");
+            toast.error(getApiErrorMessage(e, "Unable to delete the job posting. Please try again."));
             setDeletingId(null);
         },
     });

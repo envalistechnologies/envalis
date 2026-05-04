@@ -23,7 +23,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { formatDate, humanize, formatNumber, truncate } from "@/lib/utils";
+import { formatDate, humanize, formatNumber, truncate, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["web_development", "mobile_app", "ui_ux", "branding", "ecommerce", "saas", "enterprise", "other"];
 const STATUSES = ["draft", "published", "archived"];
@@ -60,6 +60,8 @@ const PortfoliosList = () => {
         },
         onError: (e) => {
             toast.error(e?.response?.data?.message || "Could not delete");
+                                    toast.error(getApiErrorMessage(e, "Unable to delete the portfolio. Please try again."));
+                        toast.error(getApiErrorMessage(e, "Unable to delete the portfolio. Please try again."));
             setDeletingId(null);
         },
     });

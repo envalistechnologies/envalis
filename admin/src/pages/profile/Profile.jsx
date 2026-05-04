@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { getInitials, formatDate, humanize, getFormErrorHandler } from "@/lib/utils";
+import { getInitials, formatDate, humanize, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
 const schema = z.object({
     firstName: z.string().min(1, "Required"),
@@ -46,7 +46,7 @@ const Profile = () => {
             updateAdmin(data.admin || { ...admin, ...data });
             reset(data.admin || data);
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Update failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update your profile. Please try again.")),
     });
 
     const onFormError = getFormErrorHandler(toast);
@@ -65,7 +65,7 @@ const Profile = () => {
             updateAdmin(data.admin || { ...admin, avatar: data.avatar });
             toast.success("Avatar updated");
         } catch (e) {
-            toast.error(e?.response?.data?.message || "Upload failed");
+            toast.error(getApiErrorMessage(e, "Unable to upload your avatar. Please try again."));
         } finally {
             setUploading(false);
         }

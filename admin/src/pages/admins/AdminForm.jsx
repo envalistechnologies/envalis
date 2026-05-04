@@ -19,7 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { humanize, getFormErrorHandler } from "@/lib/utils";
+import { humanize, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
 const ROLES = ["admin", "hr", "manager", "editor", "viewer"];
 
@@ -111,7 +111,7 @@ const AdminForm = () => {
             qc.invalidateQueries({ queryKey: ["admins"] });
             navigate("/admins");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the admin account. Please check the form and try again.")),
     });
 
     const onFormError = getFormErrorHandler(toast);

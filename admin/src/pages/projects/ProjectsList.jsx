@@ -24,7 +24,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { formatDate, humanize } from "@/lib/utils";
+import { formatDate, humanize, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["web_development", "mobile_app", "ui_ux", "branding", "ecommerce", "saas", "enterprise", "consulting", "other"];
 const STATUSES = ["planning", "in_progress", "review", "on_hold", "completed", "cancelled", "delivered"];
@@ -59,7 +59,7 @@ const ProjectsList = () => {
             qc.invalidateQueries({ queryKey: ["projects"] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Could not delete");
+            toast.error(getApiErrorMessage(e, "Unable to delete the project. Please try again."));
             setDeletingId(null);
         },
     });

@@ -24,7 +24,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { humanize } from "@/lib/utils";
+import { humanize, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["welcome", "announcement", "newsletter", "hr_notice", "policy", "event", "recognition", "reminder", "other"];
 const DEPARTMENTS = ["engineering", "design", "marketing", "hr", "finance", "operations", "sales", "management", "other"];
@@ -114,7 +114,7 @@ const EmailSend = () => {
             toast.success("Email sent successfully");
             navigate("/emails/logs");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Send failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to send the email. Please check the recipients and content.")),
     });
 
     const templateMutation = useMutation({
@@ -123,7 +123,7 @@ const EmailSend = () => {
             toast.success("Template email sent successfully");
             navigate("/emails/logs");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Send failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to send the template email. Please verify the template and variables.")),
     });
 
     const bulkMutation = useMutation({
@@ -132,7 +132,7 @@ const EmailSend = () => {
             toast.success(res?.data?.message || "Bulk email sent");
             navigate("/emails/logs");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Bulk send failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to send the bulk email. Please check the selected department or employees.")),
     });
 
     const onDirectSubmit = (data) => directMutation.mutate(data);

@@ -24,7 +24,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getInitials, formatDate, formatDateTime, humanize } from "@/lib/utils";
+import { getInitials, formatDate, formatDateTime, humanize, getApiErrorMessage } from "@/lib/utils";
 
 const Stat = ({ icon: Icon, label, value, color = "text-primary" }) => (
     <div className="flex items-center gap-3 py-2.5">
@@ -60,7 +60,7 @@ const ContactDetail = () => {
             setStatusUpdate("");
             setNewNote("");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the contact. Please try again.")),
     });
 
     const remove = useMutation({
@@ -70,7 +70,7 @@ const ContactDetail = () => {
             qc.invalidateQueries({ queryKey: ["contacts"] });
             navigate("/contacts");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to delete the contact. Please try again.")),
     });
 
     const handleAddNote = () => {

@@ -149,3 +149,7 @@ export function getFormErrorHandler(toast) {
         toast.error(msg);
     };
 }
+
+export function getApiErrorMessage(error, fallbackMessage) {
+    return error?.response?.data?.message || fallbackMessage;
+}

@@ -20,7 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { humanize, getFormErrorHandler } from "@/lib/utils";
+import { humanize, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
 const DEPARTMENTS = ["engineering", "design", "marketing", "hr", "finance", "operations", "sales", "management", "other"];
 const TYPES = ["full_time", "part_time", "contract", "internship", "remote", "hybrid"];
@@ -131,7 +131,7 @@ const CareerForm = () => {
             qc.invalidateQueries({ queryKey: ["careers"] });
             navigate("/careers");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the job posting. Please check the form and try again.")),
     });
 
     const onFormError = getFormErrorHandler(toast);

@@ -24,7 +24,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getInitials, formatDate, humanize } from "@/lib/utils";
+import { getInitials, formatDate, humanize, getApiErrorMessage } from "@/lib/utils";
 
 const DEPARTMENTS = ["engineering", "design", "marketing", "hr", "finance", "operations", "sales", "management", "other"];
 const STATUSES = ["active", "on_leave", "resigned", "terminated", "retired"];
@@ -60,6 +60,8 @@ const EmployeesList = () => {
         },
         onError: (e) => {
             toast.error(e?.response?.data?.message || "Could not delete");
+                                    toast.error(getApiErrorMessage(e, "Unable to delete the employee. Please try again."));
+                        toast.error(getApiErrorMessage(e, "Unable to delete the employee. Please try again."));
             setDeletingId(null);
         },
     });

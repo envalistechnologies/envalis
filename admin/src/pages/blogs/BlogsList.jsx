@@ -24,7 +24,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getInitials, formatDate, humanize, formatNumber } from "@/lib/utils";
+import { getInitials, formatDate, humanize, formatNumber, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["technology", "design", "business", "marketing", "development", "news", "tutorial", "insights", "other"];
 const STATUSES = ["draft", "published", "scheduled", "archived"];
@@ -56,7 +56,7 @@ const BlogsList = () => {
             toast.success(action === "publish" ? "Blog published" : "Blog unpublished");
             qc.invalidateQueries({ queryKey: ["blogs"] });
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the blog status.")),
     });
 
     const remove = useMutation({
@@ -67,7 +67,7 @@ const BlogsList = () => {
             qc.invalidateQueries({ queryKey: ["blogs"] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Could not delete");
+            toast.error(getApiErrorMessage(e, "Unable to delete the blog post. Please try again."));
             setDeletingId(null);
         },
     });

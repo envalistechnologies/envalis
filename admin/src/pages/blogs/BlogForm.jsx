@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { humanize, buildFormData, getFormErrorHandler } from "@/lib/utils";
+import { humanize, buildFormData, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["technology", "design", "business", "marketing", "development", "news", "tutorial", "insights", "other"];
 const STATUSES = ["draft", "published", "scheduled", "archived"];
@@ -103,7 +103,7 @@ const BlogForm = () => {
             qc.invalidateQueries({ queryKey: ["blogs"] });
             navigate("/blogs");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the blog post. Please check the content and try again.")),
     });
 
     const onFormError = getFormErrorHandler(toast);

@@ -21,7 +21,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getInitials, formatDate, humanize } from "@/lib/utils";
+import { getInitials, formatDate, humanize, getApiErrorMessage } from "@/lib/utils";
 
 const ROLES = ["super_admin", "admin", "hr", "manager", "editor", "viewer"];
 
@@ -51,7 +51,7 @@ const AdminsList = () => {
             toast.success("Status updated");
             qc.invalidateQueries({ queryKey: ["admins"] });
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the admin status.")),
     });
 
     const remove = useMutation({
@@ -62,7 +62,7 @@ const AdminsList = () => {
             qc.invalidateQueries({ queryKey: ["admins"] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Could not delete");
+            toast.error(getApiErrorMessage(e, "Unable to delete the admin. Please try again."));
             setDeletingId(null);
         },
     });

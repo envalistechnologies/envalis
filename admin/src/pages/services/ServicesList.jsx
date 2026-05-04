@@ -23,7 +23,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { humanize, truncate } from "@/lib/utils";
+import { humanize, truncate, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["consulting", "development", "design", "marketing", "support", "training", "other"];
 const STATUSES = ["draft", "published", "archived"];
@@ -59,7 +59,7 @@ const ServicesList = () => {
             qc.invalidateQueries({ queryKey: ["services"] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Could not delete");
+            toast.error(getApiErrorMessage(e, "Unable to delete the service. Please try again."));
             setDeletingId(null);
         },
     });

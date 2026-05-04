@@ -10,7 +10,7 @@ const PageHeader = ({ title, description, actions, showBack = false, backPath })
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
                     {showBack && (
-                        <Button variant="ghost" size="icon" className="mt-0.5 shrink-0" onClick={() => (backPath ? navigate(backPath) : navigate(-1))}>
+                        <Button type="button" variant="ghost" size="icon" className="mt-0.5 shrink-0" onClick={() => (backPath ? navigate(backPath) : navigate(-1))}>
                             <ArrowLeft size={18} />
                         </Button>
                     )}

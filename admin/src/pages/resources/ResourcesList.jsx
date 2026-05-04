@@ -23,7 +23,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { formatDate, humanize, formatNumber, truncate } from "@/lib/utils";
+import { formatDate, humanize, formatNumber, truncate, getApiErrorMessage } from "@/lib/utils";
 
 const TYPES = ["ebook", "whitepaper", "guide", "template", "checklist", "infographic", "video", "webinar", "tool", "other"];
 const CATEGORIES = ["technology", "business", "design", "marketing", "development", "leadership", "productivity", "other"];
@@ -61,7 +61,7 @@ const ResourcesList = () => {
             qc.invalidateQueries({ queryKey: ["resources"] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Could not delete");
+            toast.error(getApiErrorMessage(e, "Unable to delete the resource. Please try again."));
             setDeletingId(null);
         },
     });

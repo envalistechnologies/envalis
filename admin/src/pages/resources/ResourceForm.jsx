@@ -22,7 +22,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { humanize, buildFormData, formatBytes, getFormErrorHandler } from "@/lib/utils";
+import { humanize, buildFormData, formatBytes, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
 const TYPES = ["ebook", "whitepaper", "guide", "template", "checklist", "infographic", "video", "webinar", "tool", "other"];
 const CATEGORIES = ["technology", "business", "design", "marketing", "development", "leadership", "productivity", "other"];
@@ -105,7 +105,7 @@ const ResourceForm = () => {
             qc.invalidateQueries({ queryKey: ["resources"] });
             navigate("/resources");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the resource. Please check the form and try again.")),
     });
 
     const onFormError = getFormErrorHandler(toast);

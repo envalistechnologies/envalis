@@ -23,7 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { humanize, getFormErrorHandler } from "@/lib/utils";
+import { humanize, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["welcome", "announcement", "newsletter", "hr_notice", "policy", "event", "recognition", "reminder", "other"];
 
@@ -105,7 +105,7 @@ const EmailTemplateForm = () => {
         onSuccess: (res) => {
             setPreviewHtml(res.data?.preview || "");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Preview failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to render the template preview. Please try again.")),
     });
 
     const onFormError = getFormErrorHandler(toast);
@@ -121,7 +121,7 @@ const EmailTemplateForm = () => {
             qc.invalidateQueries({ queryKey: ["email-templates"] });
             navigate("/emails/templates");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the email template. Please check the form and try again.")),
     });
 
     if (isEdit && isLoading) return <PageLoader />;

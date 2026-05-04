@@ -19,7 +19,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { formatDate, humanize, formatNumber } from "@/lib/utils";
+import { formatDate, humanize, formatNumber, getApiErrorMessage } from "@/lib/utils";
 
 const Stat = ({ icon: Icon, label, value, color = "text-primary" }) => (
     <div className="flex items-center gap-3 py-2.5">
@@ -51,7 +51,7 @@ const CaseStudyDetail = () => {
             qc.invalidateQueries({ queryKey: ["caseStudy", id] });
             qc.invalidateQueries({ queryKey: ["caseStudies"] });
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the case study status.")),
     });
 
     const remove = useMutation({
@@ -61,7 +61,7 @@ const CaseStudyDetail = () => {
             qc.invalidateQueries({ queryKey: ["caseStudies"] });
             navigate("/case-studies");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to delete the case study. Please try again.")),
     });
 
     if (isLoading) return <PageLoader />;

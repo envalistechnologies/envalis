@@ -20,7 +20,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { formatDate, humanize, formatNumber, formatCurrency } from "@/lib/utils";
+import { formatDate, humanize, formatNumber, formatCurrency, getApiErrorMessage } from "@/lib/utils";
 
 const Stat = ({ icon: Icon, label, value, color = "text-primary" }) => (
     <div className="flex items-center gap-3 py-2.5">
@@ -74,7 +74,7 @@ const CareerDetail = () => {
             qc.invalidateQueries({ queryKey: ["careers"] });
             navigate("/careers");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the job status.")),
     });
 
     if (isLoading) return <PageLoader />;

@@ -24,7 +24,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getInitials, formatDate, humanize, formatNumber } from "@/lib/utils";
+import { getInitials, formatDate, humanize, formatNumber, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["whitepaper", "research", "thought_leadership", "industry_report", "case_analysis", "opinion", "guide", "other"];
 const STATUSES = ["draft", "published", "scheduled", "archived"];
@@ -56,7 +56,7 @@ const ArticlesList = () => {
             toast.success("Status updated");
             qc.invalidateQueries({ queryKey: ["articles"] });
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the article status.")),
     });
 
     const remove = useMutation({
@@ -67,7 +67,7 @@ const ArticlesList = () => {
             qc.invalidateQueries({ queryKey: ["articles"] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Could not delete");
+            toast.error(getApiErrorMessage(e, "Unable to delete the article. Please try again."));
             setDeletingId(null);
         },
     });

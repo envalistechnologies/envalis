@@ -20,7 +20,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { formatDate, humanize, formatNumber, truncate } from "@/lib/utils";
+import { formatDate, humanize, formatNumber, truncate, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["digital_transformation", "product_development", "process_improvement", "cost_reduction", "growth", "other"];
 const STATUSES = ["draft", "published", "archived"];
@@ -56,7 +56,7 @@ const CaseStudiesList = () => {
             qc.invalidateQueries({ queryKey: ["caseStudies"] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Could not delete");
+            toast.error(getApiErrorMessage(e, "Unable to delete the case study. Please try again."));
             setDeletingId(null);
         },
     });
@@ -67,7 +67,7 @@ const CaseStudiesList = () => {
             toast.success("Status updated");
             qc.invalidateQueries({ queryKey: ["caseStudies"] });
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the case study status.")),
     });
 
     const columns = [

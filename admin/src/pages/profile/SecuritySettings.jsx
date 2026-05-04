@@ -1,3 +1,4 @@
+import { getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -58,6 +59,8 @@ const SecuritySettings = () => {
             reset();
         },
         onError: (e) => toast.error(e?.response?.data?.message || "Could not change password"),
+            onError: (e) => toast.error(getApiErrorMessage(e, "Unable to change your password. Please try again.")),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to change your password. Please try again.")),
     });
 
     return (

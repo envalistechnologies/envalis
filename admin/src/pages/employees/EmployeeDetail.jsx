@@ -20,7 +20,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getInitials, formatDate, humanize, formatCurrency } from "@/lib/utils";
+import { getInitials, formatDate, humanize, formatCurrency, getApiErrorMessage } from "@/lib/utils";
 
 const InfoRow = ({ icon: Icon, label, value, color = "text-primary" }) => (
     <div className="flex items-start gap-3 py-2.5">
@@ -54,7 +54,7 @@ const EmployeeDetail = () => {
             qc.invalidateQueries({ queryKey: ["employees"] });
             navigate("/employees");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the employee status.")),
     });
 
     const uploadDoc = useMutation({
@@ -69,7 +69,7 @@ const EmployeeDetail = () => {
             toast.success("Document uploaded");
             qc.invalidateQueries({ queryKey: ["employee", id] });
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Upload failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to upload the document. Please try again.")),
     });
 
     const removeDoc = useMutation({
@@ -80,7 +80,7 @@ const EmployeeDetail = () => {
             qc.invalidateQueries({ queryKey: ["employee", id] });
         },
         onError: (e) => {
-            toast.error(e?.response?.data?.message || "Delete failed");
+            toast.error(getApiErrorMessage(e, "Unable to delete the document. Please try again."));
             setDeletingDoc(null);
         },
     });

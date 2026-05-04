@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { humanize, buildFormData } from "@/lib/utils";
+import { humanize, buildFormData, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["general", "web_development", "mobile_app", "design", "consulting", "support", "other"];
 const STATUSES = ["pending", "approved", "rejected", "archived"];
@@ -127,6 +127,8 @@ const TestimonialForm = () => {
             navigate("/testimonials");
         },
         onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+            onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the testimonial. Please check the form and try again.")),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the testimonial. Please check the form and try again.")),
     });
 
     const getFirstErrorMessage = (errs) => {

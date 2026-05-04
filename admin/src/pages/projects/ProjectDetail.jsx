@@ -21,7 +21,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getInitials, formatDate, humanize, formatCurrency } from "@/lib/utils";
+import { getInitials, formatDate, humanize, formatCurrency, getApiErrorMessage } from "@/lib/utils";
 
 const Stat = ({ icon: Icon, label, value, color = "text-primary" }) => (
     <div className="flex items-center gap-3 py-2.5">
@@ -53,7 +53,7 @@ const ProjectDetail = () => {
             qc.invalidateQueries({ queryKey: ["projects"] });
             navigate("/projects");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the project status.")),
     });
 
     if (isLoading) return <PageLoader />;

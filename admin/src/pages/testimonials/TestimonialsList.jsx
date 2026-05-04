@@ -24,7 +24,7 @@ import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getInitials, formatDate, humanize, truncate } from "@/lib/utils";
+import { getInitials, formatDate, humanize, truncate, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["general", "web_development", "mobile_app", "design", "consulting", "support", "other"];
 const STATUSES = ["pending", "approved", "rejected", "archived"];
@@ -63,6 +63,13 @@ const TestimonialsList = () => {
         mutationFn: (id) => testimonialsAPI.approve(id),
         onSuccess: () => { toast.success("Approved"); qc.invalidateQueries({ queryKey: ["testimonials"] }); },
         onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+            onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the testimonial.")),
+            onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the testimonial.")),
+            onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the featured status.")),
+            onError: (e) => toast.error(getApiErrorMessage(e, "Unable to delete the testimonial. Please try again.")),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the testimonial status.")),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the testimonial status.")),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the featured status.")),
     });
 
     const reject = useMutation({
@@ -86,6 +93,7 @@ const TestimonialsList = () => {
         },
         onError: (e) => {
             toast.error(e?.response?.data?.message || "Could not delete");
+                        toast.error(getApiErrorMessage(e, "Unable to delete the testimonial. Please try again."));
             setDeletingId(null);
         },
     });

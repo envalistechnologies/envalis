@@ -27,7 +27,7 @@ import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getInitials, formatDate, humanize } from "@/lib/utils";
+import { getInitials, formatDate, humanize, getApiErrorMessage } from "@/lib/utils";
 
 const APP_STATUSES = ["pending", "reviewing", "shortlisted", "interview", "selected", "rejected", "withdrawn"];
 
@@ -52,7 +52,7 @@ const CareerApplications = () => {
             qc.invalidateQueries({ queryKey: ["career", id] });
             setActiveApp(null);
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to update the application. Please try again.")),
     });
 
     if (isLoading) return <PageLoader />;

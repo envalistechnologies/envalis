@@ -1,3 +1,4 @@
+import { getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -28,7 +29,7 @@ const TwoFactorSettings = () => {
     const beginSetup = useMutation({
         mutationFn: () => authAPI.setup2FA().then((r) => r.data),
         onSuccess: (data) => setSetup(data),
-        onError: (e) => toast.error(e?.response?.data?.message || "Could not start setup"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to start two-factor setup. Please try again.")),
     });
 
     const enable = useMutation({
@@ -39,7 +40,7 @@ const TwoFactorSettings = () => {
             setSetup({ ...setup, backupCodes: data.backupCodes || setup.backupCodes });
             setToken("");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Verification failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to verify the code. Please try again.")),
     });
 
     const disable = useMutation({
@@ -51,7 +52,7 @@ const TwoFactorSettings = () => {
             setConfirmDisable(false);
             setDisableToken("");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Could not disable"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to disable two-factor authentication. Please try again.")),
     });
 
     const copyText = (text) => {

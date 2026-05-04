@@ -21,7 +21,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { humanize, buildFormData } from "@/lib/utils";
+import { humanize, buildFormData, getApiErrorMessage } from "@/lib/utils";
 
 const CATEGORIES = ["digital_transformation", "product_development", "process_improvement", "cost_reduction", "growth", "other"];
 const STATUSES = ["draft", "published", "archived"];
@@ -169,7 +169,7 @@ const CaseStudyForm = () => {
             qc.invalidateQueries({ queryKey: ["caseStudies"] });
             navigate("/case-studies");
         },
-        onError: (e) => toast.error(e?.response?.data?.message || "Save failed"),
+        onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the case study. Please check the form and try again.")),
     });
 
     const onSubmit = (data) => {
