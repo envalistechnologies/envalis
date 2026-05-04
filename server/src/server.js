@@ -32,7 +32,6 @@ dotenv.config();
 
 const app = express();
 
-// Trust proxy (important for Vercel)
 app.set("trust proxy", 1);
 
 // Connect DB
@@ -44,25 +43,28 @@ connectDB().then(() => {
   }
 });
 
+const allowedOrigins = [
+  "https://envalis-admin.vercel.app",
+  "https://envalis.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:5174"
+];
+
 app.use(cors({
-  origin: [
-    "https://envalis-admin.vercel.app",
-    "https://envalis.vercel.app",
-    "http://localhost:5173",
-    "http://localhost:5174"
-  ],
-  credentials: true
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// Handle preflight requests
 app.options("*", cors());
 
 
-// Security Middleware
+// Security
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(compression());
 
-// Rate Limiting
+// Rate limit
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -73,7 +75,7 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
-// Strict limiter (login)
+// Auth limiter
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -86,14 +88,13 @@ app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/forgot-password", authLimiter);
 app.use("/api/auth/reset-password", authLimiter);
 
-// Body Parser
+// Body parser
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Logger
 app.use(requestLogger);
 
-// Dev logs
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -126,7 +127,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/resources", resourceRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-// Error Handling
+// Error handlers
 app.use(notFound);
 app.use(errorHandler);
 
