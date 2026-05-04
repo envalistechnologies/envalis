@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { authAPI } from "@/api/authApi";
+import api from "@/api/axiosInstance";
 
 const useAuth = create(
     persist(
@@ -20,6 +21,7 @@ const useAuth = create(
                     return { requires2FA: true };
                 }
                 localStorage.setItem("enovalis_token", data.accessToken);
+                api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
                 set({ admin: data.admin, token: data.accessToken, requires2FA: false, tempToken: null });
                 return { requires2FA: false };
             },
@@ -28,12 +30,14 @@ const useAuth = create(
                 const { tempToken } = get();
                 const { data } = await authAPI.verify2FA({ token, backupCode }, tempToken);
                 localStorage.setItem("enovalis_token", data.accessToken);
+                api.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`;
                 set({ admin: data.admin, token: data.accessToken, requires2FA: false, tempToken: null });
             },
 
             logout: async () => {
                 try { await authAPI.logout(); } catch { }
                 localStorage.removeItem("enovalis_token");
+                delete api.defaults.headers.common.Authorization;
                 set({ admin: null, token: null, requires2FA: false, tempToken: null });
             },
 
