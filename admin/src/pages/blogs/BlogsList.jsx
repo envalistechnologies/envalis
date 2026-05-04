@@ -112,7 +112,7 @@ const BlogsList = () => {
                         <AvatarFallback className="text-[10px]">{getInitials(`${b.author?.firstName || ""} ${b.author?.lastName || ""}`)}</AvatarFallback>
                     </Avatar>
                     <span className="text-sm truncate max-w-35">
-                        {b.author ? `${b.author.firstName || ""} ${b.author.lastName || ""}`.trim() : "—"}
+                        {b.author ? `${b.author.firstName || ""} ${b.author.lastName || ""}`.trim() : "N/A"}
                     </span>
                 </div>
             ),

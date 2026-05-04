@@ -95,7 +95,7 @@ const CaseStudiesList = () => {
                 </div>
             ),
         },
-        { key: "client", label: "Client", render: (c) => c.client?.name || "—" },
+        { key: "client", label: "Client", render: (c) => c.client?.name || "N/A" },
         {
             key: "category",
             label: "Category",

@@ -89,7 +89,7 @@ const EmployeesList = () => {
             key: "employeeId",
             label: "ID",
             render: (e) => (
-                <Badge variant="outline" className="font-mono text-xs">{e.employeeId || "—"}</Badge>
+                <Badge variant="outline" className="font-mono text-xs">{e.employeeId || "N/A"}</Badge>
             ),
         },
         {
@@ -97,7 +97,7 @@ const EmployeesList = () => {
             label: "Department",
             render: (e) => <Badge variant="secondary" className="capitalize">{humanize(e.department)}</Badge>,
         },
-        { key: "designation", label: "Designation", render: (e) => e.designation || "—" },
+        { key: "designation", label: "Designation", render: (e) => e.designation || "N/A" },
         {
             key: "employmentType",
             label: "Type",

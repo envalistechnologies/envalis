@@ -103,7 +103,7 @@ const EmailLogsList = () => {
         {
             key: "sentBy",
             label: "Sent by",
-            render: (l) => l.sentByName || (l.sentBy ? `${l.sentBy.firstName || ""} ${l.sentBy.lastName || ""}`.trim() : "—"),
+            render: (l) => l.sentByName || (l.sentBy ? `${l.sentBy.firstName || ""} ${l.sentBy.lastName || ""}`.trim() : "N/A"),
         },
         { key: "sentAt", label: "Sent", render: (l) => formatDateTime(l.sentAt || l.createdAt) },
         {

@@ -29,7 +29,7 @@ const Stat = ({ icon: Icon, label, value, color = "text-primary" }) => (
         </div>
         <div className="min-w-0">
             <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="text-sm font-semibold">{value ?? "—"}</p>
+            <p className="text-sm font-semibold">{value ?? "N/A"}</p>
         </div>
     </div>
 );
@@ -202,7 +202,7 @@ const ArticleDetail = () => {
                         <CardContent>
                             <Separator className="mb-3" />
                             <Stat icon={Calendar} label="Published at" value={formatDateTime(article.publishedAt)} color="text-emerald-500" />
-                            <Stat icon={Calendar} label="Scheduled at" value={article.scheduledAt ? formatDateTime(article.scheduledAt) : "—"} color="text-amber-500" />
+                            <Stat icon={Calendar} label="Scheduled at" value={article.scheduledAt ? formatDateTime(article.scheduledAt) : "N/A"} color="text-amber-500" />
                             <Stat icon={Calendar} label="Created" value={formatDate(article.createdAt)} color="text-muted-foreground" />
                             <Stat icon={Calendar} label="Updated" value={formatDate(article.updatedAt)} color="text-muted-foreground" />
                         </CardContent>

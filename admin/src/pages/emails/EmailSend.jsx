@@ -302,7 +302,7 @@ const EmailSend = () => {
                                     <div className="rounded-md border bg-background overflow-hidden">
                                         <div className="bg-muted/40 px-4 py-2 border-b">
                                             <p className="text-xs text-muted-foreground">Subject</p>
-                                            <p className="text-sm font-medium">{subject || "—"}</p>
+                                            <p className="text-sm font-medium">{subject || "N/A"}</p>
                                         </div>
                                         <ScrollArea className="h-100">
                                             <div className="p-4 text-sm" dangerouslySetInnerHTML={{ __html: html || "<p class='text-muted-foreground'>Nothing to preview yet.</p>" }} />

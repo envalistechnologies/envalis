@@ -9,6 +9,9 @@ import { successResponse, errorResponse } from "../utils/apiResponse.js";
 export const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return errorResponse(res, "Please provide email and password", 400);
+    
+    // Validate email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return errorResponse(res, "Invalid email or password", 401);
 
     const admin = await Admin.findOne({ email, isDeleted: false }).select("+password +twoFactorEnabled +twoFactorSecret +loginAttempts +lockUntil +activeSessions");
 
@@ -45,16 +48,26 @@ export const verify2FA = asyncHandler(async (req, res) => {
 
     const tempToken = authHeader.split(" ")[1];
     const jwt = await import("jsonwebtoken");
-    const decoded = jwt.default.verify(tempToken, process.env.JWT_SECRET);
+    
+    let decoded;
+    try {
+        decoded = jwt.default.verify(tempToken, process.env.JWT_SECRET);
+    } catch (err) {
+        return errorResponse(res, "Invalid or expired temporary token", 401);
+    }
 
     const admin = await Admin.findById(decoded.id).select("+twoFactorSecret +twoFactorBackupCodes +twoFactorEnabled +activeSessions");
     if (!admin) return errorResponse(res, "Admin not found", 404);
 
+    if (!admin.twoFactorEnabled) return errorResponse(res, "2FA is not enabled for this account", 400);
+
     if (token) {
+        if (!admin.twoFactorSecret) return errorResponse(res, "2FA is not properly configured", 400);
         const isValid = verify2FAToken(admin.twoFactorSecret, token);
         if (!isValid) return errorResponse(res, "Invalid 2FA code", 401);
     } else if (backupCode) {
-        const codeIndex = await verifyBackupCode(backupCode, admin.twoFactorBackupCodes);
+        if (!backupCode.trim()) return errorResponse(res, "Backup code cannot be empty", 400);
+        const codeIndex = await verifyBackupCode(backupCode.trim(), admin.twoFactorBackupCodes || []);
         if (codeIndex === -1) return errorResponse(res, "Invalid backup code", 401);
         const updatedCodes = admin.twoFactorBackupCodes.filter((_, i) => i !== codeIndex);
         admin.twoFactorBackupCodes = updatedCodes;
@@ -92,12 +105,30 @@ export const getMe = asyncHandler(async (req, res) => {
 });
 
 export const changePassword = asyncHandler(async (req, res) => {
-    const { currentPassword, newPassword } = req.body;
+    const { currentPassword, newPassword, password } = req.body;
+    const nextPassword = newPassword || password;
+    
+    if (!currentPassword || !nextPassword) return errorResponse(res, "Please provide current and new password", 400);
+    
+    // Validate new password strength
+    if (nextPassword.length < 8) return errorResponse(res, "New password must be at least 8 characters", 400);
+    if (!/[A-Z]/.test(nextPassword)) return errorResponse(res, "New password must include uppercase letter", 400);
+    if (!/[a-z]/.test(nextPassword)) return errorResponse(res, "New password must include lowercase letter", 400);
+    if (!/[0-9]/.test(nextPassword)) return errorResponse(res, "New password must include number", 400);
+    
     const admin = await Admin.findById(req.admin._id).select("+password");
+    if (!admin) return errorResponse(res, "Admin not found", 404);
+    
     const isMatch = await admin.comparePassword(currentPassword);
     if (!isMatch) return errorResponse(res, "Current password is incorrect", 400);
-    admin.password = newPassword;
+    
+    // Prevent reusing the same password
+    const isSamePassword = await admin.comparePassword(nextPassword);
+    if (isSamePassword) return errorResponse(res, "New password must be different from current password", 400);
+    
+    admin.password = nextPassword;
     await admin.save();
+    
     await createAuditLog({ action: "PASSWORD_CHANGE", entity: "Admin", entityId: admin._id, entityName: admin.email, performedBy: req.admin, description: "Password changed", metadata: { ip: req.ipAddress }, severity: "medium" });
     successResponse(res, {}, "Password changed successfully");
 });
@@ -112,17 +143,37 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 });
 
 export const resetPassword = asyncHandler(async (req, res) => {
+    const { password, passwordConfirm } = req.body;
+    
+    // Validate input
+    if (!password || !passwordConfirm) return errorResponse(res, "Password and confirmation are required", 400);
+    if (password !== passwordConfirm) return errorResponse(res, "Passwords don't match", 400);
+    
+    // Validate password strength
+    if (password.length < 8) return errorResponse(res, "Password must be at least 8 characters", 400);
+    if (!/[A-Z]/.test(password)) return errorResponse(res, "Password must include uppercase letter", 400);
+    if (!/[a-z]/.test(password)) return errorResponse(res, "Password must include lowercase letter", 400);
+    if (!/[0-9]/.test(password)) return errorResponse(res, "Password must include number", 400);
+    
     const hashedToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
     const admin = await Admin.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gt: Date.now() } });
     if (!admin) return errorResponse(res, "Token is invalid or has expired", 400);
-    admin.password = req.body.password;
+    
+    admin.password = password;
     admin.passwordResetToken = undefined;
     admin.passwordResetExpires = undefined;
     await admin.save();
+    
+    await createAuditLog({ action: "PASSWORD_RESET", entity: "Admin", entityId: admin._id, entityName: admin.email, performedBy: null, description: "Password reset via email link", severity: "medium" });
     successResponse(res, {}, "Password reset successfully");
 });
 
 export const setup2FA = asyncHandler(async (req, res) => {
+    const admin = await Admin.findById(req.admin._id).select("+twoFactorEnabled");
+    if (admin.twoFactorEnabled) {
+        return errorResponse(res, "2FA is already enabled. Disable it first if you want to reconfigure.", 400);
+    }
+    
     const { secret, qrCode } = await generate2FASecret(req.admin.email);
     await Admin.findByIdAndUpdate(req.admin._id, { twoFactorSecret: secret });
     successResponse(res, { qrCode, secret }, "Scan the QR code with your authenticator app");
@@ -130,7 +181,11 @@ export const setup2FA = asyncHandler(async (req, res) => {
 
 export const enable2FA = asyncHandler(async (req, res) => {
     const { token } = req.body;
+    if (!token) return errorResponse(res, "2FA token is required", 400);
+    
     const admin = await Admin.findById(req.admin._id).select("+twoFactorSecret");
+    if (!admin.twoFactorSecret) return errorResponse(res, "2FA setup not initialized. Call setup-2fa first", 400);
+    
     const isValid = verify2FAToken(admin.twoFactorSecret, token);
     if (!isValid) return errorResponse(res, "Invalid 2FA token", 400);
 
@@ -143,9 +198,14 @@ export const enable2FA = asyncHandler(async (req, res) => {
 
 export const disable2FA = asyncHandler(async (req, res) => {
     const { token } = req.body;
+    if (!token) return errorResponse(res, "2FA token is required to disable 2FA", 400);
+    
     const admin = await Admin.findById(req.admin._id).select("+twoFactorSecret");
+    if (!admin.twoFactorEnabled) return errorResponse(res, "2FA is not enabled", 400);
+    
     const isValid = verify2FAToken(admin.twoFactorSecret, token);
     if (!isValid) return errorResponse(res, "Invalid 2FA token", 400);
+    
     await Admin.findByIdAndUpdate(req.admin._id, { twoFactorEnabled: false, twoFactorSecret: null, twoFactorBackupCodes: [] });
     await createAuditLog({ action: "TWO_FA_DISABLED", entity: "Admin", entityId: req.admin._id, entityName: req.admin.email, performedBy: req.admin, description: "2FA disabled", severity: "high" });
     successResponse(res, {}, "2FA disabled successfully");

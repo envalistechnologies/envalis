@@ -56,7 +56,6 @@ const schema = z.object({
     department: z.string().optional(),
     role: z.enum(["admin", "hr", "manager", "editor", "viewer"]),
     isActive: z.boolean(),
-    password: z.string().optional(),
     permissions: z.any(),
 });
 
@@ -76,7 +75,7 @@ const AdminForm = () => {
         resolver: zodResolver(schema),
         defaultValues: {
             firstName: "", lastName: "", email: "", phone: "", department: "",
-            role: "admin", isActive: true, password: "", permissions: buildEmpty(),
+            role: "admin", isActive: true, permissions: buildEmpty(),
         },
     });
 
@@ -90,7 +89,6 @@ const AdminForm = () => {
                 department: existing.department || "",
                 role: existing.role || "admin",
                 isActive: existing.isActive !== false,
-                password: "",
                 permissions: { ...buildEmpty(), ...(existing.permissions || {}) },
             });
         }
@@ -119,9 +117,7 @@ const AdminForm = () => {
     const onFormError = getFormErrorHandler(toast);
     const onSubmit = (data) => {
         console.log("Submitting admin form:", data);
-        const payload = { ...data };
-        if (!payload.password) delete payload.password;
-        mutation.mutate(payload);
+        mutation.mutate({ ...data });
     };
 
     const setAll = (resource, value) => {
@@ -185,19 +181,6 @@ const AdminForm = () => {
                         </CardContent>
                     </Card>
 
-                    {!isEdit && (
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Initial Password</CardTitle>
-                                <CardDescription>Admin will be asked to change on first login</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <FormField label="Password" required hint="Minimum 8 chars, mix of upper/lower/numbers">
-                                    <Input type="password" {...register("password")} placeholder="••••••••" />
-                                </FormField>
-                            </CardContent>
-                        </Card>
-                    )}
                 </TabsContent>
 
                 <TabsContent value="access" className="space-y-6 mt-4">

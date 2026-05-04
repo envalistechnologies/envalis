@@ -1,5 +1,21 @@
 import AuditLog from "../models/AuditLog.js";
 
+const AUDIT_LOG_RETENTION_LIMIT = 300;
+
+const pruneOldAuditLogs = async () => {
+    const count = await AuditLog.countDocuments();
+    if (count <= AUDIT_LOG_RETENTION_LIMIT) return;
+
+    const oldLogIds = await AuditLog.find({})
+        .sort({ createdAt: -1, _id: -1 })
+        .skip(AUDIT_LOG_RETENTION_LIMIT)
+        .select("_id");
+
+    if (!oldLogIds.length) return;
+
+    await AuditLog.deleteMany({ _id: { $in: oldLogIds.map((log) => log._id) } });
+};
+
 export const createAuditLog = async ({
     action,
     entity,
@@ -34,6 +50,7 @@ export const createAuditLog = async ({
             severity,
             errorMessage,
         });
+        await pruneOldAuditLogs();
         return log;
     } catch (error) {
         console.error("Failed to create audit log:", error.message);

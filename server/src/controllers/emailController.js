@@ -1,7 +1,7 @@
 import Employee from "../models/Employee.js";
 import EmailLog from "../models/EmailLog.js";
 import EmailTemplate from "../models/EmailTemplate.js";
-import { sendEmail, sendBulkEmail, sendEmailFromTemplate } from "../services/emailService.js";
+import { sendEmail, sendBulkEmail, sendEmailFromTemplate, emailAppUrls } from "../services/emailService.js";
 import { createAuditLog } from "../services/auditService.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { successResponse, errorResponse, buildPaginationQuery, paginatedResponse } from "../utils/apiResponse.js";
@@ -140,6 +140,10 @@ export const previewTemplate = asyncHandler(async (req, res) => {
   const template = await EmailTemplate.findOne({ _id: req.params.id, isDeleted: false });
   if (!template) return errorResponse(res, "Template not found", 404);
   const { compileTemplate } = await import("../utils/templateCompiler.js");
-  const preview = compileTemplate(template.htmlContent, variables || {});
+  const preview = compileTemplate(template.htmlContent, {
+    ...(variables || {}),
+    adminUrl: emailAppUrls.admin,
+    webappUrl: emailAppUrls.webapp,
+  });
   successResponse(res, { preview });
 });

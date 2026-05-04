@@ -17,21 +17,21 @@ export function getInitials(name = "") {
 }
 
 export function formatDate(date, opts = {}) {
-    if (!date) return "—";
+    if (!date) return "N/A";
     const d = new Date(date);
-    if (isNaN(d.getTime())) return "—";
+    if (isNaN(d.getTime())) return "N/A";
     return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", ...opts });
 }
 
 export function formatDateTime(date) {
-    if (!date) return "—";
+    if (!date) return "N/A";
     const d = new Date(date);
-    if (isNaN(d.getTime())) return "—";
+    if (isNaN(d.getTime())) return "N/A";
     return d.toLocaleString("en-US", { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
 export function formatRelative(date) {
-    if (!date) return "—";
+    if (!date) return "N/A";
     const d = new Date(date);
     const diff = (Date.now() - d.getTime()) / 1000;
     if (diff < 60) return "just now";
@@ -42,7 +42,7 @@ export function formatRelative(date) {
 }
 
 export function formatCurrency(amount, currency = "INR") {
-    if (amount == null) return "—";
+    if (amount == null) return "N/A";
     return new Intl.NumberFormat("en-IN", { style: "currency", currency, maximumFractionDigits: 0 }).format(amount);
 }
 

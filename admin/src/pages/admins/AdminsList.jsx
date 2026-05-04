@@ -96,7 +96,7 @@ const AdminsList = () => {
                 </Badge>
             ),
         },
-        { key: "department", label: "Department", render: (a) => a.department || "—" },
+        { key: "department", label: "Department", render: (a) => a.department || "N/A" },
         {
             key: "twoFactorEnabled",
             label: "2FA",

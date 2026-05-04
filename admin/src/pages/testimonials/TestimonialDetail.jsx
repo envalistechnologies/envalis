@@ -37,7 +37,7 @@ const Stat = ({ icon: Icon, label, value, color = "text-primary" }) => (
         </div>
         <div className="min-w-0">
             <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="text-sm font-semibold wrap-break-word">{value ?? "—"}</p>
+            <p className="text-sm font-semibold wrap-break-word">{value ?? "N/A"}</p>
         </div>
     </div>
 );

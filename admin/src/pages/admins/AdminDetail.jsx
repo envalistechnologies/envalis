@@ -22,7 +22,7 @@ const Row = ({ icon: Icon, label, value }) => (
         <Icon size={16} weight="duotone" className="text-muted-foreground mt-0.5" />
         <div className="flex-1 min-w-0">
             <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="text-sm font-medium truncate">{value || "—"}</p>
+            <p className="text-sm font-medium truncate">{value || "N/A"}</p>
         </div>
     </div>
 );

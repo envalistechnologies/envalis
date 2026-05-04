@@ -117,7 +117,7 @@ const ContactsList = () => {
             key: "phone",
             label: "Phone",
             render: (c) => (
-                <span className="text-xs text-muted-foreground">{c.phone || "—"}</span>
+                <span className="text-xs text-muted-foreground">{c.phone || "N/A"}</span>
             ),
         },
         {

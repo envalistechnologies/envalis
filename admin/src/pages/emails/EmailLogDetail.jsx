@@ -21,7 +21,7 @@ const Row = ({ icon: Icon, label, value, valueClassName }) => (
     <Icon size={16} weight="duotone" className="text-muted-foreground mt-0.5 shrink-0" />
     <div className="flex-1 min-w-0">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <div className={`text-sm font-medium wrap-break-word ${valueClassName || ""}`}>{value || "—"}</div>
+      <div className={`text-sm font-medium wrap-break-word ${valueClassName || ""}`}>{value || "N/A"}</div>
     </div>
   </div>
 );
@@ -97,7 +97,7 @@ const EmailLogDetail = () => {
             </div>
             <Separator />
             <Row icon={Calendar} label="Sent at" value={formatDateTime(log.sentAt)} />
-            <Row icon={Calendar} label="Delivered at" value={log.deliveredAt ? formatDateTime(log.deliveredAt) : "—"} />
+            <Row icon={Calendar} label="Delivered at" value={log.deliveredAt ? formatDateTime(log.deliveredAt) : "N/A"} />
             <Row icon={Hash} label="Recipient count" value={log.recipientCount ?? (Array.isArray(log.to) ? log.to.length : 1)} />
             <Row icon={User} label="Sent by" value={log.sentByName || (log.sentBy ? `${log.sentBy.firstName || ""} ${log.sentBy.lastName || ""}`.trim() : "System")} />
             {log.template && (
@@ -173,7 +173,7 @@ const EmailLogDetail = () => {
                 <TabsContent value="html" className="p-4">
                   <ScrollArea className="h-125 rounded-md border bg-muted/30">
                     <pre className="p-4 text-xs font-mono whitespace-pre-wrap wrap-break-word">
-                      {log.body || "—"}
+                      {log.body || "N/A"}
                     </pre>
                   </ScrollArea>
                 </TabsContent>

@@ -49,7 +49,10 @@ const SecuritySettings = () => {
     const colors = ["bg-red-500", "bg-red-400", "bg-amber-400", "bg-yellow-400", "bg-emerald-400", "bg-emerald-500"];
 
     const change = useMutation({
-        mutationFn: (data) => authAPI.changePassword(data),
+        mutationFn: (data) => authAPI.changePassword({
+            currentPassword: data.currentPassword,
+            newPassword: data.password,
+        }),
         onSuccess: () => {
             toast.success("Password changed successfully");
             reset();

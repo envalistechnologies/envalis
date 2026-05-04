@@ -3,6 +3,13 @@ import EmailLog from "../models/EmailLog.js";
 import EmailTemplate from "../models/EmailTemplate.js";
 import { compileTemplate } from "../utils/templateCompiler.js";
 
+export const emailAppUrls = {
+    admin: process.env.ADMIN_URL || "http://localhost:5174",
+    webapp: process.env.WEBAPP_URL || "http://localhost:5173",
+};
+
+const getAppUrl = (app) => emailAppUrls[app] || emailAppUrls.webapp;
+
 export const sendEmail = async ({ to, subject, html, text, cc, bcc, attachments, category, type, sentBy, templateId, templateName }) => {
     const mailOptions = {
         from: `"Enovalis" <${process.env.GMAIL_USER}>`,
@@ -61,8 +68,14 @@ export const sendEmailFromTemplate = async ({ templateId, to, variables, sentBy,
     const template = await EmailTemplate.findById(templateId);
     if (!template) throw new Error("Email template not found");
 
-    const html = compileTemplate(template.htmlContent, variables);
-    const subject = compileTemplate(template.subject, variables);
+    const templateVariables = {
+        ...(variables || {}),
+        adminUrl: getAppUrl("admin"),
+        webappUrl: getAppUrl("webapp"),
+    };
+
+    const html = compileTemplate(template.htmlContent, templateVariables);
+    const subject = compileTemplate(template.subject, templateVariables);
 
     const allTo = additionalTo ? [...(Array.isArray(to) ? to : [to]), ...additionalTo] : to;
 
@@ -85,7 +98,7 @@ export const sendEmailFromTemplate = async ({ templateId, to, variables, sentBy,
 };
 
 export const sendPasswordResetEmail = async (admin, resetToken) => {
-    const resetUrl = `${process.env.ADMIN_URL}/auth/reset-password/${resetToken}`;
+    const resetUrl = `${getAppUrl("admin")}/auth/reset-password/${resetToken}`;
     const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #1a1a2e;">Password Reset Request</h2>
@@ -101,7 +114,7 @@ export const sendPasswordResetEmail = async (admin, resetToken) => {
 };
 
 export const sendWelcomeAdminEmail = async (admin, tempPassword) => {
-    const loginUrl = `${process.env.ADMIN_URL}/auth/login`;
+    const loginUrl = `${getAppUrl("admin")}/auth/login`;
     const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #1a1a2e;">Welcome to Enovalis Admin Panel</h2>

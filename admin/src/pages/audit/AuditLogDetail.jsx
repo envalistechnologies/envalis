@@ -19,14 +19,14 @@ const Row = ({ icon: Icon, label, value }) => (
         <Icon size={15} weight="duotone" className="text-muted-foreground mt-0.5 shrink-0" />
         <div className="flex-1 min-w-0">
             <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="text-sm font-medium wrap-break-word">{value != null && value !== "" ? String(value) : "—"}</p>
+            <p className="text-sm font-medium wrap-break-word">{value != null && value !== "" ? String(value) : "N/A"}</p>
         </div>
     </div>
 );
 
 const severityBadge = (s) => {
     const map = { low: "secondary", medium: "warning", high: "destructive", critical: "destructive" };
-    return <Badge variant={map[s] || "secondary"} className="capitalize">{s || "—"}</Badge>;
+    return <Badge variant={map[s] || "secondary"} className="capitalize">{s || "N/A"}</Badge>;
 };
 
 const statusBadge = (s) => {
@@ -38,7 +38,7 @@ const statusBadge = (s) => {
     const { Icon } = cfg;
     return (
         <Badge variant={cfg.variant} className="gap-1 capitalize">
-            <Icon size={11} weight="fill" /> {s || "—"}
+            <Icon size={11} weight="fill" /> {s || "N/A"}
         </Badge>
     );
 };

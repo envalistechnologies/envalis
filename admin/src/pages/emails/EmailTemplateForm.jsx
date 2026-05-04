@@ -195,7 +195,9 @@ const EmailTemplateForm = () => {
                     <Card>
                         <CardHeader>
                             <CardTitle>Content</CardTitle>
-                            <CardDescription>Use <code className="text-xs px-1 py-0.5 rounded bg-muted">{"{{variableName}}"}</code> to insert dynamic values</CardDescription>
+                            <CardDescription>
+                                Use <code className="text-xs px-1 py-0.5 rounded bg-muted">{"{{variableName}}"}</code> to insert dynamic values, including <code className="text-xs px-1 py-0.5 rounded bg-muted">{"{{adminUrl}}"}</code> and <code className="text-xs px-1 py-0.5 rounded bg-muted">{"{{webappUrl}}"}</code>.
+                            </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <Tabs defaultValue="html">
@@ -237,7 +239,7 @@ const EmailTemplateForm = () => {
                                     <div className="rounded-md border bg-background overflow-hidden">
                                         <div className="bg-muted/40 px-4 py-2 border-b">
                                             <p className="text-xs text-muted-foreground">Subject</p>
-                                            <p className="text-sm font-medium">{renderLocal(subject, previewVars) || "—"}</p>
+                                            <p className="text-sm font-medium">{renderLocal(subject, previewVars) || "N/A"}</p>
                                         </div>
                                         <ScrollArea className="h-100">
                                             <div className="p-4 text-sm" dangerouslySetInnerHTML={{ __html: previewHtml || livePreview || "<p class='text-muted-foreground'>Start writing HTML to see a preview.</p>" }} />

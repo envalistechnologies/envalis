@@ -89,7 +89,7 @@ const PortfoliosList = () => {
                 </div>
             ),
         },
-        { key: "client", label: "Client", render: (p) => p.client?.name || "—" },
+        { key: "client", label: "Client", render: (p) => p.client?.name || "N/A" },
         {
             key: "category",
             label: "Category",
