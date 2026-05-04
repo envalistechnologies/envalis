@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
     Pencil, Trash, ChatsCircle, Calendar, Envelope, Phone, Building, Tag,
-    FolderOpen, MapPin, CheckCircle, AlertCircle, Clock,
+    FolderOpen, MapPin, CheckCircle, WarningCircleIcon, Clock,
 } from "@phosphor-icons/react";
 
 import { contactsAPI } from "@/api/contactsApi";

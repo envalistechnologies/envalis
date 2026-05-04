@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     Plus, Article as ArticleIcon, Eye, Star, FileText, DotsThreeVertical,
-    Pencil, Trash, Broadcast, BroadcastIcon, ArrowsClockwise, BookmarkSimple,
+    Pencil, Trash, BroadcastIcon, BroadcastIconIcon, ArrowsClockwise, BookmarkSimple,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
@@ -145,11 +145,11 @@ const BlogsList = () => {
                         </DropdownMenuItem>
                         {b.status === "published" ? (
                             <DropdownMenuItem onClick={() => publishMut.mutate({ id: b._id, action: "unpublish" })}>
-                                <BroadcastIcon size={14} className="mr-2" /> Unpublish
+                                <BroadcastIconIcon size={14} className="mr-2" /> Unpublish
                             </DropdownMenuItem>
                         ) : (
                             <DropdownMenuItem onClick={() => publishMut.mutate({ id: b._id, action: "publish" })}>
-                                <Broadcast size={14} className="mr-2" /> Publish
+                                <BroadcastIcon size={14} className="mr-2" /> Publish
                             </DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />
@@ -186,7 +186,7 @@ const BlogsList = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <StatsCard title="Total Blogs" value={stats.data?.total ?? 0} icon={ArticleIcon} loading={stats.isLoading} />
-                <StatsCard title="Published" value={stats.data?.published ?? 0} icon={Broadcast} iconColor="text-emerald-600" iconBg="bg-emerald-500/10" loading={stats.isLoading} />
+                <StatsCard title="Published" value={stats.data?.published ?? 0} icon={BroadcastIcon} iconColor="text-emerald-600" iconBg="bg-emerald-500/10" loading={stats.isLoading} />
                 <StatsCard title="Drafts" value={stats.data?.drafts ?? 0} icon={FileText} iconColor="text-amber-600" iconBg="bg-amber-500/10" loading={stats.isLoading} />
                 <StatsCard title="Featured" value={stats.data?.featured ?? 0} icon={Star} iconColor="text-purple-600" iconBg="bg-purple-500/10" loading={stats.isLoading} />
             </div>
