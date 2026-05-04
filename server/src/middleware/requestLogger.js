@@ -4,6 +4,12 @@ export const requestLogger = (req, res, next) => {
     req.requestTime = new Date().toISOString();
     req.ipAddress = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress;
     req.userAgent = req.headers["user-agent"] || "Unknown";
+    try {
+        const origin = req.headers.origin || req.headers.referer || "<none>";
+        console.log(`[req] ${req.method} ${req.path} origin=${origin} ip=${req.ipAddress}`);
+    } catch (err) {
+        console.log("[req] requestLogger error", err?.message || err);
+    }
     next();
 };
 
