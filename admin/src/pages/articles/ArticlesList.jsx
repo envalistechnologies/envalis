@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     Plus, Newspaper, Eye, Star, FileText, DotsThreeVertical,
-    Pencil, Trash, BroadcastIcon, ArrowsClockwise, Crown, DownloadSimple, Paperclip,
+    Pencil, Trash, Broadcast, ArrowsClockwise, Crown, DownloadSimple, Paperclip,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
@@ -149,7 +149,7 @@ const ArticlesList = () => {
                             <Pencil size={14} className="mr-2" /> Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => publishMut.mutate(a._id)}>
-                            <BroadcastIcon size={14} className="mr-2" /> {a.status === "published" ? "Unpublish" : "Publish"}
+                            <Broadcast size={14} className="mr-2" /> {a.status === "published" ? "Unpublish" : "Publish"}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -185,7 +185,7 @@ const ArticlesList = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <StatsCard title="Total Articles" value={stats.data?.total ?? 0} icon={Newspaper} loading={stats.isLoading} />
-                <StatsCard title="Published" value={stats.data?.published ?? 0} icon={BroadcastIcon} iconColor="text-emerald-600" iconBg="bg-emerald-500/10" loading={stats.isLoading} />
+                <StatsCard title="Published" value={stats.data?.published ?? 0} icon={Broadcast} iconColor="text-emerald-600" iconBg="bg-emerald-500/10" loading={stats.isLoading} />
                 <StatsCard title="Drafts" value={stats.data?.drafts ?? 0} icon={FileText} iconColor="text-amber-600" iconBg="bg-amber-500/10" loading={stats.isLoading} />
                 <StatsCard title="Premium" value={stats.data?.premium ?? 0} icon={Crown} iconColor="text-yellow-600" iconBg="bg-yellow-500/10" loading={stats.isLoading} />
             </div>

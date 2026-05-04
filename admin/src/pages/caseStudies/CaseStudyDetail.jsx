@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
     Pencil, Trash, Eye, DownloadSimple, Calendar, Star, Globe, Buildings, Users,
-    Lightbulb, Target, ChartLineUp, Quotes, ListChecks, CheckCircle, BroadcastIcon,
+    Lightbulb, Target, ChartLineUp, Quotes, ListChecks, CheckCircle, Broadcast,
 } from "@phosphor-icons/react";
 
 import { caseStudiesAPI } from "@/api/caseStudiesApi";
@@ -78,7 +78,7 @@ const CaseStudyDetail = () => {
                 actions={
                     <>
                         <Button variant="outline" onClick={() => publish.mutate()}>
-                            <BroadcastIcon size={15} className="mr-1.5" />
+                            <Broadcast size={15} className="mr-1.5" />
                             {c.status === "published" ? "Unpublish" : "Publish"}
                         </Button>
                         <Button asChild>
