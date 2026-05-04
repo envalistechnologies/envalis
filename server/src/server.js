@@ -66,7 +66,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+// Express 5 no longer accepts "*" as a route pattern; app.use(cors(...))
+// already handles preflight requests globally.
 
 
 // Security
