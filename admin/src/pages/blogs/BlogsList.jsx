@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     Plus, Article as ArticleIcon, Eye, Star, FileText, DotsThreeVertical,
-    Pencil, Trash, BroadcastIcon, BroadcastIconIcon, ArrowsClockwise, BookmarkSimple,
+    Pencil, Trash, BroadcastIcon, BroadcastIcon, ArrowsClockwise, BookmarkSimple,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
@@ -145,7 +145,7 @@ const BlogsList = () => {
                         </DropdownMenuItem>
                         {b.status === "published" ? (
                             <DropdownMenuItem onClick={() => publishMut.mutate({ id: b._id, action: "unpublish" })}>
-                                <BroadcastIconIcon size={14} className="mr-2" /> Unpublish
+                                <BroadcastIcon size={14} className="mr-2" /> Unpublish
                             </DropdownMenuItem>
                         ) : (
                             <DropdownMenuItem onClick={() => publishMut.mutate({ id: b._id, action: "publish" })}>
