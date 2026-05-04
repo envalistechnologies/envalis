@@ -47,8 +47,9 @@ const allowedOrigins = [
   "https://envalis-admin.vercel.app",
   "https://envalis.vercel.app",
   "http://localhost:5173",
-  "http://localhost:5174"
-];
+  "http://localhost:5174",
+  process.env.ADMIN_URL || "http://localhost:5174"
+].filter(Boolean);
 
 app.use(cors({
   origin: allowedOrigins,
@@ -131,11 +132,13 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-// Start server
+// Start server (only listen in development)
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Enovalis Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
-});
+if (process.env.NODE_ENV === "development") {
+  app.listen(PORT, () => {
+    console.log(`Enovalis Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+  });
+}
 
 export default app;
