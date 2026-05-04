@@ -45,7 +45,9 @@ connectDB().then(() => {
 // CORS — must be first so all responses (including rate-limit errors) carry the headers
 const allowedOrigins = [
   "https://envalis-admin.vercel.app",
+  "envalis-admin.vercel.app",
   "https://envalis.vercel.app",
+  "envalis.vercel.app",
   "http://localhost:5173",
   "http://localhost:5174",
 ];
