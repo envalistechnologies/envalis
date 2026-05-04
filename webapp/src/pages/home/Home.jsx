@@ -14,7 +14,7 @@ import Hero from "@/components/sections/Hero";
 import { publicAPI } from "@/api/publicApi.js";
 import { getInitials, truncate, formatDate } from "@/lib/utils";
 
-// ─── Trusted by logos ─────────────────────────────────────────────────────────
+// Trusted by logos
 const TrustedSection = () => (
   <section className="py-14 border-y border-border bg-muted/20">
     <div className="container mx-auto">
@@ -71,7 +71,7 @@ const ServicesSection = () => {
               return (
                 <Link key={s._id} to={`/services/${s.slug}`}
                   className="group relative p-6 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1">
-                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`w-12 h-12 rounded-2xl bg-linear-to-br ${color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <Code size={24} weight="duotone" className="text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">{s.title}</h3>
@@ -96,11 +96,11 @@ const ServicesSection = () => {
   );
 };
 
-// ─── Why Choose Us ────────────────────────────────────────────────────────────
+// Why Choose Us
 const whyUs = [
   { icon: Trophy, title: "Award-Winning Quality", desc: "Recognized by industry leaders for exceptional design and development standards." },
   { icon: Rocket, title: "Fast Delivery", desc: "Agile sprints and dedicated teams ensure we ship on time, every time." },
-  { icon: Users, title: "Expert Team", desc: "50+ seasoned professionals across design, engineering, and strategy." },
+  { icon: Users, title: "Expert Team", desc: "3+ seasoned professionals across design, engineering, and strategy." },
   { icon: Globe, title: "Global Reach", desc: "Serving clients across 20+ countries with round-the-clock support." },
 ];
 
@@ -111,7 +111,7 @@ const WhyUsSection = () => (
         <div>
           <HeroHeader
             badge="Why Envalis Technologies"
-            title="We Don't Just Build —"
+            title="We Don't Just Build"
             highlight="We Craft Excellence"
             description="Every project is a collaboration built on transparency, innovation, and a relentless pursuit of quality that exceeds expectations."
             align="left"
@@ -145,7 +145,7 @@ const WhyUsSection = () => (
             <div className="absolute inset-0 bg-dots opacity-30" />
             <div className="relative z-10 h-full flex flex-col justify-between">
               <div className="grid grid-cols-2 gap-4">
-                {[{ n: "200+", l: "Projects" }, { n: "50+", l: "Clients" }, { n: "99%", l: "Satisfaction" }, { n: "8+", l: "Years" }].map((s) => (
+                {[{ n: "8+", l: "Projects" }, { n: "7+", l: "Clients" }, { n: "99%", l: "Satisfaction" }, { n: "2+", l: "Years" }].map((s) => (
                   <div key={s.l} className="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
                     <div className="text-3xl font-black text-white">{s.n}</div>
                     <div className="text-white/60 text-sm">{s.l}</div>
@@ -183,7 +183,7 @@ const WhyUsSection = () => (
   </section>
 );
 
-// ─── Featured Work ────────────────────────────────────────────────────────────
+// Featured Work
 const FeaturedWork = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["featuredPortfolios"],
@@ -245,7 +245,7 @@ const FeaturedWork = () => {
   );
 };
 
-// ─── Testimonials ─────────────────────────────────────────────────────────────
+// Testimonials
 const TestimonialsSection = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["featuredTestimonials"],
@@ -255,7 +255,7 @@ const TestimonialsSection = () => {
   return (
     <section className="section-padding bg-muted/30">
       <div className="container mx-auto">
-        <HeroHeader badge="Client Love" title="What Our Clients" highlight="Say About Us" description="Don't take our word for it — hear from the businesses we've helped transform." className="mb-14" />
+        <HeroHeader badge="Client Love" title="What Our Clients" highlight="Say About Us" description="Don't take our word for it, hear from the businesses we've helped transform." className="mb-14" />
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading
             ? Array.from({ length: 3 }).map((_, i) => <div key={i} className="rounded-2xl border p-6 animate-pulse space-y-4"><div className="h-4 bg-muted rounded w-full" /><div className="h-4 bg-muted rounded w-2/3" /><div className="flex items-center gap-3 mt-4"><div className="w-10 h-10 bg-muted rounded-full" /><div className="space-y-1 flex-1"><div className="h-3 bg-muted rounded w-1/2" /><div className="h-3 bg-muted rounded w-1/3" /></div></div></div>)
@@ -296,7 +296,7 @@ const TestimonialsSection = () => {
   );
 };
 
-// ─── Latest Blogs ─────────────────────────────────────────────────────────────
+// Latest Blogs
 const BlogsSection = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["latestBlogs"],
@@ -354,7 +354,7 @@ const BlogsSection = () => {
   );
 };
 
-// ─── CTA Section ──────────────────────────────────────────────────────────────
+// CTA Section
 const CTASection = () => (
   <section className="section-padding bg-linear-to-br from-brand-900 via-brand-800 to-purple-900 relative overflow-hidden">
     <div className="absolute inset-0 bg-grid opacity-20" />
@@ -384,7 +384,7 @@ const CTASection = () => (
   </section>
 );
 
-// ─── HOME PAGE ────────────────────────────────────────────────────────────────
+// HOME PAGE
 const Home = () => (
   <div>
     <Hero />

@@ -4,22 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import { publicAPI } from "@/api/publicApi";
 import {
     List, X, MagnifyingGlass, CaretDown, ArrowRight,
-    Briefcase, FileMagnifyingGlass, Article, FileText, Folder,
-    Headset, Users, Phone, Star, Buildings
+    Briefcase, FileMagnifyingGlass, Article, FileText, Folder
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetClose } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import Logo from "@/assets/envalis.svg";
-
-const services = [
-    { label: "Web Development", icon: Briefcase, href: "/services/web-development" },
-    { label: "Mobile Apps", icon: Briefcase, href: "/services/mobile-apps" },
-    { label: "UI/UX Design", icon: Briefcase, href: "/services/ui-ux-design" },
-    { label: "Cloud Solutions", icon: Briefcase, href: "/services/cloud" },
-    { label: "AI & ML", icon: Briefcase, href: "/services/ai-ml" },
-    { label: "Consulting", icon: Headset, href: "/services/consulting" },
-];
 
 const resources = [
     { label: "Blog", icon: Article, href: "/blog", desc: "Tips & insights" },
@@ -38,33 +29,33 @@ const navLinks = [
     { label: "Contact", href: "/contact" },
 ];
 
-const MegaMenu = ({ type, onClose }) => {
-    const { data: servicesData } = useQuery({
-        queryKey: ["navbar-services"],
-        queryFn: () => publicAPI.getServices({ limit: 6 }).then((r) => r.data.services),
-        enabled: type === "services",
-    });
-
-    const displayServices = servicesData?.map(s => ({
+const MegaMenu = ({ type, onClose, services = [], isServicesLoading = false }) => {
+    const displayServices = services.map((s) => ({
         label: s.title,
         icon: Briefcase,
         href: `/services/${s.slug}`
-    })) || services;
+    }));
 
     if (type === "services") return (
         <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-120 bg-white rounded-2xl border border-border shadow-2xl shadow-black/10 p-6 animate-in fade-in-0 slide-in-from-top-2 duration-200 z-50">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Our Services</p>
-            <div className="grid grid-cols-2 gap-2">
-                {displayServices.map((s) => (
-                    <Link key={s.href} to={s.href} onClick={onClose}
-                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 hover:text-brand-700 hover:-translate-y-0.5 transition-all duration-200 group">
-                        <div className="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center group-hover:bg-brand-200 transition-colors">
-                            <s.icon size={16} weight="duotone" className="text-brand-600" />
-                        </div>
-                        <span className="text-sm font-medium">{s.label}</span>
-                    </Link>
-                ))}
-            </div>
+            {isServicesLoading ? (
+                <div className="py-6 text-sm text-muted-foreground">Loading services...</div>
+            ) : displayServices.length > 0 ? (
+                <div className="grid grid-cols-2 gap-2">
+                    {displayServices.map((s) => (
+                        <Link key={s.href} to={s.href} onClick={onClose}
+                            className="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 hover:text-brand-700 hover:-translate-y-0.5 transition-all duration-200 group">
+                            <div className="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center group-hover:bg-brand-200 transition-colors">
+                                <s.icon size={16} weight="duotone" className="text-brand-600" />
+                            </div>
+                            <span className="text-sm font-medium">{s.label}</span>
+                        </Link>
+                    ))}
+                </div>
+            ) : (
+                <div className="py-6 text-sm text-muted-foreground">No published services found.</div>
+            )}
             <div className="mt-4 pt-4 border-t border-border">
                 <Link to="/services" onClick={onClose} className="flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors">
                     View all services <ArrowRight size={14} />
@@ -99,9 +90,15 @@ const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [activeMega, setActiveMega] = useState(null);
+    const [mobileSection, setMobileSection] = useState(null);
     const [searchOpen, setSearchOpen] = useState(false);
     const location = useLocation();
     const megaRef = useRef(null);
+    const { data: navbarServices = [], isLoading: isServicesLoading } = useQuery({
+        queryKey: ["navbar-services"],
+        queryFn: () => publicAPI.getServices({ limit: 12, sortBy: "createdAt", sortOrder: "desc" }).then((r) => r.data.services),
+        staleTime: 5 * 60 * 1000,
+    });
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20);
@@ -112,6 +109,7 @@ const Navbar = () => {
     useEffect(() => {
         setMobileOpen(false);
         setActiveMega(null);
+        setMobileSection(null);
     }, [location]);
 
     useEffect(() => {
@@ -134,7 +132,7 @@ const Navbar = () => {
 
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-2.5 shrink-0">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
+                        <div className="w-9 h-9 rounded-xl bg-linear-to-br from-brand-600 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
                             <img src={Logo} alt="Envalis Logo" />
                         </div>
                         <div className="flex flex-col leading-none">
@@ -199,7 +197,12 @@ const Navbar = () => {
                                     </NavLink>
                                 )}
                                 {activeMega === link.mega && (
-                                    <MegaMenu type={link.mega} onClose={() => setActiveMega(null)} />
+                                    <MegaMenu
+                                        type={link.mega}
+                                        onClose={() => setActiveMega(null)}
+                                        services={navbarServices}
+                                        isServicesLoading={isServicesLoading}
+                                    />
                                 )}
                             </div>
                         ))}
@@ -262,48 +265,110 @@ const Navbar = () => {
             </div>
 
             {/* Mobile Menu */}
-            {mobileOpen && (
-                <div className="lg:hidden bg-white border-t border-border shadow-xl animate-in slide-in-from-top-2 duration-200">
-                    <nav className="container py-4 space-y-1">
-                        {navLinks.map((link) => (
-                            <div key={link.label}>
-                                <NavLink
-                                    to={link.href === "#" ? "/blog" : link.href}
-                                    className={({ isActive }) => cn(
-                                        "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors",
-                                        isActive
-                                            ? "bg-brand-50 text-brand-700"
-                                            : "text-foreground hover:bg-accent"
-                                    )}
-                                >
-                                    {link.label}
-                                    {link.mega && <CaretDown size={14} />}
-                                </NavLink>
-                                {link.mega === "services" && (
-                                    <div className="ml-4 mt-1 space-y-1">
-                                        {services.map((s) => (
-                                            <Link
-                                                key={s.href}
-                                                to={s.href}
-                                                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-muted-foreground hover:text-brand-600 hover:bg-brand-50 transition-colors"
-                                            >
-                                                <s.icon size={14} /> {s.label}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                        <div className="pt-3 border-t border-border">
-                            <Link to="/contact">
-                                <Button variant="gradient" className="w-full">
-                                    Get Started <ArrowRight size={16} />
-                                </Button>
+            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+                <SheetContent side="left" className="w-[min(88vw,20rem)] p-0 bg-white">
+                    <div className="flex h-full flex-col">
+                        <div className="flex items-center gap-3 border-b border-border px-5 py-4 pr-14">
+                            <Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-2.5">
+                                <div className="w-9 h-9 rounded-xl bg-linear-to-br from-brand-600 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
+                                    <img src={Logo} alt="Envalis Logo" />
+                                </div>
+                                <div className="flex flex-col leading-none">
+                                    <span className="text-base font-black tracking-tight text-foreground">Envalis</span>
+                                    <span className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground">Technologies</span>
+                                </div>
                             </Link>
                         </div>
-                    </nav>
-                </div>
-            )}
+
+                        <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+                            {navLinks.map((link) => (
+                                <div key={link.label} className="space-y-1">
+                                    {link.mega ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => setMobileSection(mobileSection === link.mega ? null : link.mega)}
+                                            className={cn(
+                                                "flex w-full items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                                                mobileSection === link.mega
+                                                    ? "bg-brand-50 text-brand-700"
+                                                    : "text-foreground hover:bg-accent"
+                                            )}
+                                        >
+                                            {link.label}
+                                            <CaretDown
+                                                size={14}
+                                                weight="bold"
+                                                className={cn("transition-transform duration-200", mobileSection === link.mega && "rotate-180")}
+                                            />
+                                        </button>
+                                    ) : (
+                                        <SheetClose asChild>
+                                            <NavLink
+                                                to={link.href}
+                                                className={({ isActive }) => cn(
+                                                    "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                                                    isActive
+                                                        ? "bg-brand-50 text-brand-700"
+                                                        : "text-foreground hover:bg-accent"
+                                                )}
+                                            >
+                                                {link.label}
+                                            </NavLink>
+                                        </SheetClose>
+                                    )}
+
+                                    {link.mega === "services" && mobileSection === "services" && (
+                                        <div className="ml-4 space-y-1 border-l border-border/80 pl-3 pb-2 animate-in slide-in-from-top-1 duration-200">
+                                            {isServicesLoading ? (
+                                                <div className="px-3 py-2 text-sm text-muted-foreground">Loading services...</div>
+                                            ) : navbarServices.length > 0 ? (
+                                                navbarServices.map((service) => (
+                                                    <SheetClose asChild key={service._id}>
+                                                        <Link
+                                                            to={`/services/${service.slug}`}
+                                                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-brand-600 hover:bg-brand-50 transition-colors"
+                                                        >
+                                                            <Briefcase size={14} /> {service.title}
+                                                        </Link>
+                                                    </SheetClose>
+                                                ))
+                                            ) : (
+                                                <div className="px-3 py-2 text-sm text-muted-foreground">No published services found.</div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {link.mega === "resources" && mobileSection === "resources" && (
+                                        <div className="ml-4 space-y-1 border-l border-border/80 pl-3 pb-2 animate-in slide-in-from-top-1 duration-200">
+                                            {resources.map((resource) => (
+                                                <SheetClose asChild key={resource.href}>
+                                                    <Link
+                                                        to={resource.href}
+                                                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-brand-600 hover:bg-brand-50 transition-colors"
+                                                    >
+                                                        <resource.icon size={14} />
+                                                        <span>{resource.label}</span>
+                                                    </Link>
+                                                </SheetClose>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </nav>
+
+                        <div className="border-t border-border p-4">
+                            <SheetClose asChild>
+                                <Link to="/contact">
+                                    <Button variant="gradient" className="w-full">
+                                        Get Started <ArrowRight size={16} />
+                                    </Button>
+                                </Link>
+                            </SheetClose>
+                        </div>
+                    </div>
+                </SheetContent>
+            </Sheet>
         </header>
     );
 };

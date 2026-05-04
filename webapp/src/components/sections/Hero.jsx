@@ -6,15 +6,15 @@ import { Badge } from "@/components/ui/badge";
 const highlights = ["Award-winning designs", "On-time delivery", "24/7 support", "99% client satisfaction"];
 
 const Hero = () => (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-gray-950 via-brand-950 to-purple-950">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-linear-to-br from-gray-950 via-brand-950 to-purple-950">
         {/* Animated background */}
         <div className="absolute inset-0 bg-grid opacity-40" />
         <div className="absolute inset-0 bg-dots opacity-20" />
 
         {/* Glowing orbs */}
-        <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-brand-600/15 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-600/15 rounded-full blur-3xl animate-pulse [animation-delay:1s]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-800/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-1/4 w-150 h-150 bg-brand-600/15 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-100 h-100 bg-purple-600/15 rounded-full blur-3xl animate-pulse [animation-delay:1s]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-brand-800/10 rounded-full blur-3xl" />
 
         <div className="container mx-auto relative z-10 pt-24 pb-16">
             <div className="max-w-5xl mx-auto text-center">
@@ -28,14 +28,14 @@ const Hero = () => (
                 {/* Heading */}
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-[1.05] mb-6 animate-slide-up">
                     We Build Digital
-                    <span className="block mt-2 bg-gradient-to-r from-brand-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    <span className="block mt-2 bg-linear-to-r from-brand-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                         Experiences That
                     </span>
                     <span className="block">Matter.</span>
                 </h1>
 
-                <p className="text-white/50 text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed mb-10 animate-slide-up [animation-delay:0.2s]">
-                    We're a full-service digital agency specializing in web development, mobile apps, AI solutions, and strategic consulting — helping businesses grow 10x faster.
+                <p className="text-white/50 text-xl lg:text-xl max-w-3xl mx-auto leading-relaxed mb-10 animate-slide-up [animation-delay:0.2s]">
+                    We're a full-service digital agency specializing in web development, mobile apps, AI solutions, and strategic consulting, helping businesses grow 10x faster.
                 </p>
 
                 {/* CTA Buttons */}
@@ -80,7 +80,7 @@ const Hero = () => (
         </div>
 
         {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent" />
     </section>
 );
 

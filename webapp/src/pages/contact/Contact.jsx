@@ -81,15 +81,15 @@ const Contact = () => {
                                 <div className="space-y-4 text-sm text-muted-foreground">
                                     <div className="flex items-center gap-2">
                                         <EnvelopeSimple size={16} className="text-primary" />
-                                        hello@envalis.com
+                                        envalistechnologies@gmail.com
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Phone size={16} className="text-primary" />
-                                        +91 98765 43210
+                                        +91 63547 00626
                                     </div>
                                     <div className="flex items-start gap-2">
                                         <MapPin size={16} className="text-primary mt-0.5" />
-                                        Ahmedabad, Gujarat, India
+                                        Ahmedabad, Gujarat, India - 380001
                                     </div>
                                 </div>
                             </div>

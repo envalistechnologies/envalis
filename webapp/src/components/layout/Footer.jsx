@@ -34,10 +34,9 @@ const staticFooterLinks = {
 };
 
 const socials = [
-    { icon: LinkedinLogo, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: TwitterLogo, href: "https://twitter.com", label: "Twitter" },
-    { icon: GithubLogo, href: "https://github.com", label: "GitHub" },
-    { icon: InstagramLogo, href: "https://instagram.com", label: "Instagram" },
+    { icon: LinkedinLogo, href: "https://www.linkedin.com/in/envalis-technologies/", label: "LinkedIn" },
+    { icon: TwitterLogo, href: "https://x.com/EnvalisTech01", label: "Twitter" },
+    { icon: InstagramLogo, href: "https://www.instagram.com/envalistechnologies/", label: "Instagram" },
 ];
 
 const Footer = () => {
@@ -64,8 +63,8 @@ const Footer = () => {
 
             {/* CTA Banner */}
             <div className="border-b border-white/10">
-                <div className="container mx-auto py-16">
-                    <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-brand-600 via-purple-700 to-brand-900 p-10 lg:p-14">
+                <div className="container mx-auto py-8">
+                    <div className="relative rounded-3xl overflow-hidden bg-linear-to-br from-brand-600 via-purple-700 to-brand-900 p-10 lg:p-14">
                         <div className="absolute inset-0 bg-grid opacity-20" />
                         <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/5 rounded-full" />
                         <div className="absolute -bottom-8 -left-8 w-48 h-48 bg-white/5 rounded-full" />
@@ -99,13 +98,13 @@ const Footer = () => {
             </div>
 
             {/* Main Footer */}
-            <div className="container mx-auto py-16">
+            <div className="container mx-auto py-8">
                 <div className="grid grid-cols-2 lg:grid-cols-6 gap-10">
 
                     {/* Brand Column */}
                     <div className="col-span-2">
                         <Link to="/" className="flex items-center gap-2.5 mb-6">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
+                            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-brand-500 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
                                 <img src={Logo} alt="Envalis Logo" className="w-full h-full object-contain" />
                             </div>
                             <span className="text-2xl font-black text-white">Envalis</span>
@@ -116,19 +115,19 @@ const Footer = () => {
 
                         {/* Contact Info */}
                         <div className="space-y-3 mb-6">
-                            <a href="mailto:hello@envalis.com"
+                            <a href="mailto:envalistechnologies@gmail.com"
                                 className="flex items-center gap-2.5 text-sm text-white/50 hover:text-white transition-colors">
                                 <EnvelopeSimple size={16} weight="duotone" className="text-brand-400 shrink-0" />
-                                hello@envalis.com
+                                envalistechnologies@gmail.com
                             </a>
-                            <a href="tel:+919876543210"
+                            <a href="tel:+916354700626"
                                 className="flex items-center gap-2.5 text-sm text-white/50 hover:text-white transition-colors">
                                 <Phone size={16} weight="duotone" className="text-brand-400 shrink-0" />
-                                +91 98765 43210
+                                +91 63547 00626
                             </a>
                             <p className="flex items-start gap-2.5 text-sm text-white/50">
                                 <MapPin size={16} weight="duotone" className="text-brand-400 shrink-0 mt-0.5" />
-                                Ahmedabad, Gujarat, India — 380001
+                                Ahmedabad, Gujarat, India - 380001
                             </p>
                         </div>
 
@@ -168,7 +167,7 @@ const Footer = () => {
                 </div>
 
                 {/* Newsletter */}
-                <div className="mt-14 pt-10 border-t border-white/10">
+                <div className="mt-8 pt-8 border-t border-white/10">
                     <div className="grid lg:grid-cols-2 gap-8 items-center">
                         <div>
                             <h3 className="text-lg font-bold text-white mb-1">Stay in the loop</h3>
@@ -201,8 +200,8 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar */}
-                <Separator className="mt-10 bg-white/10" />
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+                <Separator className="mt-6 bg-white/10" />
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
                     <p className="text-sm text-white/30">
                         © {new Date().getFullYear()} Envalis Technologies All rights reserved.
                     </p>
