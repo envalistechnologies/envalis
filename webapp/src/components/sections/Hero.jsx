@@ -69,7 +69,7 @@ const Hero = () => (
                     { number: "8+", label: "Projects Delivered" },
                     { number: "7+", label: "Global Clients" },
                     { number: "99%", label: "Satisfaction Rate" },
-                    { number: "2+", label: "Years of Excellence" },
+                    { number: "2", label: "Years of Excellence" },
                 ].map((stat) => (
                     <div key={stat.label} className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-5 text-center hover:bg-white/10 transition-colors">
                         <div className="text-3xl font-black text-white mb-1">{stat.number}</div>

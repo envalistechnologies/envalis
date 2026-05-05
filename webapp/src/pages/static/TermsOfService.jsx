@@ -24,7 +24,7 @@ const TermsHero = () => (
         Terms of <span className="text-emerald-300">Service</span>
       </h1>
       <p className="text-white/70 max-w-2xl text-lg leading-relaxed mb-8">
-        These terms govern your use of the Envalis website and the professional services we provide. Please read them carefully — they protect both you and us, and form the basis of a clear, fair working relationship.
+        These terms govern your use of the Envalis website and the professional services we provide. Please read them carefully they protect both you and us, and form the basis of a clear, fair working relationship.
       </p>
       <div className="flex items-center gap-3 text-white/50 text-sm">
         <Clock size={15} />
@@ -46,7 +46,7 @@ const summaryPoints = [
 
 const SummarySection = () => (
   <section className="py-12 bg-muted/30 border-b border-border">
-    <div className="container mx-auto max-w-5xl">
+    <div className="container">
       <p className="text-center text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-8">At a Glance</p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {summaryPoints.map((s) => (
@@ -129,7 +129,7 @@ const sections = [
         type: "list",
         items: [
           "All project scopes, deliverables, milestones, and timelines will be defined in a written Statement of Work (SOW) signed by both parties prior to the commencement of work.",
-          "Any changes to the agreed project scope — including additions, modifications, or reductions — must be agreed in writing by both parties through a formal Change Order process.",
+          "Any changes to the agreed project scope including additions, modifications, or reductions — must be agreed in writing by both parties through a formal Change Order process.",
           "Verbal agreements, informal emails, or messages in project management tools do not constitute a binding change to the agreed SOW unless documented in a formal Change Order.",
           "Changes to scope may affect timeline and pricing. Envalis will provide a written impact assessment for all change requests within 3 business days.",
         ],
@@ -255,7 +255,7 @@ const sections = [
       },
       {
         type: "p",
-        text: "Envalis's total cumulative liability to you for any claims arising under or related to these Terms or any Service Agreement — whether in contract, tort (including negligence), breach of statutory duty, or otherwise — shall not exceed the total fees paid by you to Envalis in the three (3) months immediately preceding the event giving rise to the claim.",
+        text: "Envalis's total cumulative liability to you for any claims arising under or related to these Terms or any Service Agreement whether in contract, tort (including negligence), breach of statutory duty, or otherwise shall not exceed the total fees paid by you to Envalis in the three (3) months immediately preceding the event giving rise to the claim.",
       },
       {
         type: "p",
@@ -452,9 +452,9 @@ const ContactBox = () => (
         <p className="text-sm text-muted-foreground leading-relaxed mb-3">
           If you have any questions, concerns, or require clarification about any aspect of these Terms of Service, please get in touch with our legal team.
         </p>
-        <a href="mailto:legal@envalis.com"
+        <a href="mailto:envalistechnologies@gmail.com"
           className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors">
-          legal@envalis.com <ArrowRight size={14} />
+          envalistechnologies@gmail.com <ArrowRight size={14} />
         </a>
       </div>
     </div>
@@ -468,7 +468,7 @@ const TermsOfService = () => (
     <SummarySection />
 
     <section className="section-padding">
-      <div className="container mx-auto max-w-6xl">
+      <div className="container">
         <div className="grid lg:grid-cols-[260px_1fr] gap-12 items-start">
           {/* Sidebar TOC */}
           <aside className="hidden lg:block">

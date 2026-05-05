@@ -145,7 +145,7 @@ const WhyUsSection = () => (
             <div className="absolute inset-0 bg-dots opacity-30" />
             <div className="relative z-10 h-full flex flex-col justify-between">
               <div className="grid grid-cols-2 gap-4">
-                {[{ n: "8+", l: "Projects" }, { n: "7+", l: "Clients" }, { n: "99%", l: "Satisfaction" }, { n: "2+", l: "Years" }].map((s) => (
+                {[{ n: "8+", l: "Projects" }, { n: "7+", l: "Clients" }, { n: "99%", l: "Satisfaction" }, { n: "2", l: "Years" }].map((s) => (
                   <div key={s.l} className="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
                     <div className="text-3xl font-black text-white">{s.n}</div>
                     <div className="text-white/60 text-sm">{s.l}</div>

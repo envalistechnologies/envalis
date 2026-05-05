@@ -23,7 +23,7 @@ const PrivacyHero = () => (
                 Privacy <span className="text-indigo-300">Policy</span>
             </h1>
             <p className="text-white/70 max-w-2xl text-lg leading-relaxed mb-8">
-                At Envalis, your privacy isn't an afterthought — it's a foundational commitment. This policy explains exactly how we collect, use, store, and protect your personal information when you interact with our website or services.
+                At Envalis, your privacy isn't an afterthought it's a foundational commitment. This policy explains exactly how we collect, use, store, and protect your personal information when you interact with our website or services.
             </p>
             <div className="flex items-center gap-3 text-white/50 text-sm">
                 <Clock size={15} />
@@ -45,7 +45,7 @@ const summaryPoints = [
 
 const SummarySection = () => (
     <section className="py-12 bg-muted/30 border-b border-border">
-        <div className="container mx-auto max-w-5xl">
+        <div className="container">
             <p className="text-center text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-8">At a Glance</p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {summaryPoints.map((s) => (
@@ -98,7 +98,7 @@ const sections = [
                     "Contact details such as your name, email address, phone number, and company name when you submit a contact or project inquiry form.",
                     "Project-related information including your goals, budget range, timelines, and any files or assets you share during the engagement process.",
                     "Communication records including emails, chat messages, and notes from calls or meetings.",
-                    "Billing and payment information when applicable (processed securely through our payment providers — we do not store raw card data).",
+                    "Billing and payment information when applicable (processed securely through our payment providers we do not store raw card data).",
                     "Newsletter subscription preferences if you opt in to receive our updates.",
                     "Account credentials if you access any client portal or project management tools we provide.",
                 ],
@@ -134,7 +134,7 @@ const sections = [
                     "Respond to your inquiries, evaluate your project requirements, and provide tailored proposals and quotations.",
                     "Deliver, manage, and improve the services outlined in our client agreements.",
                     "Send project updates, invoices, and operational communications necessary for our working relationship.",
-                    "Send marketing communications, newsletters, or case study updates — but only when you have explicitly opted in.",
+                    "Send marketing communications, newsletters, or case study updates but only when you have explicitly opted in.",
                     "Analyse website usage patterns to improve the performance, content, and user experience of our website.",
                     "Comply with applicable legal obligations, including tax and financial record-keeping requirements.",
                     "Protect against fraud, unauthorized access, and other security threats.",
@@ -191,7 +191,7 @@ const sections = [
                     "Essential Cookies: Required for the website to function correctly. These cannot be disabled and do not collect personal information.",
                     "Analytics Cookies: Help us understand how visitors interact with our website (e.g., Google Analytics). All data is aggregated and anonymised.",
                     "Preference Cookies: Remember your settings and preferences to improve your return visits.",
-                    "Marketing Cookies: Used to show relevant content and track campaign effectiveness — only with your explicit consent.",
+                    "Marketing Cookies: Used to show relevant content and track campaign effectiveness only with your explicit consent.",
                 ],
             },
             {
@@ -275,7 +275,7 @@ const sections = [
             },
             {
                 type: "p",
-                text: "To exercise any of these rights, please contact our Privacy Team at privacy@envalis.com. We will respond within 30 days. We may need to verify your identity before processing certain requests.",
+                text: "To exercise any of these rights, please contact our Privacy Team at envalistechnologies@gmail.com. We will respond within 30 days. We may need to verify your identity before processing certain requests.",
             },
         ],
     },
@@ -301,7 +301,7 @@ const sections = [
         content: [
             {
                 type: "p",
-                text: "Our website and services are not directed at individuals under the age of 18. We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please contact us immediately at privacy@envalis.com and we will delete it promptly.",
+                text: "Our website and services are not directed at individuals under the age of 18. We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please contact us immediately at envalistechnologies@gmail.com and we will delete it promptly.",
             },
         ],
     },
@@ -395,7 +395,7 @@ const PolicySection = ({ section }) => (
     </div>
 );
 
-// ─── Contact Box ──────────────────────────────────────────────────────────────
+// Contact Box
 const ContactBox = () => (
     <div className="mt-10 p-6 rounded-2xl border border-brand-200 bg-brand-50">
         <div className="flex items-start gap-4">
@@ -407,9 +407,9 @@ const ContactBox = () => (
                 <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                     If you have any questions about this Privacy Policy or how we handle your data, our Privacy Team is here to help.
                 </p>
-                <a href="mailto:privacy@envalis.com"
+                <a href="mailto:envalistechnologies@gmail.com"
                     className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors">
-                    privacy@envalis.com <ArrowRight size={14} />
+                    envalistechnologies@gmail.com <ArrowRight size={14} />
                 </a>
             </div>
         </div>
@@ -423,7 +423,7 @@ const PrivacyPolicy = () => (
         <SummarySection />
 
         <section className="section-padding">
-            <div className="container mx-auto max-w-6xl">
+            <div className="container">
                 <div className="grid lg:grid-cols-[260px_1fr] gap-12 items-start">
                     {/* Sidebar TOC */}
                     <aside className="hidden lg:block">
