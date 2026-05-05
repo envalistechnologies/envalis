@@ -11,6 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import HeroSection from "@/components/common/HeroSection";
 import PageHeader from "@/components/common/PageHeader";
 import Tags from "@/components/common/Tags";
+import RichTextContent from "@/components/common/RichTextContent";
 
 import { ErrorState, NotFoundState } from "@/components/common/LoadingStates";
 
@@ -60,6 +61,7 @@ const PortfolioDetail = () => {
         badge={portfolio.category?.replace(/_/g, " ")}
         title={portfolio.title}
         description={portfolio.description}
+        contentClassName="max-w-none"
       />
 
       {/* Back Button */}
@@ -108,11 +110,7 @@ const PortfolioDetail = () => {
             {portfolio.challenge && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">The Challenge</h2>
-                <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none prose-neutral">
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                    {portfolio.challenge}
-                  </p>
-                </div>
+                <RichTextContent html={portfolio.challenge} />
               </div>
             )}
 
@@ -120,11 +118,7 @@ const PortfolioDetail = () => {
             {portfolio.solution && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Our Solution</h2>
-                <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none prose-neutral">
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                    {portfolio.solution}
-                  </p>
-                </div>
+                <RichTextContent html={portfolio.solution} />
               </div>
             )}
 

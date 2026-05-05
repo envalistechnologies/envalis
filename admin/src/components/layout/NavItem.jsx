@@ -15,6 +15,7 @@ const NavItem = ({ item, collapsed }) => {
             className={({ isActive }) =>
                 cn(
                     "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition",
+                    collapsed && "w-full justify-center gap-0 px-0 hover:bg-sidebar-accent",
                     isActive
                         ? "bg-primary text-primary-foreground"
                         : "text-sidebar-foreground hover:bg-sidebar-accent"

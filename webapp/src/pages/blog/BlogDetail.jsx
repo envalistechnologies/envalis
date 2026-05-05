@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import HeroSection from "@/components/common/HeroSection";
 import Tags from "@/components/common/Tags";
+import RichTextContent from "@/components/common/RichTextContent";
 
 import { ErrorState, NotFoundState } from "@/components/common/LoadingStates";
 import ReadMore from "@/components/common/ReadMore";
@@ -61,6 +62,7 @@ const BlogDetail = () => {
         badge={blog.category}
         title={blog.title}
         description={blog.excerpt}
+        contentClassName="max-w-none"
       />
 
       {/* Back Button */}
@@ -88,7 +90,7 @@ const BlogDetail = () => {
                 <img
                   src={blog.coverImage.url}
                   alt={blog.title}
-                  className="w-full h-[400px] lg:h-[500px] object-cover"
+                  className="w-full h-100 lg:h-125 object-cover"
                 />
               </div>
             )}
@@ -121,10 +123,10 @@ const BlogDetail = () => {
             </div>
 
             {/* Content */}
-            <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none prose-neutral prose-a:text-brand-600 prose-img:rounded-xl mb-8">
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {blog.content}
-              </p>
+            <div>
+              {/* Render rich HTML content */}
+              {/* eslint-disable-next-line react/no-danger */}
+              <RichTextContent html={blog.content} />
             </div>
 
             {/* Tags */}
@@ -238,29 +240,7 @@ const BlogDetail = () => {
               </CardContent>
             </Card>
 
-            {/* Author */}
-            {blog.author && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Author</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center">
-                    <Avatar className="w-16 h-16 mx-auto mb-4">
-                      <AvatarFallback>
-                        {getInitials(blog.author.name || "Author")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <p className="font-semibold">{blog.author.name || "Author"}</p>
-                    {blog.author.email && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {blog.author.email}
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            {/* Sidebar author removed — author is shown under the cover image above */}
 
             {/* CTA */}
             <Card className="bg-linear-to-br from-brand-50 to-purple-50 border-brand-200">

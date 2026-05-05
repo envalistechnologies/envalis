@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import RichTextContent from "@/components/common/RichTextContent";
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -117,10 +118,7 @@ const ArticleDetail = () => {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div
-                                className="prose prose-sm md:prose-base max-w-none dark:prose-invert prose-headings:font-semibold prose-img:rounded-md"
-                                dangerouslySetInnerHTML={{ __html: article.content || "<p class='text-muted-foreground'>No content yet.</p>" }}
-                            />
+                            <RichTextContent html={article.content} />
                         </CardContent>
                     </Card>
 

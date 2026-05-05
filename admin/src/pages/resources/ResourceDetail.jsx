@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import RichTextContent from "@/components/common/RichTextContent";
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -104,10 +105,7 @@ const ResourceDetail = () => {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div
-                                    className="prose prose-sm md:prose-base max-w-none dark:prose-invert prose-headings:font-semibold prose-img:rounded-md"
-                                    dangerouslySetInnerHTML={{ __html: resource.content }}
-                                />
+                                <RichTextContent html={resource.content} />
                             </CardContent>
                         </Card>
                     )}

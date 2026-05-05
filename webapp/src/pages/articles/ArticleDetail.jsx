@@ -11,6 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HeroSection from "@/components/common/HeroSection";
 import Tags from "@/components/common/Tags";
+import RichTextContent from "@/components/common/RichTextContent";
 
 import { ErrorState, NotFoundState } from "@/components/common/LoadingStates";
 import { formatDate, getInitials } from "@/lib/utils";
@@ -61,6 +62,7 @@ const ArticleDetail = () => {
         badge={article.category.replace(/_/g, " ")}
         title={article.title}
         description={article.excerpt}
+        contentClassName="max-w-none"
       />
 
       {/* Back Button */}
@@ -88,7 +90,7 @@ const ArticleDetail = () => {
                 <img
                   src={article.coverImage.url}
                   alt={article.title}
-                  className="w-full h-[400px] lg:h-[500px] object-cover"
+                  className="w-full h-100 lg:h-125 object-cover"
                 />
               </div>
             )}
@@ -147,10 +149,9 @@ const ArticleDetail = () => {
             )}
 
             {/* Content */}
-            <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none prose-neutral prose-a:text-brand-600 prose-img:rounded-xl mb-8">
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {article.content}
-              </p>
+            <div>
+              {/* eslint-disable-next-line react/no-danger */}
+              <RichTextContent html={article.content} />
             </div>
 
             {/* Tags */}
@@ -300,29 +301,7 @@ const ArticleDetail = () => {
               </Card>
             )}
 
-            {/* Author */}
-            {article.author && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Author</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center">
-                    <Avatar className="w-16 h-16 mx-auto mb-4">
-                      <AvatarFallback>
-                        {getInitials(article.author.name || "Author")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <p className="font-semibold">{article.author.name || "Author"}</p>
-                    {article.author.email && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {article.author.email}
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            {/* Sidebar author removed — author is shown under the cover image above */}
 
             {/* CTA */}
             <Card className="bg-linear-to-br from-brand-50 to-purple-50 border-brand-200">

@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HeroSection from "@/components/common/HeroSection";
 import Tags from "@/components/common/Tags";
+import RichTextContent from "@/components/common/RichTextContent";
 
 import { ErrorState, NotFoundState } from "@/components/common/LoadingStates";
 import { formatDate } from "@/lib/utils";
@@ -59,6 +60,7 @@ const ResourceDetail = () => {
         badge={resource.resourceType || "Resource"}
         title={resource.title}
         description={resource.description}
+        contentClassName="max-w-none"
       />
 
       {/* Back Button */}
@@ -86,16 +88,15 @@ const ResourceDetail = () => {
                 <img
                   src={resource.coverImage.url}
                   alt={resource.title}
-                  className="w-full h-[400px] lg:h-[500px] object-cover"
+                  className="w-full h-100 lg:h-125 object-cover"
                 />
               </div>
             )}
 
             {/* Description */}
-            <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none prose-neutral prose-a:text-brand-600 prose-img:rounded-xl mb-8">
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {resource.content}
-              </p>
+            <div>
+              {/* eslint-disable-next-line react/no-danger */}
+              <RichTextContent html={resource.content} />
             </div>
 
             {/* Details */}

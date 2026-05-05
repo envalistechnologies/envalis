@@ -28,7 +28,7 @@ const Sidebar = ({ admin, navGroups = [], hasPermission, hasRole, handleLogout }
                     collapsed ? "w-16" : "w-64"
                 )}
             >
-                <div className="flex items-start gap-3 px-4 py-3 border-b border-sidebar-border">
+                <div className={cn("flex items-start gap-3 border-b border-sidebar-border py-3", collapsed ? "justify-center px-2" : "px-4") }>
                     {/* Logo */}
                     <div className="size-9 rounded-xl bg-sidebar-primary text-sidebar-primary-foreground flex items-center justify-center font-bold text-lg shadow-md shrink-0 mt-0.5">
                         <img src={Logo} alt="Logo" />
@@ -44,7 +44,7 @@ const Sidebar = ({ admin, navGroups = [], hasPermission, hasRole, handleLogout }
                 </div>
 
                 <ScrollArea className="flex-1 min-h-0">
-                    <nav className="px-3 py-4 space-y-5">
+                    <nav className={cn("py-4 space-y-5", collapsed ? "px-2" : "px-3")}>
                         {navGroups.map((group) => {
                             const visibleItems = group.items.filter((it) =>
                                 it.roles
@@ -81,7 +81,7 @@ const Sidebar = ({ admin, navGroups = [], hasPermission, hasRole, handleLogout }
 
                 <Separator />
 
-                <div className={cn("p-3 space-y-2", collapsed && "px-2")}>
+                <div className={cn("p-3 space-y-2", collapsed && "px-2") }>
                     {!collapsed && admin && (
                         <div className="px-3 py-2 rounded-md bg-sidebar-accent/50 text-xs">
                             <p className="font-medium truncate text-sidebar-foreground">
@@ -93,17 +93,17 @@ const Sidebar = ({ admin, navGroups = [], hasPermission, hasRole, handleLogout }
                         </div>
                     )}
 
-                    <div className="flex items-center gap-1.5">
+                    <div className={collapsed ? "flex flex-col items-stretch gap-2" : "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2"}>
                         {collapsed ? (
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button
                                         variant="ghost"
-                                        size="icon"
+                                        size="sm"
                                         onClick={handleLogout}
-                                        className="text-destructive hover:text-destructive hover:bg-destructive/10 w-full"
+                                        className="w-full justify-start px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
                                     >
-                                        <SignOut size={16} weight="bold" />
+                                        <SignOut size={16} className="shrink-0" weight="bold" />
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent side="right">Logout</TooltipContent>
@@ -124,11 +124,15 @@ const Sidebar = ({ admin, navGroups = [], hasPermission, hasRole, handleLogout }
                             <TooltipTrigger asChild>
                                 <Button
                                     variant="ghost"
-                                    size="icon"
+                                    size={collapsed ? "sm" : "icon"}
                                     onClick={() => setCollapsed((prev) => !prev)}
-                                    className="shrink-0"
+                                    className={cn(
+                                        collapsed
+                                            ? "w-full justify-start px-3 text-sidebar-foreground hover:bg-sidebar-accent"
+                                            : "shrink-0"
+                                    )}
                                 >
-                                    {collapsed ? <CaretDoubleRight size={14} /> : <CaretDoubleLeft size={14} />}
+                                    {collapsed ? <CaretDoubleRight size={14} className="shrink-0" /> : <CaretDoubleLeft size={14} className="shrink-0" />}
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent side="right">

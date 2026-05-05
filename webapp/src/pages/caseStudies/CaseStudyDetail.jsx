@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HeroSection from "@/components/common/HeroSection";
 import PageHeader from "@/components/common/PageHeader";
 import Tags from "@/components/common/Tags";
+import RichTextContent from "@/components/common/RichTextContent";
 
 import { ErrorState, NotFoundState } from "@/components/common/LoadingStates";
 
@@ -60,6 +61,7 @@ const CaseStudyDetail = () => {
         badge={caseStudy.category.replace(/_/g, " ")}
         title={caseStudy.title}
         description={caseStudy.tagline || caseStudy.overview}
+        contentClassName="max-w-none"
       />
 
       {/* Back Button */}
@@ -87,7 +89,7 @@ const CaseStudyDetail = () => {
                 <img
                   src={caseStudy.bannerImage.url}
                   alt={caseStudy.title}
-                  className="w-full h-[400px] lg:h-[500px] object-cover"
+                  className="w-full h-100 lg:h-125 object-cover"
                 />
               </div>
             )}
@@ -95,22 +97,14 @@ const CaseStudyDetail = () => {
             {/* Overview */}
             <div>
               <h2 className="text-2xl font-bold mb-4">Overview</h2>
-              <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none prose-neutral">
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                  {caseStudy.overview}
-                </p>
-              </div>
+              <RichTextContent html={caseStudy.overview} />
             </div>
 
             {/* Background */}
             {caseStudy.background && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Background</h2>
-                <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none prose-neutral">
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                    {caseStudy.background}
-                  </p>
-                </div>
+                <RichTextContent html={caseStudy.background} />
               </div>
             )}
 

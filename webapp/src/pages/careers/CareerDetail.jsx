@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HeroSection from "@/components/common/HeroSection";
 import Tags from "@/components/common/Tags";
+import RichTextContent from "@/components/common/RichTextContent";
 
 import { ErrorState, NotFoundState } from "@/components/common/LoadingStates";
 import { toast } from "sonner";
@@ -53,6 +54,7 @@ const CareerDetail = () => {
         badge={job.department}
         title={job.title}
         description={job.location}
+        contentClassName="max-w-none"
       />
 
       {/* Back Button */}
@@ -77,11 +79,7 @@ const CareerDetail = () => {
             {/* Overview */}
             <div>
               <h2 className="text-2xl font-bold mb-4">Overview</h2>
-              <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none prose-neutral">
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                  {job.description}
-                </p>
-              </div>
+              <RichTextContent html={job.description} />
             </div>
 
             {/* Responsibilities */}
