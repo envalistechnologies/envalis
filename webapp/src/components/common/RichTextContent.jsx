@@ -1,13 +1,16 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
 export const richTextContentClassName = "rich-text-content";
 
-const RichTextContent = ({ html }) => {
+const defaultEmptyHtml = "";
+
+const RichTextContent = ({ html, emptyHtml = defaultEmptyHtml, className }) => {
   return (
     <div className="mb-8">
       <div
-        className={richTextContentClassName}
-        dangerouslySetInnerHTML={{ __html: html || "" }}
+        className={cn(richTextContentClassName, className)}
+        dangerouslySetInnerHTML={{ __html: html || emptyHtml }}
       />
     </div>
   );

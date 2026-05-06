@@ -94,7 +94,7 @@ const ServiceDetail = () => {
             {/* Description */}
             <div>
               {/* eslint-disable-next-line react/no-danger */}
-              <RichTextContent html={service.content} />
+              <RichTextContent html={service.content || service.description} className="max-w-none" />
             </div>
 
             {/* Tags */}

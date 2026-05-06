@@ -108,13 +108,13 @@ const ServiceDetail = () => {
                     </Card>
 
                     {/* Content */}
-                    {service.content && (
+                    {(service.content || service.description) && (
                         <Card>
                             <CardHeader>
                                 <CardTitle className="text-base">Content</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <RichTextContent html={service.content} />
+                                <RichTextContent html={service.content || service.description} className="max-w-none" />
                             </CardContent>
                         </Card>
                     )}

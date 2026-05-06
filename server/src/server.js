@@ -35,13 +35,17 @@ const app = express();
 app.set("trust proxy", 1);
 
 // Connect DB
-connectDB().then(() => {
-  if (process.env.NODE_ENV === "development") {
-    seedSuperAdmin().catch((err) =>
-      console.error("Seed error:", err.message)
-    );
-  }
-});
+connectDB()
+  .then(() => {
+    if (process.env.NODE_ENV === "development") {
+      seedSuperAdmin().catch((err) =>
+        console.error("Seed error:", err.message)
+      );
+    }
+  })
+  .catch((err) => {
+    console.error("DB startup skipped:", err.message);
+  });
 
 const allowedOrigins = [
   "https://envalis-admin.vercel.app",
@@ -51,9 +55,32 @@ const allowedOrigins = [
   process.env.ADMIN_URL || "http://localhost:5174"
 ].filter(Boolean);
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) return false;
+  if (allowedOrigins.includes(origin)) return true;
+  return /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin);
+};
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && isAllowedOrigin(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+  }
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || isAllowedOrigin(origin)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
