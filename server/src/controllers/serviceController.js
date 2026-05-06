@@ -89,6 +89,7 @@ export const createService = asyncHandler(async (req, res) => {
     if (!serviceData.content) {
         serviceData.content = serviceData.description || "";
     }
+    console.log("[ServiceController] Creating service:", { title: serviceData.title, contentLength: serviceData.content?.length || 0, hasBlockquote: serviceData.content?.includes("<blockquote") || false });
     if (req.files?.coverImage?.[0]) {
         const img = await uploadSingleImage(req.files.coverImage[0], "envalis/services");
         serviceData.coverImage = { ...img, alt: req.body.coverImageAlt || serviceData.title };
@@ -113,6 +114,7 @@ export const updateService = asyncHandler(async (req, res) => {
     if (!body.content) {
         body.content = body.description || service.content;
     }
+    console.log("[ServiceController] Updating service:", { title: service.title, newContentLength: body.content?.length || 0, hasBlockquote: body.content?.includes("<blockquote") || false });
     const before = { title: service.title, status: service.status };
     if (req.files?.coverImage?.[0]) {
         if (service.coverImage?.publicId) await deleteMedia(service.coverImage.publicId).catch(() => {});

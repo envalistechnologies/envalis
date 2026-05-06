@@ -135,7 +135,16 @@ const ServiceForm = () => {
 
     const onFormError = getFormErrorHandler(toast);
     const onSubmit = (data) => {
-        console.log("Submitting service form:", data);
+        console.log("Submitting service form:", {
+            ...data,
+            contentLength: data.content?.length || 0,
+            contentHasBlockquote: data.content?.includes("<blockquote") || false,
+            contentPreview: data.content?.substring(0, 100) || "EMPTY",
+        });
+        if (!data.content || data.content.trim().length === 0) {
+            toast.error("Rich Content is empty! Please add content to the editor.");
+            return;
+        }
         mutation.mutate(data);
     };
 

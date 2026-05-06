@@ -111,10 +111,14 @@ const ServiceDetail = () => {
                     {(service.content || service.description) && (
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-base">Content</CardTitle>
+                                <CardTitle className="text-base">Content (Rich HTML)</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <RichTextContent html={service.content || service.description} className="max-w-none" />
+                                {service.content ? (
+                                    <RichTextContent html={service.content} className="max-w-none" />
+                                ) : (
+                                    <div className="text-sm text-muted-foreground italic">No rich content saved. Fallback to description.</div>
+                                )}
                             </CardContent>
                         </Card>
                     )}
