@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ArrowRight, ShareNetwork, Globe, GithubLogo } from "@phosphor-icons/react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ShareNetwork,
+  Globe,
+  GithubLogo,
+  Clock,
+  Users,
+  Briefcase,
+  CheckCircle,
+} from "@phosphor-icons/react";
 import { publicAPI } from "@/api/publicApi";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,24 +19,67 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import HeroSection from "@/components/common/HeroSection";
-import PageHeader from "@/components/common/PageHeader";
 import Tags from "@/components/common/Tags";
 import RichTextContent from "@/components/common/RichTextContent";
-
 import { ErrorState, NotFoundState } from "@/components/common/LoadingStates";
 
+/* Sticky section anchor helper */
+const SectionTitle = ({ children }) => (
+  <h2 className="text-xl font-bold text-foreground mb-5 flex items-center gap-3">
+    <span className="inline-block w-1 h-5 rounded-full bg-primary shrink-0" />
+    {children}
+  </h2>
+);
+
+/* Sidebar info row */
+const InfoRow = ({ icon: Icon, label, children }) => (
+  <div className="flex items-start gap-3 py-3">
+    <div className="mt-0.5 size-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+      <Icon size={15} className="text-primary" weight="bold" />
+    </div>
+    <div className="min-w-0">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">
+        {label}
+      </p>
+      {children}
+    </div>
+  </div>
+);
+
+/* Gallery image card */
+const GalleryCard = ({ image }) => (
+  <div className="group relative rounded-xl overflow-hidden border border-border bg-muted/30 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="overflow-hidden aspect-video">
+      <img
+        src={image.url}
+        alt={image.alt}
+        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+      />
+    </div>
+    {image.caption && (
+      <p className="text-xs text-muted-foreground px-3 py-2 border-t border-border bg-background/80 backdrop-blur-sm">
+        {image.caption}
+      </p>
+    )}
+  </div>
+);
+
+/* Main Component */
 const PortfolioDetail = () => {
   const { slug } = useParams();
   const [copied, setCopied] = useState(false);
 
-  const { data: portfolio, isLoading, isError } = useQuery({
+  const {
+    data: portfolio,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["portfolio", slug],
     queryFn: () => publicAPI.getPortfolio(slug).then((r) => r.data.portfolio),
   });
 
   const handleShare = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -34,7 +87,7 @@ const PortfolioDetail = () => {
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary" />
       </div>
     );
 
@@ -55,8 +108,8 @@ const PortfolioDetail = () => {
     );
 
   return (
-    <div className="bg-background">
-      {/* Hero Section */}
+    <div className="bg-background min-h-screen">
+      {/* Hero */}
       <HeroSection
         badge={portfolio.category?.replace(/_/g, " ")}
         title={portfolio.title}
@@ -64,255 +117,293 @@ const PortfolioDetail = () => {
         contentClassName="max-w-none"
       />
 
-      {/* Back Button */}
-      <div className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <Link
-            to="/portfolio"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft size={16} />
-            Back to Portfolio
-          </Link>
+      {/* Breadcrumb bar */}
+      <div className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur-md">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-12">
+            <Link
+              to="/portfolio"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft size={15} weight="bold" />
+              Back to Portfolio
+            </Link>
+
+            <div className="flex items-center gap-2">
+              {portfolio.projectUrl && (
+                <a href={portfolio.projectUrl} target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8">
+                    <Globe size={13} weight="bold" />
+                    Live
+                  </Button>
+                </a>
+              )}
+              {portfolio.githubUrl && (
+                <a href={portfolio.githubUrl} target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8">
+                    <GithubLogo size={13} weight="bold" />
+                    GitHub
+                  </Button>
+                </a>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5 text-xs h-8"
+                onClick={handleShare}
+              >
+                <ShareNetwork size={13} weight="bold" />
+                {copied ? "Copied!" : "Share"}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Content */}
+      {/* Body */}
       <section className="section-padding">
         <div className="container">
-        <div className="grid lg:grid-cols-5 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-4 space-y-8">
-            {/* Gallery */}
-            {portfolio.gallery && portfolio.gallery.length > 0 && (
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Project Gallery</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {portfolio.gallery.map((image, idx) => (
-                    <div key={idx} className="rounded-xl overflow-hidden">
-                      <img
-                        src={image.url}
-                        alt={image.alt}
-                        className="w-full h-64 object-cover"
-                      />
-                      {image.caption && (
-                        <p className="text-sm text-muted-foreground mt-2">
-                          {image.caption}
-                        </p>
-                      )}
-                    </div>
-                  ))}
+          <div className="grid lg:grid-cols-[1fr_300px] gap-10 items-start">
+
+            {/* MAIN CONTENT */}
+            <div className="space-y-12 min-w-0">
+
+              {/* Gallery */}
+              {portfolio.gallery?.length > 0 && (
+                <div>
+                  <SectionTitle>Project Gallery</SectionTitle>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {portfolio.gallery.map((image, idx) => (
+                      <GalleryCard key={idx} image={image} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Challenge */}
-            {portfolio.challenge && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">The Challenge</h2>
-                <RichTextContent html={portfolio.challenge} />
-              </div>
-            )}
+              {/* Challenge */}
+              {portfolio.challenge && (
+                <div>
+                  <SectionTitle>The Challenge</SectionTitle>
+                  <div className="prose prose-sm max-w-none text-muted-foreground leading-relaxed">
+                    <RichTextContent html={portfolio.challenge} />
+                  </div>
+                </div>
+              )}
 
-            {/* Solution */}
-            {portfolio.solution && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Our Solution</h2>
-                <RichTextContent html={portfolio.solution} />
-              </div>
-            )}
+              {/* Solution */}
+              {portfolio.solution && (
+                <div>
+                  <SectionTitle>Our Solution</SectionTitle>
+                  <div className="prose prose-sm max-w-none text-muted-foreground leading-relaxed">
+                    <RichTextContent html={portfolio.solution} />
+                  </div>
+                </div>
+              )}
 
-            {/* Results */}
-            {portfolio.results && portfolio.results.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Results & Impact</h2>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {portfolio.results.map((result, idx) => (
-                    <Card key={idx}>
-                      <CardContent className="pt-6">
-                        <p className="text-3xl font-bold text-primary mb-2">
+              {/* Results */}
+              {portfolio.results?.length > 0 && (
+                <div>
+                  <SectionTitle>Results & Impact</SectionTitle>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {portfolio.results.map((result, idx) => (
+                      <div
+                        key={idx}
+                        className="relative rounded-xl border border-border bg-card p-5 overflow-hidden group hover:border-primary/30 transition-colors"
+                      >
+                        <div className="absolute top-0 left-0 w-1 h-full bg-primary rounded-l-xl" />
+                        <p className="text-3xl font-bold text-primary mb-1 pl-3">
                           {result.value}
                         </p>
-                        <p className="font-medium mb-1">{result.metric}</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="font-semibold text-sm text-foreground pl-3 mb-0.5">
+                          {result.metric}
+                        </p>
+                        <p className="text-xs text-muted-foreground pl-3">
                           {result.description}
                         </p>
-                      </CardContent>
-                    </Card>
-                  ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Testimonial */}
-            {portfolio.testimonial && (
-              <Card className="bg-linear-to-br from-blue-50 to-purple-50 border-blue-200">
-                <CardContent className="pt-6">
-                  <p className="text-lg font-semibold italic mb-4">
-                    "{portfolio.testimonial.quote}"
-                  </p>
-                  <div className="flex items-center gap-3">
-                    {portfolio.testimonial.avatar && (
-                      <Avatar>
+              {/* Testimonial */}
+              {portfolio.testimonial && (
+                <div>
+                  <SectionTitle>Client Feedback</SectionTitle>
+                  <div className="relative rounded-xl border border-border bg-linear-to-br from-primary/5 via-background to-purple-500/5 p-6 overflow-hidden">
+                    {/* decorative quote mark */}
+                    <span
+                      aria-hidden
+                      className="absolute top-3 right-5 text-[80px] font-serif leading-none text-primary/10 select-none"
+                    >
+                      "
+                    </span>
+                    <p className="text-base font-medium italic text-foreground mb-5 relative z-10 leading-relaxed">
+                      "{portfolio.testimonial.quote}"
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="size-10 ring-2 ring-border">
                         <AvatarImage src={portfolio.testimonial.avatar} />
-                        <AvatarFallback>
+                        <AvatarFallback className="text-sm font-semibold bg-primary/10 text-primary">
                           {portfolio.testimonial.author?.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-                    )}
-                    <div>
-                      <p className="font-semibold text-sm">
-                        {portfolio.testimonial.author}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {portfolio.testimonial.designation}
-                      </p>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">
+                          {portfolio.testimonial.author}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {portfolio.testimonial.designation}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+                </div>
+              )}
+            </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Project Info */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Project Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {portfolio.client?.name && (
-                  <>
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
-                        Client
-                      </p>
-                      <p className="text-sm font-medium">{portfolio.client.name}</p>
-                    </div>
-                    <Separator />
-                  </>
-                )}
+            {/* SIDEBAR */}
+            <div className="space-y-5 lg:sticky lg:top-20">
 
-                {portfolio.category && (
-                  <>
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
-                        Category
+              {/* Project Details Card */}
+              <Card className="overflow-hidden shadow-sm">
+                <CardHeader className="pb-2 pt-4 px-5">
+                  <CardTitle className="text-sm font-semibold text-foreground">
+                    Project Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="px-5 pb-5 divide-y divide-border">
+                  {portfolio.client?.name && (
+                    <InfoRow icon={Briefcase} label="Client">
+                      <p className="text-sm font-medium text-foreground">
+                        {portfolio.client.name}
                       </p>
-                      <Badge variant="outline" className="capitalize">
+                    </InfoRow>
+                  )}
+
+                  {portfolio.category && (
+                    <InfoRow icon={CheckCircle} label="Category">
+                      <Badge variant="secondary" className="capitalize text-xs mt-0.5">
                         {portfolio.category.replace(/_/g, " ")}
                       </Badge>
-                    </div>
-                    <Separator />
-                  </>
-                )}
+                    </InfoRow>
+                  )}
 
-                {portfolio.duration && (
-                  <>
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
-                        Duration
+                  {portfolio.duration && (
+                    <InfoRow icon={Clock} label="Duration">
+                      <p className="text-sm text-foreground">{portfolio.duration}</p>
+                    </InfoRow>
+                  )}
+
+                  {portfolio.teamSize && (
+                    <InfoRow icon={Users} label="Team Size">
+                      <p className="text-sm text-foreground">
+                        {portfolio.teamSize} people
                       </p>
-                      <p className="text-sm">{portfolio.duration}</p>
-                    </div>
-                    <Separator />
-                  </>
-                )}
-
-                {portfolio.teamSize && (
-                  <>
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
-                        Team Size
-                      </p>
-                      <p className="text-sm">{portfolio.teamSize} people</p>
-                    </div>
-                    <Separator />
-                  </>
-                )}
-
-                <Button
-                  variant="outline"
-                  className="w-full gap-2"
-                  onClick={handleShare}
-                >
-                  <ShareNetwork size={16} />
-                  {copied ? "Copied!" : "Share"}
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Technologies */}
-            {portfolio.technologies && portfolio.technologies.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Technologies</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Tags tags={portfolio.technologies} />
+                    </InfoRow>
+                  )}
                 </CardContent>
               </Card>
-            )}
 
-            {/* Services */}
-            {portfolio.services && portfolio.services.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Services</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Tags tags={portfolio.services} variant="secondary" />
-                </CardContent>
-              </Card>
-            )}
+              {/* Technologies */}
+              {portfolio.technologies?.length > 0 && (
+                <Card className="shadow-sm">
+                  <CardHeader className="pb-2 pt-4 px-5">
+                    <CardTitle className="text-sm font-semibold text-foreground">
+                      Technologies
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-5 pb-5">
+                    <Tags tags={portfolio.technologies} />
+                  </CardContent>
+                </Card>
+              )}
 
-            {/* Links */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Links</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {portfolio.projectUrl && (
-                  <a
-                    href={portfolio.projectUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button variant="outline" className="w-full gap-2">
-                      <Globe size={16} /> View Live
+              {/* Services */}
+              {portfolio.services?.length > 0 && (
+                <Card className="shadow-sm">
+                  <CardHeader className="pb-2 pt-4 px-5">
+                    <CardTitle className="text-sm font-semibold text-foreground">
+                      Services
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-5 pb-5">
+                    <Tags tags={portfolio.services} variant="secondary" />
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Links */}
+              {(portfolio.projectUrl || portfolio.githubUrl) && (
+                <Card className="shadow-sm">
+                  <CardHeader className="pb-2 pt-4 px-5">
+                    <CardTitle className="text-sm font-semibold text-foreground">
+                      Links
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-5 pb-5 space-y-2">
+                    {portfolio.projectUrl && (
+                      <a
+                        href={portfolio.projectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block"
+                      >
+                        <Button
+                          variant="outline"
+                          className="w-full gap-2 justify-start text-sm"
+                        >
+                          <Globe size={15} weight="bold" />
+                          View Live Project
+                        </Button>
+                      </a>
+                    )}
+                    {portfolio.githubUrl && (
+                      <a
+                        href={portfolio.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block"
+                      >
+                        <Button
+                          variant="outline"
+                          className="w-full gap-2 justify-start text-sm"
+                        >
+                          <GithubLogo size={15} weight="bold" />
+                          View on GitHub
+                        </Button>
+                      </a>
+                    )}
+                    <Button
+                      variant="ghost"
+                      className="w-full gap-2 justify-start text-sm text-muted-foreground"
+                      onClick={handleShare}
+                    >
+                      <ShareNetwork size={15} weight="bold" />
+                      {copied ? "Link Copied!" : "Copy Link"}
                     </Button>
-                  </a>
-                )}
-                {portfolio.githubUrl && (
-                  <a
-                    href={portfolio.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button variant="outline" className="w-full gap-2">
-                      <GithubLogo size={16} /> View on GitHub
-                    </Button>
-                  </a>
-                )}
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              )}
 
-            {/* CTA */}
-            <Card className="bg-linear-to-br from-brand-50 to-purple-50 border-brand-200">
-              <CardContent className="pt-6">
-                <p className="text-sm font-medium mb-4">
-                  Want to build something like this?
+              {/* CTA Card */}
+              <div className="rounded-xl border border-primary/20 bg-linear-to-br from-primary/8 via-background to-purple-500/8 p-5">
+                <p className="text-sm font-semibold text-foreground mb-1">
+                  Like what you see?
+                </p>
+                <p className="text-xs text-muted-foreground mb-4">
+                  Let's build something amazing together.
                 </p>
                 <Link to="/contact">
-                  <Button className="w-full gap-2">
-                    Get in Touch <ArrowRight size={16} />
+                  <Button className="w-full gap-2 text-sm" size="sm">
+                    Get in Touch
+                    <ArrowRight size={14} weight="bold" />
                   </Button>
                 </Link>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+
           </div>
-        </div>
         </div>
       </section>
     </div>
