@@ -48,11 +48,13 @@ connectDB()
   });
 
 const allowedOrigins = [
+  "https://envalistechnologies.com",
+  "https://www.envalistechnologies.com",
+  "https://admin.envalistechnologies.com",
   "https://envalis-admin.vercel.app",
   "https://envalis.vercel.app",
   "http://localhost:5173",
   "http://localhost:5174",
-  process.env.ADMIN_URL || "http://localhost:5174"
 ].filter(Boolean);
 
 const isAllowedOrigin = (origin) => {
