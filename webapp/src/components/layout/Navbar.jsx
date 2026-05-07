@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { publicAPI } from "@/api/publicApi";
 import {
-    List, X, MagnifyingGlass, CaretDown, ArrowRight,
+    List, X, CaretDown, ArrowRight,
     Briefcase, FileMagnifyingGlass, Article, FileText, Folder
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
@@ -91,7 +91,6 @@ const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [activeMega, setActiveMega] = useState(null);
     const [mobileSection, setMobileSection] = useState(null);
-    const [searchOpen, setSearchOpen] = useState(false);
     const location = useLocation();
     const megaRef = useRef(null);
     const { data: navbarServices = [], isLoading: isServicesLoading } = useQuery({
@@ -210,18 +209,6 @@ const Navbar = () => {
 
                     {/* Right actions */}
                     <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => setSearchOpen(!searchOpen)}
-                            className={cn(
-                                "hidden sm:flex w-9 h-9 rounded-lg items-center justify-center transition-colors",
-                                scrolled
-                                    ? "text-foreground hover:bg-accent"
-                                    : "text-white/80 hover:bg-white/10"
-                            )}
-                        >
-                            <MagnifyingGlass size={18} weight="bold" />
-                        </button>
-
                         <Link to="/contact">
                             <Button
                                 size="sm"
@@ -248,20 +235,6 @@ const Navbar = () => {
                         </button>
                     </div>
                 </div>
-
-                {/* Search bar */}
-                {searchOpen && (
-                    <div className="pb-4 animate-in slide-in-from-top-2 duration-200">
-                        <div className="relative">
-                            <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                            <input
-                                autoFocus
-                                placeholder="Search blogs, services, case studies..."
-                                className="w-full h-12 pl-11 pr-4 bg-white rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring shadow-lg"
-                            />
-                        </div>
-                    </div>
-                )}
             </div>
 
             {/* Mobile Menu */}

@@ -5,6 +5,7 @@ import { ArrowRight, Download } from "@phosphor-icons/react";
 import { publicAPI } from "@/api/publicApi";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import HeroSection from "@/components/common/HeroSection";
 import PageHeader from "@/components/common/PageHeader";
 import { CardGrid, ItemCard } from "@/components/common/CardGrid";

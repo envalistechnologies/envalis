@@ -152,8 +152,7 @@ const BlogDetail = () => {
                   </Button>
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  <span className="font-medium">{blog.views || 0}</span> views •{" "}
-                  <span className="font-medium">{blog.likes || 0}</span> likes
+                  <span className="font-medium">{blog.views || 0}</span> views
                 </div>
               </div>
             </div>
