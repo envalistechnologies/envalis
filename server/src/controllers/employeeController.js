@@ -83,6 +83,14 @@ export const updateEmployee = asyncHandler(async (req, res) => {
   const before = { firstName: employee.firstName, lastName: employee.lastName, department: employee.department, designation: employee.designation };
   const body = { ...req.body };
   parseEmployeeBody(body);
+
+  // Handle explicit avatar removal (user removed image without replacing)
+  if (body.removeAvatar === "true" && !req.file) {
+      if (employee.avatar?.publicId) await deleteMedia(employee.avatar.publicId).catch(() => {});
+      body.avatar = null;
+  }
+  delete body.removeAvatar;
+
   if (req.file) {
     if (employee.avatar?.publicId) await deleteMedia(employee.avatar.publicId).catch(() => {});
     const img = await uploadSingleImage(req.file, "envalis/employee-avatars");

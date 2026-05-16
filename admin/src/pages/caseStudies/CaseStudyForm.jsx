@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
@@ -166,6 +166,9 @@ const CaseStudyForm = () => {
     const coverImage = watch("_coverImage");
     const bannerImage = watch("_bannerImage");
     const gallery = watch("_gallery") || [];
+    const [removedCoverImage, setRemovedCoverImage] = useState(false);
+    const [removedBannerImage, setRemovedBannerImage] = useState(false);
+    const [removedGalleryIds, setRemovedGalleryIds] = useState([]);
 
     const mutation = useMutation({
         mutationFn: (payload) => isEdit ? caseStudiesAPI.update(id, payload) : caseStudiesAPI.create(payload),
@@ -184,8 +187,11 @@ const CaseStudyForm = () => {
         };
         const fd = new FormData();
         if (coverImage instanceof File) fd.append("coverImage", coverImage);
+        if (removedCoverImage && !(coverImage instanceof File)) fd.append("removeCoverImage", "true");
         if (bannerImage instanceof File) fd.append("bannerImage", bannerImage);
+        if (removedBannerImage && !(bannerImage instanceof File)) fd.append("removeBannerImage", "true");
         gallery.forEach((g) => { if (g.file instanceof File) fd.append("gallery", g.file); });
+        if (removedGalleryIds.length > 0) fd.append("removeGalleryIds", JSON.stringify(removedGalleryIds));
         delete payload._coverImage;
         delete payload._bannerImage;
         delete payload._gallery;
@@ -287,7 +293,8 @@ const CaseStudyForm = () => {
                                             label="Cover Image"
                                             existingUrl={existing?.coverImage?.url}
                                             value={field.value}
-                                            onChange={field.onChange}
+                                            onChange={(f) => { field.onChange(f); if (f) setRemovedCoverImage(false); }}
+                                            onRemoveExisting={() => setRemovedCoverImage(true)}
                                         />
                                     )}
                                 />
@@ -299,7 +306,8 @@ const CaseStudyForm = () => {
                                             label="Banner Image"
                                             existingUrl={existing?.bannerImage?.url}
                                             value={field.value}
-                                            onChange={field.onChange}
+                                            onChange={(f) => { field.onChange(f); if (f) setRemovedBannerImage(false); }}
+                                            onRemoveExisting={() => setRemovedBannerImage(true)}
                                         />
                                     )}
                                 />
@@ -308,7 +316,7 @@ const CaseStudyForm = () => {
                                 control={control}
                                 name="_gallery"
                                 render={({ field }) => (
-                                    <MultiImageUploader value={field.value || []} onChange={field.onChange} />
+                                    <MultiImageUploader value={field.value || []} onChange={field.onChange} onRemoveExisting={(item) => { if (item.publicId) setRemovedGalleryIds((prev) => [...prev, item.publicId]); }} />
                                 )}
                             />
                         </CardContent>

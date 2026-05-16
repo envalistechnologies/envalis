@@ -112,6 +112,14 @@ export const updateTestimonial = asyncHandler(async (req, res) => {
   const testimonial = await Testimonial.findOne({ _id: req.params.id, isDeleted: false });
   if (!testimonial) return errorResponse(res, "Testimonial not found", 404);
   const data = normalizeTestimonialBody(req.body);
+
+  // Handle explicit avatar removal (user removed image without replacing)
+  if (data.removeClientAvatar === "true" && !req.file) {
+      if (testimonial.clientAvatar?.publicId) await deleteMedia(testimonial.clientAvatar.publicId).catch(() => {});
+      data.clientAvatar = null;
+  }
+  delete data.removeClientAvatar;
+
   if (req.file) {
     if (testimonial.clientAvatar?.publicId) await deleteMedia(testimonial.clientAvatar.publicId).catch(() => {});
     const img = await uploadSingleImage(req.file, "envalis/testimonials");

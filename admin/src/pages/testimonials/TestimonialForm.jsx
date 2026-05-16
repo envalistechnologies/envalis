@@ -70,6 +70,7 @@ const TestimonialForm = () => {
     const qc = useQueryClient();
 
     const [avatarFile, setAvatarFile] = useState(null);
+    const [removedAvatar, setRemovedAvatar] = useState(false);
 
     const { data: existing, isLoading } = useQuery({
         queryKey: ["testimonial", id],
@@ -118,6 +119,7 @@ const TestimonialForm = () => {
         mutationFn: (payload) => {
             const fd = buildFormData(payload);
             if (avatarFile) fd.append("clientAvatar", avatarFile);
+            if (removedAvatar && !avatarFile) fd.append("removeClientAvatar", "true");
             return isEdit ? testimonialsAPI.update(id, fd) : testimonialsAPI.create(fd);
         },
         onSuccess: () => {
@@ -257,8 +259,9 @@ const TestimonialForm = () => {
                                 <ImageUploader
                                     label="Avatar"
                                     value={avatarFile}
-                                    onChange={setAvatarFile}
+                                    onChange={(f) => { setAvatarFile(f); if (f) setRemovedAvatar(false); }}
                                     existingUrl={existing?.clientAvatar?.url}
+                                    onRemoveExisting={() => setRemovedAvatar(true)}
                                     aspect="1/1"
                                     description="Square image"
                                 />

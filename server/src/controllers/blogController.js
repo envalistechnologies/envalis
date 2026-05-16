@@ -98,6 +98,24 @@ export const updateBlog = asyncHandler(async (req, res) => {
     const body = { ...req.body };
     parseBlogBody(body);
     const before = { title: blog.title, status: blog.status };
+
+    // Handle explicit image removal (user removed image without replacing)
+    if (body.removeCoverImage === "true" && !req.files?.coverImage?.[0]) {
+        if (blog.coverImage?.publicId) await deleteMedia(blog.coverImage.publicId).catch(() => {});
+        body.coverImage = null;
+    }
+    if (body.removeGalleryIds) {
+        try {
+            const idsToRemove = JSON.parse(body.removeGalleryIds);
+            if (Array.isArray(idsToRemove) && idsToRemove.length > 0) {
+                await Promise.all(idsToRemove.map((id) => deleteMedia(id).catch(() => {})));
+                body.gallery = (blog.gallery || []).filter((g) => !idsToRemove.includes(g.publicId));
+            }
+        } catch { /* ignore parse errors */ }
+    }
+    delete body.removeCoverImage;
+    delete body.removeGalleryIds;
+
     if (req.files?.coverImage?.[0]) {
         if (blog.coverImage?.publicId) await deleteMedia(blog.coverImage.publicId).catch(() => { });
         const img = await uploadSingleImage(req.files.coverImage[0], "envalis/blogs");

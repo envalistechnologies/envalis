@@ -1,12 +1,21 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { UploadSimple, Image as ImageIcon, X, Camera } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { cn, formatBytes } from "@/lib/utils";
 
-const ImageUploader = ({ value, onChange, label = "Cover Image", description = "PNG, JPG up to 5MB", aspect = "16/9", existingUrl, className, accept = "image/*", maxSize = 5 * 1024 * 1024 }) => {
+const ImageUploader = ({ value, onChange, label = "Cover Image", description = "PNG, JPG up to 5MB", aspect = "16/9", existingUrl, onRemoveExisting, className, accept = "image/*", maxSize = 5 * 1024 * 1024 }) => {
     const inputRef = useRef(null);
     const [preview, setPreview] = useState(existingUrl || null);
+    const [isExisting, setIsExisting] = useState(!!existingUrl);
     const [error, setError] = useState("");
+
+    // Sync preview when existingUrl prop changes (e.g. after data loads)
+    useEffect(() => {
+        if (existingUrl && !value) {
+            setPreview(existingUrl);
+            setIsExisting(true);
+        }
+    }, [existingUrl, value]);
 
     const handleFile = (file) => {
         setError("");
@@ -21,12 +30,18 @@ const ImageUploader = ({ value, onChange, label = "Cover Image", description = "
         }
         const url = URL.createObjectURL(file);
         setPreview(url);
+        setIsExisting(false);
         onChange?.(file);
     };
 
     const handleClear = (e) => {
         e?.stopPropagation();
+        // If we're removing an existing server-side image, notify the parent
+        if (isExisting) {
+            onRemoveExisting?.();
+        }
         setPreview(null);
+        setIsExisting(false);
         if (inputRef.current) inputRef.current.value = "";
         onChange?.(null);
     };
@@ -72,7 +87,7 @@ const ImageUploader = ({ value, onChange, label = "Cover Image", description = "
     );
 };
 
-export const MultiImageUploader = ({ value = [], onChange, label = "Gallery", maxFiles = 12, accept = "image/*" }) => {
+export const MultiImageUploader = ({ value = [], onChange, onRemoveExisting, label = "Gallery", maxFiles = 12, accept = "image/*" }) => {
     const inputRef = useRef(null);
     const items = value;
 
@@ -85,7 +100,14 @@ export const MultiImageUploader = ({ value = [], onChange, label = "Gallery", ma
         onChange?.(next);
     };
 
-    const removeAt = (idx) => onChange?.(items.filter((_, i) => i !== idx));
+    const removeAt = (idx) => {
+        const item = items[idx];
+        // If this item has a publicId, it's an existing server-side image — notify parent
+        if (item?.publicId) {
+            onRemoveExisting?.(item);
+        }
+        onChange?.(items.filter((_, i) => i !== idx));
+    };
 
     return (
         <div className="space-y-2">

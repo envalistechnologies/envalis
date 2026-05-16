@@ -92,6 +92,13 @@ export const updateArticle = asyncHandler(async (req, res) => {
     const body = { ...req.body };
     parseArticleBody(body);
     
+    // Handle explicit image removal (user removed image without replacing)
+    if (body.removeCoverImage === "true" && !req.file) {
+        if (article.coverImage?.publicId) await deleteMedia(article.coverImage.publicId).catch(() => {});
+        body.coverImage = null;
+    }
+    delete body.removeCoverImage;
+
     if (req.file) {
         if (article.coverImage?.publicId) await deleteMedia(article.coverImage.publicId).catch(() => { });
         const img = await uploadSingleImage(req.file, "envalis/articles");

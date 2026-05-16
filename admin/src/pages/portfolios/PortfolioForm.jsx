@@ -69,6 +69,8 @@ const PortfolioForm = () => {
 
     const [coverFile, setCoverFile] = useState(null);
     const [galleryFiles, setGalleryFiles] = useState([]);
+    const [removedCoverImage, setRemovedCoverImage] = useState(false);
+    const [removedGalleryIds, setRemovedGalleryIds] = useState([]);
 
     const { data: existing, isLoading } = useQuery({
         queryKey: ["portfolio", id],
@@ -124,7 +126,9 @@ const PortfolioForm = () => {
                 isFeatured: !!existing.isFeatured,
                 order: existing.order || 0,
             });
-            setGalleryFiles((existing.gallery || []).map((g) => ({ url: g.url, preview: g.url, alt: g.alt })));
+            setGalleryFiles((existing.gallery || []).map((g) => ({ url: g.url, preview: g.url, alt: g.alt, publicId: g.publicId })));
+            setRemovedCoverImage(false);
+            setRemovedGalleryIds([]);
         }
     }, [existing, reset]);
 
@@ -132,7 +136,9 @@ const PortfolioForm = () => {
         mutationFn: (payload) => {
             const fd = buildFormData(payload);
             if (coverFile) fd.append("coverImage", coverFile);
+            if (removedCoverImage && !coverFile) fd.append("removeCoverImage", "true");
             galleryFiles.forEach((g) => { if (g.file) fd.append("gallery", g.file); });
+            if (removedGalleryIds.length > 0) fd.append("removeGalleryIds", JSON.stringify(removedGalleryIds));
             return isEdit ? portfoliosAPI.update(id, fd) : portfoliosAPI.create(fd);
         },
         onSuccess: () => {
@@ -342,8 +348,9 @@ const PortfolioForm = () => {
                             <ImageUploader
                                 label=""
                                 value={coverFile}
-                                onChange={setCoverFile}
+                                onChange={(f) => { setCoverFile(f); if (f) setRemovedCoverImage(false); }}
                                 existingUrl={existing?.coverImage?.url}
+                                onRemoveExisting={() => setRemovedCoverImage(true)}
                                 aspect="16/9"
                                 description="Recommended 1600x900"
                             />
@@ -356,7 +363,7 @@ const PortfolioForm = () => {
                             <CardDescription>Showcase screenshots</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <MultiImageUploader value={galleryFiles} onChange={setGalleryFiles} maxFiles={12} />
+                            <MultiImageUploader value={galleryFiles} onChange={setGalleryFiles} onRemoveExisting={(item) => { if (item.publicId) setRemovedGalleryIds((prev) => [...prev, item.publicId]); }} maxFiles={12} />
                         </CardContent>
                     </Card>
                 </TabsContent>

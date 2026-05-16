@@ -103,6 +103,24 @@ export const updatePortfolio = asyncHandler(async (req, res) => {
   const body = { ...req.body };
   parsePortfolioBody(body);
   const files = req.files || {};
+
+  // Handle explicit image removal (user removed image without replacing)
+  if (body.removeCoverImage === "true" && !files.coverImage?.[0]) {
+      if (portfolio.coverImage?.publicId) await deleteMedia(portfolio.coverImage.publicId).catch(() => {});
+      body.coverImage = null;
+  }
+  if (body.removeGalleryIds) {
+      try {
+          const idsToRemove = JSON.parse(body.removeGalleryIds);
+          if (Array.isArray(idsToRemove) && idsToRemove.length > 0) {
+              await Promise.all(idsToRemove.map((id) => deleteMedia(id).catch(() => {})));
+              body.gallery = (portfolio.gallery || []).filter((g) => !idsToRemove.includes(g.publicId));
+          }
+      } catch { /* ignore parse errors */ }
+  }
+  delete body.removeCoverImage;
+  delete body.removeGalleryIds;
+
   if (files.coverImage?.[0]) {
     if (portfolio.coverImage?.publicId) await deleteMedia(portfolio.coverImage.publicId).catch(() => {});
     const img = await uploadSingleImage(files.coverImage[0], "envalis/portfolios");

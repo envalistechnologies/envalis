@@ -75,6 +75,8 @@ const ServiceForm = () => {
 
     const [coverFile, setCoverFile] = useState(null);
     const [bannerFile, setBannerFile] = useState(null);
+    const [removedCoverImage, setRemovedCoverImage] = useState(false);
+    const [removedBannerImage, setRemovedBannerImage] = useState(false);
 
     const { data: existing, isLoading } = useQuery({
         queryKey: ["service", id],
@@ -124,7 +126,9 @@ const ServiceForm = () => {
         mutationFn: (data) => {
             const fd = buildFormData(data);
             if (coverFile) fd.append("coverImage", coverFile);
+            if (removedCoverImage && !coverFile) fd.append("removeCoverImage", "true");
             if (bannerFile) fd.append("bannerImage", bannerFile);
+            if (removedBannerImage && !bannerFile) fd.append("removeBannerImage", "true");
             return isEdit ? servicesAPI.update(id, fd) : servicesAPI.create(fd);
         },
         onSuccess: () => {
@@ -242,8 +246,8 @@ const ServiceForm = () => {
                             <CardTitle>Visuals</CardTitle>
                         </CardHeader>
                         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <ImageUploader label="Cover Image" value={coverFile} onChange={setCoverFile} existingUrl={existing?.coverImage?.url} />
-                            <ImageUploader label="Banner Image" value={bannerFile} onChange={setBannerFile} existingUrl={existing?.bannerImage?.url} />
+                            <ImageUploader label="Cover Image" value={coverFile} onChange={(f) => { setCoverFile(f); if (f) setRemovedCoverImage(false); }} existingUrl={existing?.coverImage?.url} onRemoveExisting={() => setRemovedCoverImage(true)} />
+                            <ImageUploader label="Banner Image" value={bannerFile} onChange={(f) => { setBannerFile(f); if (f) setRemovedBannerImage(false); }} existingUrl={existing?.bannerImage?.url} onRemoveExisting={() => setRemovedBannerImage(true)} />
                         </CardContent>
                     </Card>
 

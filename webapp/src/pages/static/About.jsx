@@ -18,7 +18,7 @@ import { getInitials } from "@/lib/utils";
 const AboutHero = () => (
   <section className="relative overflow-hidden bg-white pt-28 pb-14">
     <div className="absolute inset-0 bg-dots opacity-20" />
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-indigo-50/50 to-transparent rounded-full blur-3xl" />
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-100 bg-linear-to-b from-indigo-50/50 to-transparent rounded-full blur-3xl" />
 
     <div className="container mx-auto relative z-10 text-center">
       <Badge className="mb-6 bg-indigo-50 text-indigo-700 border-indigo-200 px-4 py-1.5 rounded-full text-sm font-medium">

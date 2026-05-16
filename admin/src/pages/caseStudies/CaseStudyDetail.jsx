@@ -92,9 +92,9 @@ const CaseStudyDetail = () => {
             />
 
             {(c.bannerImage?.url || c.coverImage?.url) && (
-                <div className="relative w-full overflow-hidden rounded-2xl bg-muted aspect-[21/9]">
+                <div className="relative w-full overflow-hidden rounded-2xl bg-muted aspect-21/9">
                     <img src={c.bannerImage?.url || c.coverImage?.url} alt={c.title} className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
                     <div className="absolute bottom-6 left-6 right-6 text-white space-y-2">
                         <div className="flex items-center gap-2 flex-wrap">
                             <Badge variant="secondary" className="capitalize">{humanize(c.category)}</Badge>

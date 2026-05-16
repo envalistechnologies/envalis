@@ -116,6 +116,19 @@ export const updateService = asyncHandler(async (req, res) => {
     }
     console.log("[ServiceController] Updating service:", { title: service.title, newContentLength: body.content?.length || 0, hasBlockquote: body.content?.includes("<blockquote") || false });
     const before = { title: service.title, status: service.status };
+
+    // Handle explicit image removal (user removed image without replacing)
+    if (body.removeCoverImage === "true" && !req.files?.coverImage?.[0]) {
+        if (service.coverImage?.publicId) await deleteMedia(service.coverImage.publicId).catch(() => {});
+        body.coverImage = null;
+    }
+    if (body.removeBannerImage === "true" && !req.files?.bannerImage?.[0]) {
+        if (service.bannerImage?.publicId) await deleteMedia(service.bannerImage.publicId).catch(() => {});
+        body.bannerImage = null;
+    }
+    delete body.removeCoverImage;
+    delete body.removeBannerImage;
+
     if (req.files?.coverImage?.[0]) {
         if (service.coverImage?.publicId) await deleteMedia(service.coverImage.publicId).catch(() => {});
         const img = await uploadSingleImage(req.files.coverImage[0], "envalis/services");

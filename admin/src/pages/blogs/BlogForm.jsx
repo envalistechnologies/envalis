@@ -56,6 +56,8 @@ const BlogForm = () => {
     const [coverFile, setCoverFile] = useState(null);
     const [galleryFiles, setGalleryFiles] = useState([]);
     const [coverExisting, setCoverExisting] = useState("");
+    const [removedCoverImage, setRemovedCoverImage] = useState(false);
+    const [removedGalleryIds, setRemovedGalleryIds] = useState([]);
 
     const { data: existing, isLoading } = useQuery({
         queryKey: ["blog", id],
@@ -88,7 +90,9 @@ const BlogForm = () => {
                 isTopPick: !!existing.isTopPick,
             });
             setCoverExisting(existing.coverImage?.url || "");
-            setGalleryFiles((existing.gallery || []).map((g) => ({ url: g.url, preview: g.url, alt: g.alt })));
+            setRemovedCoverImage(false);
+            setRemovedGalleryIds([]);
+            setGalleryFiles((existing.gallery || []).map((g) => ({ url: g.url, preview: g.url, alt: g.alt, publicId: g.publicId })));
         }
     }, [existing, reset]);
 
@@ -101,7 +105,9 @@ const BlogForm = () => {
         mutationFn: (payload) => {
             const fd = buildFormData(payload);
             if (coverFile) fd.append("coverImage", coverFile);
+            if (removedCoverImage && !coverFile) fd.append("removeCoverImage", "true");
             galleryFiles.forEach((g) => { if (g.file) fd.append("gallery", g.file); });
+            if (removedGalleryIds.length > 0) fd.append("removeGalleryIds", JSON.stringify(removedGalleryIds));
             return isEdit ? blogsAPI.update(id, fd) : blogsAPI.create(fd);
         },
         onSuccess: () => {
@@ -219,8 +225,9 @@ const BlogForm = () => {
                             <ImageUploader
                                 label=""
                                 value={coverFile}
-                                onChange={setCoverFile}
+                                onChange={(f) => { setCoverFile(f); if (f) setRemovedCoverImage(false); }}
                                 existingUrl={coverExisting}
+                                onRemoveExisting={() => setRemovedCoverImage(true)}
                                 aspect="16/9"
                                 description="Recommended 1600x900 PNG/JPG up to 5MB"
                             />
@@ -233,7 +240,7 @@ const BlogForm = () => {
                             <CardDescription>Optional images to embed in the post</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <MultiImageUploader value={galleryFiles} onChange={setGalleryFiles} maxFiles={12} />
+                            <MultiImageUploader value={galleryFiles} onChange={setGalleryFiles} onRemoveExisting={(item) => { if (item.publicId) setRemovedGalleryIds((prev) => [...prev, item.publicId]); }} maxFiles={12} />
                         </CardContent>
                     </Card>
                 </TabsContent>

@@ -82,6 +82,7 @@ const EmployeeForm = () => {
     const qc = useQueryClient();
 
     const [avatarFile, setAvatarFile] = useState(null);
+    const [removedAvatar, setRemovedAvatar] = useState(false);
 
     const { data: existing, isLoading } = useQuery({
         queryKey: ["employee", id],
@@ -158,6 +159,7 @@ const EmployeeForm = () => {
         mutationFn: (payload) => {
             const fd = buildFormData(payload);
             if (avatarFile) fd.append("avatar", avatarFile);
+            if (removedAvatar && !avatarFile) fd.append("removeAvatar", "true");
             return isEdit ? employeesAPI.update(id, fd) : employeesAPI.create(fd);
         },
         onSuccess: () => {
@@ -216,8 +218,9 @@ const EmployeeForm = () => {
                                 <ImageUploader
                                     label="Avatar"
                                     value={avatarFile}
-                                    onChange={setAvatarFile}
+                                    onChange={(f) => { setAvatarFile(f); if (f) setRemovedAvatar(false); }}
                                     existingUrl={existing?.avatar?.url}
+                                    onRemoveExisting={() => setRemovedAvatar(true)}
                                     aspect="1/1"
                                     description="Square image, up to 5MB"
                                 />

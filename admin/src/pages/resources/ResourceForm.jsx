@@ -52,6 +52,7 @@ const ResourceForm = () => {
 
     const [coverFile, setCoverFile] = useState(null);
     const [resourceFile, setResourceFile] = useState(null);
+    const [removedCoverImage, setRemovedCoverImage] = useState(false);
 
     const { data: existing, isLoading } = useQuery({
         queryKey: ["resource", id],
@@ -97,6 +98,7 @@ const ResourceForm = () => {
         mutationFn: (payload) => {
             const fd = buildFormData(payload);
             if (coverFile) fd.append("coverImage", coverFile);
+            if (removedCoverImage && !coverFile) fd.append("removeCoverImage", "true");
             if (resourceFile) fd.append("file", resourceFile);
             return isEdit ? resourcesAPI.update(id, fd) : resourcesAPI.create(fd);
         },
@@ -217,7 +219,7 @@ const ResourceForm = () => {
                             <CardTitle>Cover Image</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <ImageUploader value={coverFile} onChange={setCoverFile} existingUrl={existing?.coverImage?.url} aspect="3/4" description="Recommended portrait cover" />
+                            <ImageUploader value={coverFile} onChange={(f) => { setCoverFile(f); if (f) setRemovedCoverImage(false); }} existingUrl={existing?.coverImage?.url} onRemoveExisting={() => setRemovedCoverImage(true)} aspect="3/4" description="Recommended portrait cover" />
                         </CardContent>
                     </Card>
 

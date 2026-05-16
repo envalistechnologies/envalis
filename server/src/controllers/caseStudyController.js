@@ -91,6 +91,29 @@ export const updateCaseStudy = asyncHandler(async (req, res) => {
   const data = { ...req.body };
   ["client", "challenge", "solution", "implementation", "results", "testimonial"].forEach((k) => parseJsonField(data, k));
   const files = req.files || {};
+
+  // Handle explicit image removal (user removed image without replacing)
+  if (data.removeCoverImage === "true" && !files.coverImage?.[0]) {
+      if (caseStudy.coverImage?.publicId) await deleteMedia(caseStudy.coverImage.publicId).catch(() => {});
+      data.coverImage = null;
+  }
+  if (data.removeBannerImage === "true" && !files.bannerImage?.[0]) {
+      if (caseStudy.bannerImage?.publicId) await deleteMedia(caseStudy.bannerImage.publicId).catch(() => {});
+      data.bannerImage = null;
+  }
+  if (data.removeGalleryIds) {
+      try {
+          const idsToRemove = JSON.parse(data.removeGalleryIds);
+          if (Array.isArray(idsToRemove) && idsToRemove.length > 0) {
+              await Promise.all(idsToRemove.map((id) => deleteMedia(id).catch(() => {})));
+              data.gallery = (caseStudy.gallery || []).filter((g) => !idsToRemove.includes(g.publicId));
+          }
+      } catch { /* ignore parse errors */ }
+  }
+  delete data.removeCoverImage;
+  delete data.removeBannerImage;
+  delete data.removeGalleryIds;
+
   if (files.coverImage?.[0]) {
     if (caseStudy.coverImage?.publicId) await deleteMedia(caseStudy.coverImage.publicId).catch(() => {});
     const img = await uploadSingleImage(files.coverImage[0], "envalis/case-studies");

@@ -57,6 +57,7 @@ const ArticleForm = () => {
     const qc = useQueryClient();
 
     const [coverFile, setCoverFile] = useState(null);
+    const [removedCoverImage, setRemovedCoverImage] = useState(false);
 
     const { data: existing, isLoading } = useQuery({
         queryKey: ["article", id],
@@ -99,6 +100,7 @@ const ArticleForm = () => {
         mutationFn: (payload) => {
             const fd = buildFormData(payload);
             if (coverFile) fd.append("coverImage", coverFile);
+            if (removedCoverImage && !coverFile) fd.append("removeCoverImage", "true");
             return isEdit ? articlesAPI.update(id, fd) : articlesAPI.create(fd);
         },
         onSuccess: () => {
@@ -217,8 +219,9 @@ const ArticleForm = () => {
                             <ImageUploader
                                 label=""
                                 value={coverFile}
-                                onChange={setCoverFile}
+                                onChange={(f) => { setCoverFile(f); if (f) setRemovedCoverImage(false); }}
                                 existingUrl={existing?.coverImage?.url}
+                                onRemoveExisting={() => setRemovedCoverImage(true)}
                                 aspect="16/9"
                                 description="Recommended 1600x900 PNG/JPG up to 5MB"
                             />
