@@ -27,6 +27,12 @@ const STATUSES = ["planning", "in_progress", "review", "on_hold", "completed", "
 const PRIORITIES = ["low", "medium", "high", "critical"];
 const MILESTONE_STATUSES = ["pending", "in_progress", "completed", "delayed"];
 
+const normalizeEnum = (value, allowed) => {
+    if (!value) return "";
+    const normalized = String(value).trim().toLowerCase().replace(/[\s-]+/g, "_");
+    return allowed.includes(normalized) ? normalized : "";
+};
+
 const schema = z.object({
     name: z.string().min(1, "Required"),
     description: z.string().min(1, "Required"),
@@ -36,7 +42,7 @@ const schema = z.object({
         email: z.string().optional(),
         phone: z.string().optional(),
     }).optional(),
-    category: z.enum(CATEGORIES),
+    category: z.preprocess((val) => normalizeEnum(val, CATEGORIES) || "web_development", z.enum(CATEGORIES)),
     status: z.enum(STATUSES),
     priority: z.enum(PRIORITIES),
     startDate: z.string().min(1, "Required"),
@@ -98,7 +104,7 @@ const ProjectForm = () => {
                     email: existing.clientContact?.email || "",
                     phone: existing.clientContact?.phone || "",
                 },
-                category: existing.category || "web_development",
+                category: normalizeEnum(existing.category, CATEGORIES) || "web_development",
                 status: existing.status || "planning",
                 priority: existing.priority || "medium",
                 startDate: existing.startDate ? existing.startDate.split("T")[0] : "",
@@ -137,7 +143,11 @@ const ProjectForm = () => {
     const onFormError = getFormErrorHandler(toast);
     const onSubmit = (data) => {
         console.log("Submitting project form:", data);
-        mutation.mutate(data);
+        const payload = {
+            ...data,
+            category: normalizeEnum(data.category, CATEGORIES) || "web_development",
+        };
+        mutation.mutate(payload);
     };
 
     if (isEdit && isLoading) return <PageLoader />;
@@ -186,7 +196,7 @@ const ProjectForm = () => {
                                     control={control}
                                     name="category"
                                     render={({ field }) => (
-                                        <Select value={field.value} onValueChange={field.onChange}>
+                                        <Select value={normalizeEnum(field.value, CATEGORIES) || CATEGORIES[0]} onValueChange={field.onChange}>
                                             <SelectTrigger><SelectValue /></SelectTrigger>
                                             <SelectContent>
                                                 {CATEGORIES.map((c) => <SelectItem key={c} value={c}>{humanize(c)}</SelectItem>)}

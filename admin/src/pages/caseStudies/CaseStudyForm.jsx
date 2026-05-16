@@ -26,11 +26,17 @@ import { humanize, buildFormData, getApiErrorMessage } from "@/lib/utils";
 const CATEGORIES = ["digital_transformation", "product_development", "process_improvement", "cost_reduction", "growth", "other"];
 const STATUSES = ["draft", "published", "archived"];
 
+const normalizeEnum = (value, allowed) => {
+    if (!value) return "";
+    const normalized = String(value).trim().toLowerCase().replace(/[\s-]+/g, "_");
+    return allowed.includes(normalized) ? normalized : "";
+};
+
 const schema = z.object({
     title: z.string().min(1, "Required"),
     tagline: z.string().optional(),
     overview: z.string().min(1, "Required"),
-    category: z.string().min(1, "Required"),
+    category: z.preprocess((val) => normalizeEnum(val, CATEGORIES) || "digital_transformation", z.enum(CATEGORIES)),
     background: z.string().optional(),
     timeline: z.string().optional(),
     teamSize: z.coerce.number().optional(),
@@ -70,7 +76,6 @@ const schema = z.object({
             value: z.string().optional(),
             unit: z.string().optional(),
             improvement: z.string().optional(),
-            icon: z.string().optional(),
         })).optional(),
     }).optional(),
     testimonial: z.object({
@@ -122,7 +127,7 @@ const CaseStudyForm = () => {
                 title: existing.title || "",
                 tagline: existing.tagline || "",
                 overview: existing.overview || "",
-                category: existing.category || "digital_transformation",
+                category: normalizeEnum(existing.category, CATEGORIES) || "digital_transformation",
                 background: existing.background || "",
                 timeline: existing.timeline || "",
                 teamSize: existing.teamSize || 0,
@@ -173,7 +178,10 @@ const CaseStudyForm = () => {
     });
 
     const onSubmit = (data) => {
-        const payload = { ...data };
+        const payload = {
+            ...data,
+            category: normalizeEnum(data.category, CATEGORIES) || "digital_transformation",
+        };
         const fd = new FormData();
         if (coverImage instanceof File) fd.append("coverImage", coverImage);
         if (bannerImage instanceof File) fd.append("bannerImage", bannerImage);
@@ -237,7 +245,7 @@ const CaseStudyForm = () => {
                                         control={control}
                                         name="category"
                                         render={({ field }) => (
-                                            <Select value={field.value} onValueChange={field.onChange}>
+                                            <Select value={normalizeEnum(field.value, CATEGORIES) || CATEGORIES[0]} onValueChange={field.onChange}>
                                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                                 <SelectContent>
                                                     {CATEGORIES.map((c) => (
@@ -484,7 +492,7 @@ const CaseStudyForm = () => {
                                 <CardTitle>Key Metrics</CardTitle>
                                 <CardDescription>Quantifiable wins to display in cards</CardDescription>
                             </div>
-                            <Button type="button" size="sm" variant="outline" onClick={() => metrics.append({ label: "", value: "", unit: "", improvement: "", icon: "" })}>
+                            <Button type="button" size="sm" variant="outline" onClick={() => metrics.append({ label: "", value: "", unit: "", improvement: "" })}>
                                 <Plus size={14} className="mr-1" /> Add Metric
                             </Button>
                         </CardHeader>
@@ -500,7 +508,7 @@ const CaseStudyForm = () => {
                                             <Trash size={14} />
                                         </Button>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                                         <FormField label="Label" className="md:col-span-2">
                                             <Input {...register(`results.metrics.${idx}.label`)} placeholder="Revenue Growth" />
                                         </FormField>
@@ -510,10 +518,7 @@ const CaseStudyForm = () => {
                                         <FormField label="Unit">
                                             <Input {...register(`results.metrics.${idx}.unit`)} placeholder="%" />
                                         </FormField>
-                                        <FormField label="Icon">
-                                            <Input {...register(`results.metrics.${idx}.icon`)} placeholder="TrendUp" />
-                                        </FormField>
-                                        <FormField label="Improvement Note" className="md:col-span-5">
+                                        <FormField label="Improvement Note" className="md:col-span-4">
                                             <Input {...register(`results.metrics.${idx}.improvement`)} placeholder="vs. previous year" />
                                         </FormField>
                                     </div>

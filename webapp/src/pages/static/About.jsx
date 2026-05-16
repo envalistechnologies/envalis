@@ -213,44 +213,63 @@ const ValuesSection = () => (
 );
 
 // Services We Offer
-const aboutServices = [
-  { icon: Code, label: "Web Development", color: "from-blue-500 to-brand-600", href: "/services/web-development" },
-  { icon: DeviceMobile, label: "Mobile Apps", color: "from-brand-500 to-purple-600", href: "/services/mobile-apps" },
-  { icon: PaintBrush, label: "UI/UX Design", color: "from-purple-500 to-pink-600", href: "/services/ui-ux-design" },
-  { icon: Cloud, label: "Cloud Solutions", color: "from-cyan-500 to-blue-600", href: "/services/cloud" },
-  { icon: Robot, label: "AI & ML", color: "from-green-500 to-emerald-600", href: "/services/ai-ml" },
-  { icon: Handshake, label: "Consulting", color: "from-orange-500 to-red-600", href: "/services/consulting" },
+const SERVICE_ICONS = [Code, DeviceMobile, PaintBrush, Cloud, Robot, Handshake];
+const SERVICE_COLORS = [
+  "from-blue-500 to-brand-600",
+  "from-brand-500 to-purple-600",
+  "from-purple-500 to-pink-600",
+  "from-cyan-500 to-blue-600",
+  "from-green-500 to-emerald-600",
+  "from-orange-500 to-red-600",
 ];
 
-const ServicesStrip = () => (
-  <section className="section-padding bg-slate-50">
-    <div className="container mx-auto">
-      <HeroHeader
-        badge="What We Do"
-        title="Our Full Range of"
-        highlight="Capabilities"
-        description="End-to-end digital expertise under one roof so your project never loses momentum through handoffs."
-        className="mb-12"
-      />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {aboutServices.map((s) => (
-          <Link key={s.href} to={s.href}
-            className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-slate-100 bg-white hover:border-indigo-200 hover:shadow-lg hover:shadow-slate-100/80 transition-all duration-300 hover:-translate-y-1 text-center">
-            <div className={`w-12 h-12 rounded-2xl bg-linear-to-br ${s.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-              <s.icon size={22} weight="duotone" className="text-white" />
-            </div>
-            <span className="text-sm font-semibold group-hover:text-primary transition-colors leading-tight">{s.label}</span>
+const ServicesStrip = () => {
+  const { data } = useQuery({
+    queryKey: ["about-services"],
+    queryFn: () => publicAPI.getServices({ limit: 6, sortBy: "createdAt", sortOrder: "desc" }).then((r) => r.data.services),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const services = data || [];
+  const displayServices = services.slice(0, 6);
+
+  return (
+    <section className="section-padding bg-slate-50">
+      <div className="container mx-auto">
+        <HeroHeader
+          badge="What We Do"
+          title="Our Full Range of"
+          highlight="Capabilities"
+          description="End-to-end digital expertise under one roof so your project never loses momentum through handoffs."
+          className="mb-12"
+        />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {displayServices.map((service, idx) => {
+            const Icon = SERVICE_ICONS[idx % SERVICE_ICONS.length];
+            const color = SERVICE_COLORS[idx % SERVICE_COLORS.length];
+            return (
+              <Link
+                key={service._id || service.slug || service.title}
+                to={`/services/${service.slug}`}
+                className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-slate-100 bg-white hover:border-indigo-200 hover:shadow-lg hover:shadow-slate-100/80 transition-all duration-300 hover:-translate-y-1 text-center"
+              >
+                <div className={`w-12 h-12 rounded-2xl bg-linear-to-br ${color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon size={22} weight="duotone" className="text-white" />
+                </div>
+                <span className="text-sm font-semibold group-hover:text-primary transition-colors leading-tight">{service.title}</span>
+              </Link>
+            );
+          })}
+        </div>
+        <div className="text-center mt-8">
+          <Link to="/services">
+            <Button variant="outline" size="lg">Explore All Services <ArrowRight size={16} /></Button>
           </Link>
-        ))}
+        </div>
       </div>
-      <div className="text-center mt-8">
-        <Link to="/services">
-          <Button variant="outline" size="lg">Explore All Services <ArrowRight size={16} /></Button>
-        </Link>
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 // Team Section
 const TeamSection = () => {

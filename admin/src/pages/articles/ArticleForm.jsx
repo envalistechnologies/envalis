@@ -165,7 +165,7 @@ const ArticleForm = () => {
                                     control={control}
                                     name="category"
                                     render={({ field }) => (
-                                        <Select value={field.value} onValueChange={field.onChange}>
+                                        <Select value={normalizeCategory(field.value) || CATEGORIES[0]} onValueChange={field.onChange}>
                                             <SelectTrigger><SelectValue /></SelectTrigger>
                                             <SelectContent>
                                                 {CATEGORIES.map((c) => <SelectItem key={c} value={c}>{humanize(c)}</SelectItem>)}

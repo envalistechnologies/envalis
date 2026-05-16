@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MagnifyingGlass, CheckCircle } from "@phosphor-icons/react";
+import DashboardImage from "@/assets/dashboard.png";
 
 const HeroSection = ({
   badge,
@@ -160,7 +161,9 @@ const HeroSection = ({
                     <div className="absolute -right-6 top-12 w-44 h-56 rounded-2xl bg-white/5 shadow-lg transform -rotate-3" />
 
                     <div className="relative bg-white rounded-2xl p-4 shadow-2xl border border-border">
-                      <div className="w-full h-44 bg-linear-to-br from-brand-50 to-purple-50 rounded-lg overflow-hidden" />
+                      <div className="w-full h-44 bg-linear-to-br from-brand-50 to-purple-50 rounded-lg overflow-hidden">
+                        <img src={DashboardImage} alt="Dashboard preview" className="w-full h-full object-cover" />
+                      </div>
                       <div className="mt-4 grid gap-2">
                         <div className="h-3 bg-muted-foreground/10 rounded w-5/6" />
                         <div className="h-3 bg-muted-foreground/10 rounded w-1/2" />

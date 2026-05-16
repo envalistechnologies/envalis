@@ -56,7 +56,6 @@ const caseStudySchema = new mongoose.Schema(
                     value: String,
                     unit: String,
                     improvement: String,
-                    icon: String,
                 },
             ],
         },

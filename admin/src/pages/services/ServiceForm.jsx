@@ -24,8 +24,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { humanize, buildFormData, getFormErrorHandler, getApiErrorMessage } from "@/lib/utils";
 
-const CATEGORIES = ["consulting", "development", "design", "marketing", "support", "training", "other"];
+const CATEGORIES = ["consulting", "development", "design", "marketing", "support", "training", "analytics", "automation", "other"];
 const STATUSES = ["draft", "published", "archived"];
+
+const normalizeEnum = (value, allowed) => {
+    if (!value) return "";
+    const normalized = String(value).trim().toLowerCase().replace(/[\s-]+/g, "_");
+    return allowed.includes(normalized) ? normalized : "";
+};
 
 const schema = z.object({
     title: z.string().min(1, "Required"),
@@ -33,12 +39,10 @@ const schema = z.object({
     shortDescription: z.string().max(300).optional(),
     description: z.string().min(1, "Required"),
     content: z.string().optional(),
-    category: z.enum(CATEGORIES),
-    icon: z.string().optional(),
+    category: z.preprocess((val) => normalizeEnum(val, CATEGORIES) || "consulting", z.enum(CATEGORIES)),
     features: z.array(z.object({
         title: z.string().optional(),
         description: z.string().optional(),
-        icon: z.string().optional(),
     })).optional(),
     pricing: z.array(z.object({
         plan: z.string().optional(),
@@ -82,7 +86,7 @@ const ServiceForm = () => {
         resolver: zodResolver(schema),
         defaultValues: {
             title: "", tagline: "", shortDescription: "", description: "", content: "",
-            category: "consulting", icon: "",
+            category: "consulting",
             features: [], pricing: [], process: [], faqs: [],
             technologies: [], tags: [],
             status: "draft", isFeatured: false, order: 0,
@@ -102,8 +106,7 @@ const ServiceForm = () => {
                 shortDescription: existing.shortDescription || "",
                 description: existing.description || "",
                 content: existing.content || "",
-                category: existing.category || "consulting",
-                icon: existing.icon || "",
+                category: normalizeEnum(existing.category, CATEGORIES) || "consulting",
                 features: existing.features || [],
                 pricing: existing.pricing || [],
                 process: existing.process || [],
@@ -145,7 +148,11 @@ const ServiceForm = () => {
             toast.error("Rich Content is empty! Please add content to the editor.");
             return;
         }
-        mutation.mutate(data);
+        const payload = {
+            ...data,
+            category: normalizeEnum(data.category, CATEGORIES) || "consulting",
+        };
+        mutation.mutate(payload);
     };
 
     if (isEdit && isLoading) return <PageLoader />;
@@ -196,7 +203,7 @@ const ServiceForm = () => {
                                     control={control}
                                     name="category"
                                     render={({ field }) => (
-                                        <Select value={field.value} onValueChange={field.onChange}>
+                                        <Select value={normalizeEnum(field.value, CATEGORIES) || CATEGORIES[0]} onValueChange={field.onChange}>
                                             <SelectTrigger><SelectValue /></SelectTrigger>
                                             <SelectContent>
                                                 {CATEGORIES.map((c) => <SelectItem key={c} value={c}>{humanize(c)}</SelectItem>)}
@@ -204,9 +211,6 @@ const ServiceForm = () => {
                                         </Select>
                                     )}
                                 />
-                            </FormField>
-                            <FormField label="Icon" hint="Phosphor icon name">
-                                <Input {...register("icon")} placeholder="Code" />
                             </FormField>
                             <FormField label="Short Description" hint="Max 300 chars" className="md:col-span-2">
                                 <Textarea rows={2} {...register("shortDescription")} />
@@ -261,7 +265,7 @@ const ServiceForm = () => {
                                 <CardTitle>Features</CardTitle>
                                 <CardDescription>Highlight what's included</CardDescription>
                             </div>
-                            <Button type="button" size="sm" variant="outline" onClick={() => features.append({ title: "", description: "", icon: "" })}>
+                            <Button type="button" size="sm" variant="outline" onClick={() => features.append({ title: "", description: "" })}>
                                 <Plus size={14} className="mr-1" /> Add Feature
                             </Button>
                         </CardHeader>
@@ -277,14 +281,11 @@ const ServiceForm = () => {
                                             <Trash size={14} />
                                         </Button>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <FormField label="Title" className="md:col-span-2">
                                             <Input {...register(`features.${idx}.title`)} />
                                         </FormField>
-                                        <FormField label="Icon">
-                                            <Input {...register(`features.${idx}.icon`)} placeholder="CheckCircle" />
-                                        </FormField>
-                                        <FormField label="Description" className="md:col-span-3">
+                                        <FormField label="Description" className="md:col-span-2">
                                             <Textarea rows={2} {...register(`features.${idx}.description`)} />
                                         </FormField>
                                     </div>

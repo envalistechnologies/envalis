@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
     Pencil, Trash, Clock, Calendar, Tag, Star, Lightning, CheckCircle,
-    GraduationCap, CurrencyDollar, Lightbulb, Steps,
+    CurrencyDollar, Lightbulb, Steps,
 } from "@phosphor-icons/react";
 
 import { servicesAPI } from "@/api/servicesApi";
@@ -135,7 +135,6 @@ const ServiceDetail = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {service.features.map((f, i) => (
                                         <div key={i} className="rounded-lg border p-3 bg-muted/30">
-                                            {f.icon && <span className="text-2xl mb-2 block">{f.icon}</span>}
                                             {f.title && <p className="font-semibold text-sm mb-1">{f.title}</p>}
                                             {f.description && <p className="text-xs text-muted-foreground">{f.description}</p>}
                                         </div>
@@ -235,7 +234,6 @@ const ServiceDetail = () => {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <Stat icon={Lightning} label="Category" value={humanize(service.category)} />
-                            {service.icon && <Stat icon={GraduationCap} label="Icon" value={service.icon} />}
                             <Stat 
                                 icon={Star} 
                                 label="Featured" 

@@ -26,6 +26,12 @@ import { humanize, buildFormData, getFormErrorHandler, getApiErrorMessage } from
 const CATEGORIES = ["technology", "design", "business", "marketing", "development", "news", "tutorial", "insights", "other"];
 const STATUSES = ["draft", "published", "scheduled", "archived"];
 
+const normalizeEnum = (value, allowed) => {
+    if (!value) return "";
+    const normalized = String(value).trim().toLowerCase().replace(/[\s-]+/g, "_");
+    return allowed.includes(normalized) ? normalized : "";
+};
+
 const slugify = (s = "") => s.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
 
 const schema = z.object({
@@ -33,7 +39,7 @@ const schema = z.object({
     slug: z.string().optional(),
     excerpt: z.string().min(1, "Required").max(500),
     content: z.string().min(1, "Content is required"),
-    category: z.enum(CATEGORIES),
+    category: z.preprocess((val) => normalizeEnum(val, CATEGORIES) || "technology", z.enum(CATEGORIES)),
     tags: z.array(z.string()).default([]),
     status: z.enum(STATUSES),
     scheduledAt: z.string().optional().nullable(),
@@ -74,7 +80,7 @@ const BlogForm = () => {
                 slug: existing.slug || "",
                 excerpt: existing.excerpt || "",
                 content: existing.content || "",
-                category: existing.category || "technology",
+                category: normalizeEnum(existing.category, CATEGORIES) || "technology",
                 tags: existing.tags || [],
                 status: existing.status || "draft",
                 scheduledAt: existing.scheduledAt ? new Date(existing.scheduledAt).toISOString().slice(0, 16) : "",
@@ -109,7 +115,11 @@ const BlogForm = () => {
     const onFormError = getFormErrorHandler(toast);
     const onSubmit = (data) => {
         console.log("Submitting blog form:", data);
-        mutation.mutate(data);
+        const payload = {
+            ...data,
+            category: normalizeEnum(data.category, CATEGORIES) || "technology",
+        };
+        mutation.mutate(payload);
     };
 
     if (isEdit && isLoading) return <PageLoader />;
@@ -157,7 +167,7 @@ const BlogForm = () => {
                                     control={control}
                                     name="category"
                                     render={({ field }) => (
-                                        <Select value={field.value} onValueChange={field.onChange}>
+                                        <Select value={normalizeEnum(field.value, CATEGORIES) || CATEGORIES[0]} onValueChange={field.onChange}>
                                             <SelectTrigger><SelectValue /></SelectTrigger>
                                             <SelectContent>
                                                 {CATEGORIES.map((c) => <SelectItem key={c} value={c}>{humanize(c)}</SelectItem>)}

@@ -94,11 +94,6 @@ const ServicesList = () => {
             label: "Category",
             render: (s) => <Badge variant="secondary" className="capitalize">{humanize(s.category)}</Badge>,
         },
-        {
-            key: "icon",
-            label: "Icon",
-            render: (s) => <span className="text-xs font-mono text-muted-foreground">{s.icon || "N/A"}</span>,
-        },
         { key: "status", label: "Status", render: (s) => <StatusBadge status={s.status} /> },
         { key: "order", label: "Order", render: (s) => s.order ?? 0 },
         {
