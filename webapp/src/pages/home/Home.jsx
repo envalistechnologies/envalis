@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowRight, Code, DeviceMobile, PaintBrush, Cloud, Robot, Handshake,
-  Star, ArrowUpRight, Quotes, CheckCircle, Trophy, Users, Rocket, Globe
+  Star, ArrowUpRight, Quotes, CheckCircle, Trophy, Users, Rocket, Globe,
+  ClipboardText, ChatDots, TrendUp
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,17 +14,28 @@ import HeroHeader from "@/components/sections/HeroHeader";
 import Hero from "@/components/sections/Hero";
 import { publicAPI } from "@/api/publicApi.js";
 import { getInitials, truncate, formatDate } from "@/lib/utils";
+import figmaLogo from "@/assets/figma.png";
+import reactLogo from "@/assets/reactjs.png";
+import nextLogo from "@/assets/nextjs.png";
+import nodeLogo from "@/assets/nodejs.png";
+import tailwindLogo from "@/assets/tailwindcss.png";
+import canvaLogo from "@/assets/canva.png";
+import vscodeLogo from "@/assets/vscode.png";
+import gitLogo from "@/assets/git.png";
 
-// Trusted by logos
+// Trusted by logos — horizontal brand strip
+const trustedBrands = ["IRVIUM", "LoopSystem", "GGO", "LOCIO", "TechNova", "PixelForge"];
 const TrustedSection = () => (
-  <section className="py-14 border-y border-border bg-muted/20">
+  <section className="py-10 bg-white border-b border-slate-100">
     <div className="container mx-auto">
-      <p className="text-center text-sm text-muted-foreground font-medium mb-8 uppercase tracking-widest">
-        Trusted by industry leaders
+      <p className="text-center text-[11px] text-muted-foreground font-medium mb-6 tracking-[0.15em]">
+        Trusted by the globe's leading innovative enterprises
       </p>
-      <div className="flex items-center justify-center flex-wrap gap-x-12 gap-y-6 opacity-50 grayscale">
-        {["TechCorp", "InnovateCo", "BuildIt", "DataStream", "CloudBase", "NextGen", "VisionAI", "ScalePro"].map((name) => (
-          <div key={name} className="text-xl font-black text-foreground tracking-tight">{name}</div>
+      <div className="flex items-center justify-center flex-wrap gap-x-10 gap-y-4">
+        {trustedBrands.map((name) => (
+          <div key={name} className="text-base font-bold text-slate-300 tracking-tight hover:text-slate-500 transition-colors cursor-default px-3 py-1.5 rounded-xl border border-slate-100 bg-slate-50/50">
+            {name}
+          </div>
         ))}
       </div>
     </div>
@@ -39,6 +51,89 @@ const defaultColors = [
   "from-orange-500 to-red-600",
 ];
 
+// Process Steps — "Simple Steps, Big Creative Impact"
+const processSteps = [
+  {
+    step: "Step 01",
+    timeline: "Week 1",
+    icon: ClipboardText,
+    title: "Discover & Plan",
+    desc: "We start with a deep-dive into your business goals, audience, and competitive landscape to craft a clear strategy and roadmap.",
+    deliverables: ["Discovery workshop", "User insights", "Project roadmap"],
+    color: "from-brand-500 to-blue-500",
+    bgColor: "bg-brand-50",
+  },
+  {
+    step: "Step 02",
+    timeline: "Weeks 2-4",
+    icon: ChatDots,
+    title: "Design & Build",
+    desc: "Our designers and engineers work in agile sprints, delivering pixel-perfect designs and clean, scalable code on a rapid timeline.",
+    deliverables: ["UI/UX design", "Interactive prototype", "Sprint builds"],
+    color: "from-purple-500 to-pink-500",
+    bgColor: "bg-purple-50",
+  },
+  {
+    step: "Step 03",
+    timeline: "Weeks 5+",
+    icon: TrendUp,
+    title: "Launch & Scale",
+    desc: "We deploy, test, and optimize — then provide ongoing support to help your product grow with real users and real data.",
+    deliverables: ["Go-live support", "Performance tuning", "Growth analytics"],
+    color: "from-orange-500 to-red-500",
+    bgColor: "bg-orange-50",
+  },
+];
+
+const ProcessSection = () => (
+  <section className="section-padding bg-white">
+    <div className="container mx-auto">
+      <HeroHeader
+        title="Simple Steps,"
+        highlight="Big Creative Impact"
+        description="We follow a straightforward process, turning your ideas into impactful solutions with clear steps and creative collaboration every time."
+        className="mb-16"
+        size="lg"
+      />
+      <div className="grid md:grid-cols-3 gap-8">
+        {processSteps.map((step, idx) => (
+          <div key={step.title} className="group relative">
+            {/* Step card */}
+            <div className={`rounded-3xl ${step.bgColor} p-6 pb-8 hover:shadow-xl hover:shadow-brand-100/50 transition-all duration-300 hover:-translate-y-1 border border-transparent hover:border-brand-100`}>
+              <div className="flex items-center justify-between mb-4 text-xs font-semibold text-muted-foreground">
+                <span className="uppercase tracking-widest">{step.step}</span>
+                <span className="px-2.5 py-1 rounded-full bg-white/70 border border-white/60">{step.timeline}</span>
+              </div>
+              {/* Visual mock area */}
+              <div className="relative h-44 rounded-2xl bg-white shadow-sm border border-slate-100 mb-6 overflow-hidden flex items-center justify-center">
+                <div className={`w-14 h-14 rounded-2xl bg-linear-to-br ${step.color} flex items-center justify-center shadow-lg`}>
+                  <step.icon size={28} weight="duotone" className="text-white" />
+                </div>
+                {/* Floating mini elements */}
+                <div className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center animate-float-slow">
+                  <div className="w-3 h-3 rounded-full bg-linear-to-br from-brand-400 to-purple-400" />
+                </div>
+                <div className="absolute bottom-3 left-3 w-16 h-2 rounded-full bg-slate-100" />
+                <div className="absolute bottom-3 left-3 mt-2 w-10 h-2 rounded-full bg-slate-100 translate-y-3" />
+              </div>
+              <h3 className="text-lg font-bold text-foreground mb-2">{step.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+              <div className="mt-4 space-y-2">
+                {step.deliverables.map((item) => (
+                  <div key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-400" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 const ServicesSection = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["featuredServices"],
@@ -46,7 +141,7 @@ const ServicesSection = () => {
   });
 
   return (
-    <section className="section-padding">
+    <section className="section-padding bg-white">
       <div className="container mx-auto">
         <HeroHeader
           badge="What We Do"
@@ -58,7 +153,7 @@ const ServicesSection = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading ? (
             Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-2xl border p-6 animate-pulse">
+              <div key={i} className="rounded-2xl border bg-white p-6 animate-pulse">
                 <div className="w-12 h-12 bg-muted rounded-2xl mb-4" />
                 <div className="h-5 bg-muted rounded w-1/2 mb-2" />
                 <div className="h-4 bg-muted rounded w-full mb-1" />
@@ -70,13 +165,13 @@ const ServicesSection = () => {
               const color = defaultColors[idx % defaultColors.length];
               return (
                 <Link key={s._id} to={`/services/${s.slug}`}
-                  className="group relative p-6 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1">
+                  className="group relative p-6 rounded-2xl border border-border/60 bg-white hover:border-brand-200 hover:shadow-xl hover:shadow-brand-50 transition-all duration-300 hover:-translate-y-1">
                   <div className={`w-12 h-12 rounded-2xl bg-linear-to-br ${color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <Code size={24} weight="duotone" className="text-white" />
                   </div>
-                  <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">{s.title}</h3>
+                  <h3 className="text-lg font-bold mb-2 group-hover:text-brand-600 transition-colors">{s.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">{s.shortDescription}</p>
-                  <div className="flex items-center gap-1 mt-4 text-sm font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-1 mt-4 text-sm font-semibold text-brand-600 opacity-0 group-hover:opacity-100 transition-opacity">
                     Learn more <ArrowRight size={14} />
                   </div>
                 </Link>
@@ -88,7 +183,7 @@ const ServicesSection = () => {
         </div>
         <div className="text-center mt-10">
           <Link to="/services">
-            <Button variant="outline" size="lg">View All Services <ArrowRight size={16} /></Button>
+            <Button variant="outline" size="lg" className="rounded-full">View All Services <ArrowRight size={16} /></Button>
           </Link>
         </div>
       </div>
@@ -96,7 +191,7 @@ const ServicesSection = () => {
   );
 };
 
-// Why Choose Us
+// Key Benefits — lavender/purple background section
 const whyUs = [
   { icon: Trophy, title: "Award-Winning Quality", desc: "Recognized by industry leaders for exceptional design and development standards." },
   { icon: Rocket, title: "Fast Delivery", desc: "Agile sprints and dedicated teams ensure we ship on time, every time." },
@@ -105,74 +200,97 @@ const whyUs = [
 ];
 
 const WhyUsSection = () => (
-  <section className="section-padding bg-muted/30">
-    <div className="container mx-auto">
+  <section className="section-padding relative overflow-hidden">
+    {/* Lavender/purple gradient background */}
+    <div className="absolute inset-0 bg-linear-to-b from-brand-50/60 via-purple-50/40 to-brand-100/50" />
+    <div className="absolute inset-0 bg-dots opacity-20" />
+
+    <div className="container mx-auto relative z-10">
       <div className="grid lg:grid-cols-2 gap-16 items-center">
         <div>
           <HeroHeader
             badge="Why Envalis Technologies"
-            title="We Don't Just Build"
-            highlight="We Craft Excellence"
+            title="Key Benefit we"
+            highlight="Deliver to our Partners"
             description="Every project is a collaboration built on transparency, innovation, and a relentless pursuit of quality that exceeds expectations."
             align="left"
             className="mb-10"
+            size="lg"
           />
-          <div className="space-y-6">
+          <div className="space-y-5">
             {whyUs.map((item) => (
-              <div key={item.title} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <item.icon size={20} weight="duotone" className="text-primary" />
+              <div key={item.title} className="flex items-start gap-4 group">
+                <div className="w-11 h-11 rounded-2xl bg-white shadow-sm border border-brand-100 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-brand-50 group-hover:border-brand-200 transition-colors">
+                  <item.icon size={20} weight="duotone" className="text-brand-600" />
                 </div>
                 <div>
-                  <h4 className="font-bold mb-1">{item.title}</h4>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  <h4 className="font-bold mb-1 text-foreground">{item.title}</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             ))}
           </div>
           <div className="mt-8">
             <Link to="/about">
-              <Button size="lg" variant="gradient">
+              <Button size="lg" variant="gradient" className="rounded-full font-bold shadow-lg shadow-brand-500/20">
                 Meet Our Team <ArrowRight size={16} />
               </Button>
             </Link>
           </div>
         </div>
 
-        {/* Visual element */}
+        {/* Visual element — tool icons grid */}
         <div className="relative">
-          <div className="relative rounded-3xl overflow-hidden bg-linear-to-br from-brand-900 to-purple-900 p-8 aspect-square max-w-lg mx-auto">
-            <div className="absolute inset-0 bg-dots opacity-30" />
-            <div className="relative z-10 h-full flex flex-col justify-between">
-              <div className="grid grid-cols-2 gap-4">
-                {[{ n: "8+", l: "Projects" }, { n: "7+", l: "Clients" }, { n: "99%", l: "Satisfaction" }, { n: "2", l: "Years" }].map((s) => (
-                  <div key={s.l} className="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-                    <div className="text-3xl font-black text-white">{s.n}</div>
-                    <div className="text-white/60 text-sm">{s.l}</div>
+          <div className="relative rounded-3xl overflow-hidden bg-white border border-brand-100/50 shadow-xl shadow-brand-100/30 p-8">
+            {/* Tool icons grid */}
+            <div className="grid grid-cols-4 gap-4 mb-6">
+              {[
+                { name: "Figma", icon: figmaLogo, bg: "#FEF2F2" },
+                { name: "React", icon: reactLogo, bg: "#ECFEFF" },
+                { name: "Next.js", icon: nextLogo, bg: "#F3F4F6" },
+                { name: "Node", icon: nodeLogo, bg: "#ECFDF5" },
+                { name: "Tailwind", icon: tailwindLogo, bg: "#EFF6FF" },
+                { name: "Canva", icon: canvaLogo, bg: "#ECFDF5" },
+                { name: "VS Code", icon: vscodeLogo, bg: "#EFF6FF" },
+                { name: "Git", icon: gitLogo, bg: "#FEF2F2" },
+              ].map((tool) => (
+                <div
+                  key={tool.name}
+                  className="aspect-square rounded-2xl flex items-center justify-center shadow-sm border border-slate-100 hover:scale-105 transition-transform cursor-default"
+                  style={{ background: tool.bg }}
+                >
+                  <img
+                    src={tool.icon}
+                    alt={`${tool.name} logo`}
+                    className="w-12 h-12 object-contain"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+            {/* CTA card inside */}
+            <div className="rounded-2xl bg-linear-to-br from-brand-600 via-brand-700 to-purple-700 p-6 text-white">
+              <h3 className="text-lg font-bold mb-2">
+                Transform Your Business with Expert Design & Development Solutions 🚀
+              </h3>
+              <p className="text-white/70 text-sm leading-relaxed">
+                We combine creativity with cutting-edge technology to deliver outstanding results.
+              </p>
+            </div>
+          </div>
+
+          {/* Floating badge */}
+          <div className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-xl shadow-brand-100/40 p-3 border border-brand-50 animate-float">
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-1.5">
+                {["#6366f1", "#8b5cf6", "#ec4899"].map((c, i) => (
+                  <div key={i} className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold border-2 border-white" style={{ background: c }}>
+                    {["A", "B", "C"][i]}
                   </div>
                 ))}
               </div>
-              <div className="bg-white/10 backdrop-blur rounded-2xl p-5 border border-white/10">
-                <div className="flex items-center gap-3 mb-2">
-                  <CheckCircle size={20} weight="duotone" className="text-green-400" />
-                  <span className="text-white font-semibold">Project Status: Delivered</span>
-                </div>
-                <div className="h-2 bg-white/20 rounded-full">
-                  <div className="h-2 bg-linear-to-r from-green-400 to-emerald-400 rounded-full" style={{ width: "100%" }} />
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Floating badge */}
-          <div className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-xl p-3 border border-border animate-float">
-            <div className="flex items-center gap-2">
-              <div className="flex -space-x-2">
-                {["A", "B", "C"].map((l) => (
-                  <div key={l} className="w-7 h-7 rounded-full bg-linear-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold border-2 border-white">{l}</div>
-                ))}
-              </div>
               <div>
-                <div className="text-xs font-bold">Happy Clients</div>
+                <div className="text-xs font-bold text-foreground">Happy Clients</div>
                 <div className="flex gap-0.5">{[1, 2, 3, 4, 5].map(i => <Star key={i} size={10} weight="fill" className="text-yellow-400" />)}</div>
               </div>
             </div>
@@ -288,7 +406,7 @@ const TestimonialsSection = () => {
         </div>
         <div className="text-center mt-10">
           <Link to="/testimonials">
-            <Button variant="outline" size="lg">Read All Reviews <ArrowRight size={16} /></Button>
+            <Button variant="outline" size="lg" className="rounded-full">Read All Reviews <ArrowRight size={16} /></Button>
           </Link>
         </div>
       </div>
@@ -389,6 +507,7 @@ const Home = () => (
   <div>
     <Hero />
     <TrustedSection />
+    <ProcessSection />
     <ServicesSection />
     <WhyUsSection />
     <FeaturedWork />

@@ -16,53 +16,46 @@ import { publicAPI } from "@/api/publicApi";
 import { getInitials } from "@/lib/utils";
 
 const AboutHero = () => (
-  <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-brand-900 via-brand-800 to-purple-900">
-    {/* Background layers */}
-    <div className="absolute inset-0 bg-linear-to-br from-slate-950 via-[#0d0a1f] to-brand-950" />
-    <div className="absolute inset-0 bg-grid opacity-10" />
-    <div className="absolute inset-0 bg-dots opacity-[0.07]" />
+  <section className="relative overflow-hidden bg-white pt-28 pb-14">
+    <div className="absolute inset-0 bg-dots opacity-20" />
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-indigo-50/50 to-transparent rounded-full blur-3xl" />
 
-    {/* Glow orbs */}
-    <div className="absolute top-0 right-0 w-150 h-150 bg-brand-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-    <div className="absolute bottom-0 left-0 w-125 h-125 bg-purple-600/15 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
-    <div className="absolute top-1/2 left-1/2 w-100 h-100 bg-indigo-600/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-
-    <div className="container mx-auto relative z-10 text-center pt-32 pb-20">
-      <Badge className="mb-6 bg-white/10 text-white border-white/20 px-4 py-1.5 rounded-full text-sm">
+    <div className="container mx-auto relative z-10 text-center">
+      <Badge className="mb-6 bg-indigo-50 text-indigo-700 border-indigo-200 px-4 py-1.5 rounded-full text-sm font-medium">
         About Envalis
       </Badge>
-      <h1 className="text-5xl lg:text-7xl font-black text-white mb-6 leading-tight max-w-4xl mx-auto">
+      <h1 className="text-4xl lg:text-6xl font-black text-foreground mb-6 leading-tight max-w-4xl mx-auto tracking-tight">
         We Build Digital{" "}
-        <span className="text-yellow-300">Futures</span>{" "}
+        <span className="text-gradient">Futures</span>{" "}
         That Last
       </h1>
-      <p className="text-white/60 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-        Since 2024, Envalis has been at the intersection of design and technology crafting experiences that move businesses forward and delight the people who use them.
+      <p className="text-muted-foreground text-base lg:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+        Since 2024, Envalis has been at the intersection of design and technology — crafting experiences that move businesses forward and delight the people who use them.
       </p>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center mb-14">
         <Link to="/contact">
-          <Button size="lg" variant="white" className="font-bold">
+          <Button size="lg" className="rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold">
             Work With Us <ArrowRight size={18} />
           </Button>
         </Link>
         <Link to="/portfolio">
-          <Button size="lg" variant="glass" className="font-bold">
+          <Button size="lg" variant="outline" className="rounded-full font-bold border-slate-200">
             View Our Work
           </Button>
         </Link>
       </div>
 
-      {/* Floating stats row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-16 max-w-3xl mx-auto">
+      {/* Stats row */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
         {[
           { n: "8+", l: "Projects Delivered" },
           { n: "7+", l: "Global Clients" },
           { n: "99%", l: "Satisfaction Rate" },
           { n: "2", l: "Years of Excellence" },
         ].map((s) => (
-          <div key={s.l} className="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-            <div className="text-3xl font-black text-white">{s.n}</div>
-            <div className="text-white/60 text-sm mt-1">{s.l}</div>
+          <div key={s.l} className="rounded-2xl bg-slate-50 border border-slate-100 p-4">
+            <div className="text-3xl font-black text-foreground">{s.n}</div>
+            <div className="text-muted-foreground text-sm mt-1">{s.l}</div>
           </div>
         ))}
       </div>
@@ -88,7 +81,7 @@ const OurStory = () => (
                 <div className="absolute -left-14 w-10 h-10 rounded-full bg-linear-to-br from-brand-100 to-purple-100 border-4 border-brand-500 flex items-center justify-center shadow-lg shadow-brand-500/20">
                   <div className="w-3 h-3 rounded-full bg-brand-600" />
                 </div>
-                <div className="group p-5 rounded-2xl border border-border hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 bg-card">
+                <div className="group p-5 rounded-2xl border border-slate-100 bg-white hover:border-indigo-200 hover:shadow-xl hover:shadow-slate-100/80 transition-all duration-300 hover:-translate-y-0.5">
                   <Badge variant="secondary" className="mb-2 text-xs">{item.year}</Badge>
                   <h4 className="font-bold text-base mb-1.5 group-hover:text-primary transition-colors">{item.title}</h4>
                   <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
@@ -134,7 +127,7 @@ const OurStory = () => (
 
 // Mission & Vision
 const MissionVision = () => (
-  <section className="section-padding bg-muted/30">
+  <section className="section-padding bg-slate-50">
     <div className="container mx-auto">
       <HeroHeader
         badge="What Drives Us"
@@ -168,7 +161,7 @@ const MissionVision = () => (
           },
         ].map((item) => (
           <div key={item.label}
-            className="group relative p-6 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1">
+            className="group relative p-6 rounded-2xl border border-slate-100 bg-white hover:border-indigo-200 hover:shadow-xl hover:shadow-slate-100/80 transition-all duration-300 hover:-translate-y-1">
             <div className={`w-12 h-12 rounded-2xl bg-linear-to-br ${item.color} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
               <item.icon size={24} weight="duotone" className="text-white" />
             </div>
@@ -204,7 +197,7 @@ const ValuesSection = () => (
       />
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {values.map((v) => (
-          <div key={v.title} className="flex items-start gap-4 p-5 rounded-2xl border border-border hover:border-primary/30 hover:bg-accent/30 transition-all duration-200 group">
+            <div key={v.title} className="flex items-start gap-4 p-5 rounded-2xl border border-slate-100 bg-white hover:border-indigo-200 hover:shadow-lg hover:shadow-slate-100/80 transition-all duration-200 group">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-primary/20 transition-colors">
               <v.icon size={20} weight="duotone" className="text-primary" />
             </div>
@@ -230,7 +223,7 @@ const aboutServices = [
 ];
 
 const ServicesStrip = () => (
-  <section className="section-padding bg-muted/30">
+  <section className="section-padding bg-slate-50">
     <div className="container mx-auto">
       <HeroHeader
         badge="What We Do"
@@ -242,7 +235,7 @@ const ServicesStrip = () => (
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {aboutServices.map((s) => (
           <Link key={s.href} to={s.href}
-            className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1 text-center">
+            className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-slate-100 bg-white hover:border-indigo-200 hover:shadow-lg hover:shadow-slate-100/80 transition-all duration-300 hover:-translate-y-1 text-center">
             <div className={`w-12 h-12 rounded-2xl bg-linear-to-br ${s.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
               <s.icon size={22} weight="duotone" className="text-white" />
             </div>
@@ -294,7 +287,7 @@ const TeamSection = () => {
           ) : data?.length > 0 ? (
             data.map((member) => (
               <Card key={member._id}
-                className="group p-6 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1 border border-border hover:border-primary/30 overflow-hidden relative">
+                className="group p-6 hover:shadow-xl hover:shadow-slate-100/80 transition-all duration-300 hover:-translate-y-1 border border-slate-100 bg-white hover:border-indigo-200 overflow-hidden relative rounded-2xl">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-brand-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="flex items-start gap-4 mb-4">
                   <Avatar className="h-14 w-14 border-2 border-border group-hover:border-primary/30 transition-colors">
@@ -349,28 +342,25 @@ const TeamSection = () => {
 
 // CTA
 const AboutCTA = () => (
-  <section className="section-padding bg-linear-to-br from-brand-900 via-brand-800 to-purple-900 relative overflow-hidden">
-    <div className="absolute inset-0 bg-grid opacity-20" />
-    <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-    <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-    <div className="container mx-auto relative z-10 text-center">
-      <Badge className="mb-6 bg-white/10 text-white border-white/20 px-4 py-1.5 rounded-full">
+  <section className="py-16 bg-slate-50">
+    <div className="container mx-auto text-center">
+      <Badge className="mb-6 bg-indigo-50 text-indigo-700 border-indigo-200 px-4 py-1.5 rounded-full text-sm font-medium">
         🤝 Let's Collaborate
       </Badge>
-      <h2 className="text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-6 max-w-3xl mx-auto leading-tight">
-        Ready to Build Something <span className="text-yellow-300">Remarkable?</span>
+      <h2 className="text-4xl lg:text-5xl font-black text-foreground mb-6 max-w-3xl mx-auto leading-tight tracking-tight">
+        Ready to Build Something <span className="text-gradient">Remarkable?</span>
       </h2>
-      <p className="text-white/60 text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+      <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
         Whether you have a clear vision or just an idea on a napkin — we're the team to make it real. Let's start a conversation today.
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link to="/contact">
-          <Button size="xl" variant="white" className="font-bold">
+          <Button size="lg" className="rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold">
             Get In Touch <ArrowRight size={18} />
           </Button>
         </Link>
         <Link to="/case-studies">
-          <Button size="xl" variant="glass" className="font-bold">
+          <Button size="lg" variant="outline" className="rounded-full font-bold border-slate-200">
             Read Case Studies
           </Button>
         </Link>
@@ -378,6 +368,7 @@ const AboutCTA = () => (
     </div>
   </section>
 );
+
 
 // Main About Component
 const About = () => (

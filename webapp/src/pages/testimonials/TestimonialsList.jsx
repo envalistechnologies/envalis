@@ -17,7 +17,7 @@ const TestimonialsList = () => {
   const testimonials = data?.testimonials || [];
 
   return (
-    <div className="bg-background">
+    <div className="bg-white">
       {/* Hero Section */}
       <HeroSection
         badge="Success Stories"
@@ -46,7 +46,7 @@ const TestimonialsList = () => {
             {/* Featured Testimonials Grid */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               {testimonials.map((testimonial) => (
-                <Card key={testimonial._id} className="hover:shadow-lg transition-all">
+                <Card key={testimonial._id} className="hover:shadow-xl hover:shadow-slate-100/80 transition-all duration-300 hover:-translate-y-1 border-slate-100 rounded-2xl bg-white">
                   <CardContent className="pt-6">
                     {/* Rating */}
                     <div className="flex items-center gap-1 mb-4">
@@ -99,7 +99,7 @@ const TestimonialsList = () => {
                 className="mb-8 text-center"
               />
               {testimonials.map((testimonial) => (
-                <Card key={`full-${testimonial._id}`} className="hover:shadow-md transition-all">
+                <Card key={`full-${testimonial._id}`} className="hover:shadow-lg transition-all border-slate-100 rounded-2xl bg-white">
                   <CardContent className="pt-6">
                     <div className="flex items-start gap-4">
                       <Avatar className="w-16 h-16 shrink-0">

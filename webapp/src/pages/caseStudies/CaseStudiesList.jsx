@@ -193,8 +193,7 @@ const CaseStudiesList = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-linear-to-br from-brand-50 to-purple-50 py-16">
+      <section className="py-16 bg-slate-50">
         <div className="container mx-auto text-center">
           <PageHeader
             title="Ready to be our next success story?"
@@ -202,7 +201,7 @@ const CaseStudiesList = () => {
             className="mb-8"
           />
           <Link to="/contact">
-            <Button size="lg" className="gap-2">
+            <Button size="lg" className="rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold gap-2">
               Get Started <ArrowRight size={18} />
             </Button>
           </Link>

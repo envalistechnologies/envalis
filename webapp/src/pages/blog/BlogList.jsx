@@ -1,26 +1,19 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { ArrowRight, Clock, Sparkle, Tag } from "@phosphor-icons/react";
+import { ArrowRight, Clock, Tag } from "@phosphor-icons/react";
 import { publicAPI } from "@/api/publicApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import HeroSection from "@/components/common/HeroSection";
+import FilterBar from "@/components/common/FilterBar";
 import Pagination from "@/components/common/Pagination";
 import { ErrorState, NoResults, SkeletonCard } from "@/components/common/LoadingStates";
 import { formatDate, truncate } from "@/lib/utils";
 
 const BLOG_CATEGORIES = [
-    "technology",
-    "design",
-    "business",
-    "marketing",
-    "development",
-    "news",
-    "tutorial",
-    "insights",
-    "other",
+    "technology", "design", "business", "marketing",
+    "development", "news", "tutorial", "insights", "other",
 ];
 
 const BlogList = () => {
@@ -34,10 +27,8 @@ const BlogList = () => {
         search: search || undefined,
         category: category || undefined,
         featured: featured || undefined,
-        page,
-        limit,
-        sortBy: "publishedAt",
-        sortOrder: "desc",
+        page, limit,
+        sortBy: "publishedAt", sortOrder: "desc",
     }), [search, category, featured, page]);
 
     const { data, isLoading, isError, refetch } = useQuery({
@@ -49,66 +40,35 @@ const BlogList = () => {
     const pagination = data?.pagination;
 
     return (
-        <div className="bg-background">
-            <section className="relative overflow-hidden bg-linear-to-br from-slate-950 via-brand-950 to-purple-950 text-white">
-                <div className="absolute inset-0 bg-grid opacity-30" />
-                <div className="container mx-auto py-20 relative">
-                    <div className="max-w-3xl">
-                        <Badge className="mb-4 bg-white/10 text-white border-white/20">
-                            <Sparkle size={14} weight="duotone" className="mr-2" /> Knowledge Hub
-                        </Badge>
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-4">
-                            Insights, ideas, and practical guides
-                        </h1>
-                        <p className="text-white/70 text-lg max-w-2xl">
-                            Explore the latest in technology, design, and digital strategy from the Envalis Technologies team.
-                        </p>
-                    </div>
-                </div>
-            </section>
+        <div className="bg-white">
+            {/* Clean white hero */}
+            <HeroSection
+                badge="📝 Our Blogs"
+                title="Insights and Inspiration, Explore Our Blog"
+                description="Dive into our blog for expert insights, tips, and industry trends to elevate your project management journey."
+                search={search}
+                onSearchChange={(v) => { setSearch(v); setPage(1); }}
+                searchPlaceholder="Search for Blogs..."
+            />
 
-            <section className="section-padding">
+            <section className="section-padding pt-8">
                 <div className="container mx-auto">
-                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-8">
-                        <div className="relative w-full lg:max-w-md">
-                            <Input
-                                value={search}
-                                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                                placeholder="Search blogs by title or tag"
-                                className="h-11 rounded-xl"
-                            />
-                        </div>
-                        <div className="flex flex-wrap items-center gap-3">
-                            <Select value={category || "all"} onValueChange={(v) => { setCategory(v === "all" ? "" : v); setPage(1); }}>
-                                <SelectTrigger className="h-11 min-w-40 rounded-xl text-sm">
-                                    <SelectValue placeholder="Category" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All categories</SelectItem>
-                                    {BLOG_CATEGORIES.map((c) => (
-                                        <SelectItem key={c} value={c}>{c.replace(/_/g, " ")}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <Select value={featured || "all"} onValueChange={(v) => { setFeatured(v === "all" ? "" : v); setPage(1); }}>
-                                <SelectTrigger className="h-11 min-w-36 rounded-xl text-sm">
-                                    <SelectValue placeholder="Featured" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All posts</SelectItem>
-                                    <SelectItem value="true">Featured</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            {(search || category || featured) && (
-                                <Button
-                                    variant="outline"
-                                    className="h-11 rounded-xl"
-                                    onClick={() => { setSearch(""); setCategory(""); setFeatured(""); setPage(1); }}
-                                >
-                                    Clear
-                                </Button>
-                            )}
-                        </div>
+                    {/* Category pills + filters */}
+                    <div className="mb-10">
+                        <p className="text-center text-sm font-medium text-muted-foreground mb-4">Top Picks</p>
+                        <FilterBar
+                            searchValue={search}
+                            onSearchChange={(v) => { setSearch(v); setPage(1); }}
+                            searchPlaceholder="Search blogs..."
+                            categories={BLOG_CATEGORIES}
+                            activeCategory={category}
+                            onCategoryChange={(c) => { setCategory(c); setPage(1); }}
+                            filters={[
+                                { id: "featured", label: "Featured", value: featured, options: ["true"] },
+                            ]}
+                            onFilterChange={(id, v) => { if (id === "featured") setFeatured(v); setPage(1); }}
+                            onReset={() => { setSearch(""); setCategory(""); setFeatured(""); setPage(1); }}
+                        />
                     </div>
 
                     {isError && <ErrorState onRetry={refetch} />}
@@ -122,32 +82,35 @@ const BlogList = () => {
                                         <Link
                                             key={blog._id}
                                             to={`/blog/${blog.slug}`}
-                                            className="group rounded-2xl border border-border overflow-hidden bg-card hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
+                                            className="group rounded-2xl border border-slate-100 overflow-hidden bg-white hover:shadow-xl hover:shadow-slate-100/80 transition-all duration-300 hover:-translate-y-1"
                                         >
-                                            <div className="h-48 bg-muted overflow-hidden">
+                                            <div className="h-48 bg-slate-50 overflow-hidden">
                                                 {blog.coverImage?.url ? (
                                                     <img src={blog.coverImage.url} alt={blog.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                                 ) : (
-                                                    <div className="w-full h-full bg-linear-to-br from-brand-50 to-purple-50" />
+                                                    <div className="w-full h-full bg-gradient-to-br from-slate-50 to-indigo-50" />
                                                 )}
                                             </div>
                                             <div className="p-5">
-                                                <div className="flex items-center gap-2 mb-3 flex-wrap">
-                                                    <Badge variant="outline" className="text-xs capitalize">{blog.category}</Badge>
-                                                    {blog.isFeatured && <Badge variant="default" className="text-xs">Featured</Badge>}
-                                                </div>
-                                                <h3 className="font-bold text-lg leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                                                <h3 className="font-bold text-base leading-snug mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">
                                                     {blog.title}
                                                 </h3>
-                                                <p className="text-sm text-muted-foreground line-clamp-3">{truncate(blog.excerpt, 150)}</p>
-                                                <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/60 text-xs text-muted-foreground">
-                                                    <span className="flex items-center gap-1"><Clock size={12} /> {blog.readTime || 5} min</span>
-                                                    <span>{formatDate(blog.publishedAt)}</span>
+                                                <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{truncate(blog.excerpt, 120)}</p>
+                                                <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 text-xs text-muted-foreground">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-[10px] font-bold">
+                                                            {blog.author?.avatar?.url
+                                                                ? <img src={blog.author.avatar.url} alt="" className="w-full h-full object-cover" />
+                                                                : (blog.author?.firstName?.[0] || "E")}
+                                                        </div>
+                                                        <span className="font-medium text-foreground">{[blog.author?.firstName, blog.author?.lastName].filter(Boolean).join(' ') || "Envalis"}</span>
+                                                    </div>
+                                                    <span className="flex items-center gap-1"><Clock size={12} /> {blog.readTime || 5} Min Read</span>
                                                 </div>
                                                 {blog.tags?.length > 0 && (
-                                                    <div className="flex flex-wrap gap-2 mt-4">
-                                                        {blog.tags.slice(0, 3).map((tag) => (
-                                                            <span key={tag} className="inline-flex items-center gap-1 text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
+                                                    <div className="flex flex-wrap gap-2 mt-3">
+                                                        {blog.tags.slice(0, 2).map((tag) => (
+                                                            <span key={tag} className="inline-flex items-center gap-1 text-xs text-muted-foreground bg-slate-50 px-2 py-1 rounded-full border border-slate-100">
                                                                 <Tag size={10} /> {tag}
                                                             </span>
                                                         ))}
@@ -159,23 +122,20 @@ const BlogList = () => {
                             </div>
 
                             {!isLoading && blogs.length === 0 && <NoResults query={search} />}
-
-                            {pagination && (
-                                <Pagination pagination={pagination} onPageChange={setPage} />
-                            )}
+                            {pagination && <Pagination pagination={pagination} onPageChange={setPage} />}
                         </>
                     )}
                 </div>
             </section>
 
-            <section className="section-padding bg-muted/30">
+            <section className="py-16 bg-slate-50">
                 <div className="container mx-auto">
-                    <div className="rounded-3xl border border-border bg-card p-8 lg:p-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                    <div className="rounded-3xl border border-slate-100 bg-white p-8 lg:p-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                         <div>
                             <h2 className="text-2xl lg:text-3xl font-black mb-2">Ready for a deeper dive?</h2>
                             <p className="text-muted-foreground max-w-xl">Subscribe for curated insights, product updates, and case studies delivered monthly.</p>
                         </div>
-                        <Button size="lg" variant="gradient" className="rounded-2xl">
+                        <Button size="lg" className="rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold">
                             Subscribe to updates <ArrowRight size={16} />
                         </Button>
                     </div>

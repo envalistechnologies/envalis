@@ -100,13 +100,14 @@ const ArticleDetail = () => {
               {article.author && (
                 <div className="flex items-center gap-2">
                   <Avatar className="w-10 h-10">
+                    {article.author.avatar?.url && <AvatarImage src={article.author.avatar.url} />}
                     <AvatarFallback>
-                      {getInitials(article.author.name || "Author")}
+                      {getInitials(`${article.author.firstName || ''} ${article.author.lastName || ''}`)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm font-medium">
-                      {article.author.name || "Author"}
+                      {[article.author.firstName, article.author.lastName].filter(Boolean).join(' ') || 'Author'}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {formatDate(article.publishedAt)}

@@ -26,13 +26,13 @@ export const ItemCard = ({
   className = "",
   imageClassName = ""
 }) => (
-  <Card className={cn("overflow-hidden group cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1", className)} onClick={onClick}>
+  <Card className={cn("overflow-hidden group cursor-pointer bg-white border-slate-100 hover:shadow-xl hover:shadow-slate-100/80 transition-all duration-300 hover:-translate-y-1 rounded-2xl", className)} onClick={onClick}>
     {image && (
-      <div className={cn("relative overflow-hidden bg-muted aspect-[16/9] w-full", imageClassName)}>
+      <div className={cn("relative overflow-hidden bg-slate-50 aspect-[16/9] w-full rounded-t-2xl", imageClassName)}>
         <img 
           src={image} 
           alt={imageAlt} 
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         {badge && (
           <div className="absolute top-3 right-3">
@@ -41,14 +41,19 @@ export const ItemCard = ({
         )}
       </div>
     )}
+    {!image && badge && (
+      <div className="px-5 pt-5">
+        {badge}
+      </div>
+    )}
     <CardContent className="p-5">
       {title && (
-        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
+        <h3 className="font-bold text-foreground group-hover:text-indigo-600 transition-colors line-clamp-2 text-base">
           {title}
         </h3>
       )}
       {description && (
-        <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+        <p className="text-sm text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
           {description}
         </p>
       )}
@@ -58,7 +63,7 @@ export const ItemCard = ({
         </div>
       )}
       {footer && (
-        <div className="mt-4 pt-4 border-t">
+        <div className="mt-4 pt-4 border-t border-slate-100">
           {footer}
         </div>
       )}

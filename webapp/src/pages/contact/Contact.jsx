@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import HeroSection from "@/components/common/HeroSection";
 
 const SERVICES = [
     "Web Development",
@@ -57,20 +58,11 @@ const Contact = () => {
 
     return (
         <div className="bg-background">
-            <section className="relative overflow-hidden bg-linear-to-br from-slate-950 via-brand-950 to-rose-950 text-white">
-                <div className="absolute inset-0 bg-grid opacity-30" />
-                <div className="container mx-auto py-20 relative">
-                    <div className="max-w-3xl">
-                        <Badge className="mb-4 bg-white/10 text-white border-white/20">
-                            <Sparkle size={14} weight="duotone" className="mr-2" /> Start a Project
-                        </Badge>
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-4">Let's build something great</h1>
-                        <p className="text-white/70 text-lg max-w-2xl">
-                            Tell us about your goals and we will follow up with ideas, timelines, and next steps.
-                        </p>
-                    </div>
-                </div>
-            </section>
+            <HeroSection
+                badge="Start a Project"
+                title="Let's build something great"
+                description="Tell us about your goals and we will follow up with ideas, timelines, and next steps."
+            />
 
             <section className="section-padding">
                 <div className="container mx-auto">

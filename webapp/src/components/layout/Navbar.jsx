@@ -93,6 +93,8 @@ const Navbar = () => {
     const [mobileSection, setMobileSection] = useState(null);
     const location = useLocation();
     const megaRef = useRef(null);
+    // Treat header as light by default so links are visible on light heroes
+    const lightHero = true;
     const { data: navbarServices = [], isLoading: isServicesLoading } = useQuery({
         queryKey: ["navbar-services"],
         queryFn: () => publicAPI.getServices({ limit: 12, sortBy: "createdAt", sortOrder: "desc" }).then((r) => r.data.services),
@@ -124,7 +126,7 @@ const Navbar = () => {
             "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
             scrolled
                 ? "bg-white/95 backdrop-blur-xl border-b border-border shadow-sm"
-                : "bg-transparent"
+                : lightHero ? "bg-transparent" : "bg-transparent"
         )}>
             <div className="container">
                 <div className="flex items-center justify-between h-16 lg:h-18">
@@ -137,13 +139,13 @@ const Navbar = () => {
                         <div className="flex flex-col leading-none">
                             <span className={cn(
                                 "text-xl font-black tracking-tight transition-colors duration-300",
-                                scrolled ? "text-foreground" : "text-white"
+                                scrolled ? "text-foreground" : lightHero ? "text-foreground" : "text-white"
                             )}>
                                 Envalis
                             </span>
                             <span className={cn(
                                 "text-[10px] font-semibold tracking-widest uppercase transition-colors duration-300",
-                                scrolled ? "text-muted-foreground" : "text-white/40"
+                                scrolled ? "text-muted-foreground" : lightHero ? "text-muted-foreground" : "text-white/40"
                             )}>
                                 Technologies
                             </span>
@@ -162,10 +164,12 @@ const Navbar = () => {
                                             activeMega === link.mega
                                                 ? scrolled
                                                     ? "text-brand-600 bg-brand-50"
-                                                    : "text-white bg-white/20"
+                                                    : lightHero ? "text-brand-600 bg-brand-50" : "text-white bg-white/20"
                                                 : scrolled
                                                     ? "text-foreground hover:text-brand-600 hover:bg-accent hover:-translate-y-0.5"
-                                                    : "text-white/90 hover:text-white hover:bg-white/10 hover:-translate-y-0.5"
+                                                    : lightHero
+                                                        ? "text-foreground/80 hover:text-brand-600 hover:bg-accent hover:-translate-y-0.5"
+                                                        : "text-white/90 hover:text-white hover:bg-white/10 hover:-translate-y-0.5"
                                         )}
                                     >
                                         {link.label}
@@ -186,10 +190,12 @@ const Navbar = () => {
                                             isActive
                                                 ? scrolled
                                                     ? "text-brand-600 bg-brand-50"
-                                                    : "text-white bg-white/20 font-semibold"
+                                                    : lightHero ? "text-brand-600 bg-brand-50 font-semibold" : "text-white bg-white/20 font-semibold"
                                                 : scrolled
                                                     ? "text-foreground hover:text-brand-600 hover:bg-accent hover:-translate-y-0.5"
-                                                    : "text-white/90 hover:text-white hover:bg-white/10 hover:-translate-y-0.5"
+                                                    : lightHero
+                                                        ? "text-foreground/80 hover:text-brand-600 hover:bg-accent hover:-translate-y-0.5"
+                                                        : "text-white/90 hover:text-white hover:bg-white/10 hover:-translate-y-0.5"
                                         )}
                                     >
                                         {link.label}
@@ -212,10 +218,11 @@ const Navbar = () => {
                         <Link to="/contact">
                             <Button
                                 size="sm"
-                                variant={scrolled ? "default" : "outline"}
+                                variant={scrolled ? "default" : lightHero ? "outline" : "outline"}
                                 className={cn(
-                                    "hidden sm:flex transition-all",
-                                    !scrolled && "bg-white/15 hover:bg-white/25 text-white border-white/30 backdrop-blur-sm"
+                                    "hidden sm:flex transition-all rounded-full",
+                                    !scrolled && !lightHero && "bg-white/15 hover:bg-white/25 text-white border-white/30 backdrop-blur-sm",
+                                    !scrolled && lightHero && "border-border text-foreground hover:bg-accent"
                                 )}
                             >
                                 Get Started
@@ -228,7 +235,7 @@ const Navbar = () => {
                                 "lg:hidden w-9 h-9 rounded-lg flex items-center justify-center transition-colors",
                                 scrolled
                                     ? "text-foreground hover:bg-accent"
-                                    : "text-white hover:bg-white/10"
+                                    : lightHero ? "text-foreground hover:bg-accent" : "text-white hover:bg-white/10"
                             )}
                         >
                             {mobileOpen ? <X size={20} /> : <List size={20} />}
