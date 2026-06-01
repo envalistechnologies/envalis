@@ -139,13 +139,13 @@ const EmailTemplateForm = () => {
         onError: (e) => toast.error(getApiErrorMessage(e, "Unable to save the email template. Please check the form and try again.")),
     });
 
-    if (isEdit && isLoading) return <PageLoader />;
-
     const livePreview = renderLocal(htmlContent, previewVars);
     const previewDoc = useMemo(
         () => buildPreviewDoc(previewHtml || livePreview, "Start writing HTML to see a preview."),
         [previewHtml, livePreview]
     );
+
+    if (isEdit && isLoading) return <PageLoader />;
 
     return (
         <form onSubmit={handleSubmit(onSubmit, onFormError)} className="space-y-6">
