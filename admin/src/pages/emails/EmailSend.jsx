@@ -24,7 +24,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { humanize, getApiErrorMessage } from "@/lib/utils";
+import { humanize, getApiErrorMessage, getFormErrorHandler } from "@/lib/utils";
 
 const CATEGORIES = ["welcome", "announcement", "newsletter", "hr_notice", "policy", "event", "recognition", "reminder", "other"];
 const DEPARTMENTS = ["engineering", "design", "marketing", "hr", "finance", "operations", "sales", "management", "other"];
@@ -86,6 +86,8 @@ const EmailSend = () => {
         resolver: zodResolver(directSchema),
         defaultValues: { to: [], cc: [], bcc: [], subject: "", html: "", text: "", category: "other" },
     });
+
+    const onFormError = getFormErrorHandler(toast);
 
     const html = watch("html");
     const subject = watch("subject");
@@ -235,7 +237,7 @@ const EmailSend = () => {
             </div>
 
             {mode === "direct" && (
-                <form onSubmit={handleSubmit(onDirectSubmit)} className="space-y-6">
+                <form onSubmit={handleSubmit(onDirectSubmit, onFormError)} className="space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Recipients</CardTitle>
@@ -351,7 +353,7 @@ const EmailSend = () => {
             )}
 
             {mode === "template" && (
-                <form onSubmit={handleSubmit(onTemplateSubmit)} className="space-y-6">
+                <form onSubmit={handleSubmit(onTemplateSubmit, onFormError)} className="space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div className="lg:col-span-2 space-y-6">
                             <Card>
