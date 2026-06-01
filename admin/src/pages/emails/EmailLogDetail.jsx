@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -57,6 +58,21 @@ const Recipients = ({ list, label }) => {
   );
 };
 
+const buildPreviewDoc = (html = "", emptyMessage = "Nothing to preview yet.") => {
+  const trimmed = (html || "").trim();
+  const content = trimmed || `<p style="color:#64748b;font-family:Arial, sans-serif;">${emptyMessage}</p>`;
+  if (/<html[\s>]/i.test(content)) return content;
+  return `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>html,body{margin:0;padding:0;}body{font-family:Arial, sans-serif;}</style>
+</head>
+<body>${content}</body>
+</html>`;
+};
+
 const EmailLogDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -66,8 +82,13 @@ const EmailLogDetail = () => {
     queryFn: () => emailsAPI.getLogById(id).then((r) => r.data?.log || r.data),
   });
 
-  if (isLoading) return <PageLoader />;
   const log = data;
+  const previewDoc = useMemo(
+    () => buildPreviewDoc(log?.body || "", "Nothing to preview yet."),
+    [log?.body]
+  );
+
+  if (isLoading) return <PageLoader />;
   if (!log) return null;
 
   return (
@@ -166,7 +187,14 @@ const EmailLogDetail = () => {
                 <TabsContent value="preview" className="p-4">
                   <div className="rounded-md border bg-background overflow-hidden">
                     <ScrollArea className="h-125">
-                      <div className="p-4 text-sm" dangerouslySetInnerHTML={{ __html: log.body || "" }} />
+                      <div className="p-4">
+                        <iframe
+                          title="Email preview"
+                          sandbox=""
+                          className="w-full h-100 border-0"
+                          srcDoc={previewDoc}
+                        />
+                      </div>
                     </ScrollArea>
                   </div>
                 </TabsContent>
