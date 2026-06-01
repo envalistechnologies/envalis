@@ -44,6 +44,12 @@ const directSchema = z.object({
     category: z.enum(CATEGORIES),
 });
 
+const templateSchema = z.object({
+    to: z.array(z.string().email("Invalid email")).min(1, "At least one recipient"),
+    cc: z.array(z.string().email()).optional(),
+    bcc: z.array(z.string().email()).optional(),
+});
+
 const extractVars = (html = "") => {
     const re = /\{\{\s*([\w.]+)\s*\}\}/g;
     const set = new Set();
@@ -82,9 +88,24 @@ const EmailSend = () => {
     const [bulkEmployeeIds, setBulkEmployeeIds] = useState([]);
     const [bulkUseTemplate, setBulkUseTemplate] = useState(false);
 
-    const { register, handleSubmit, control, watch, formState: { errors } } = useForm({
+    const {
+        register,
+        handleSubmit: handleDirectSubmit,
+        control: directControl,
+        watch,
+        formState: { errors: directErrors },
+    } = useForm({
         resolver: zodResolver(directSchema),
         defaultValues: { to: [], cc: [], bcc: [], subject: "", html: "", text: "", category: "other" },
+    });
+
+    const {
+        handleSubmit: handleTemplateSubmit,
+        control: templateControl,
+        formState: { errors: templateErrors },
+    } = useForm({
+        resolver: zodResolver(templateSchema),
+        defaultValues: { to: [], cc: [], bcc: [] },
     });
 
     const onFormError = getFormErrorHandler(toast);
@@ -237,16 +258,16 @@ const EmailSend = () => {
             </div>
 
             {mode === "direct" && (
-                <form onSubmit={handleSubmit(onDirectSubmit, onFormError)} className="space-y-6">
+                <form onSubmit={handleDirectSubmit(onDirectSubmit, onFormError)} className="space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Recipients</CardTitle>
                             <CardDescription>Add one or more email addresses</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <FormField label="To" required error={errors.to?.message}>
+                            <FormField label="To" required error={directErrors.to?.message}>
                                 <Controller
-                                    control={control}
+                                    control={directControl}
                                     name="to"
                                     render={({ field }) => (
                                         <TagInput value={field.value || []} onChange={field.onChange} placeholder="recipient@example.com" />
@@ -256,7 +277,7 @@ const EmailSend = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <FormField label="CC">
                                     <Controller
-                                        control={control}
+                                        control={directControl}
                                         name="cc"
                                         render={({ field }) => (
                                             <TagInput value={field.value || []} onChange={field.onChange} placeholder="cc@example.com" />
@@ -265,7 +286,7 @@ const EmailSend = () => {
                                 </FormField>
                                 <FormField label="BCC">
                                     <Controller
-                                        control={control}
+                                        control={directControl}
                                         name="bcc"
                                         render={({ field }) => (
                                             <TagInput value={field.value || []} onChange={field.onChange} placeholder="bcc@example.com" />
@@ -282,12 +303,12 @@ const EmailSend = () => {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <FormField label="Subject" required error={errors.subject?.message} className="md:col-span-2">
+                                <FormField label="Subject" required error={directErrors.subject?.message} className="md:col-span-2">
                                     <Input {...register("subject")} placeholder="Important update" />
                                 </FormField>
                                 <FormField label="Category" required>
                                     <Controller
-                                        control={control}
+                                        control={directControl}
                                         name="category"
                                         render={({ field }) => (
                                             <Select value={field.value} onValueChange={field.onChange}>
@@ -310,7 +331,7 @@ const EmailSend = () => {
                                     <TabsTrigger value="preview"><Eye size={13} className="mr-1.5" /> Preview</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="html" className="mt-3">
-                                    <FormField error={errors.html?.message}>
+                                    <FormField error={directErrors.html?.message}>
                                         <Textarea rows={14} className="font-mono text-xs" {...register("html")} placeholder="<p>Hello team,</p>" />
                                     </FormField>
                                 </TabsContent>
@@ -353,7 +374,7 @@ const EmailSend = () => {
             )}
 
             {mode === "template" && (
-                <form onSubmit={handleSubmit(onTemplateSubmit, onFormError)} className="space-y-6">
+                <form onSubmit={handleTemplateSubmit(onTemplateSubmit, onFormError)} className="space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div className="lg:col-span-2 space-y-6">
                             <Card>
@@ -374,9 +395,9 @@ const EmailSend = () => {
                                             </SelectContent>
                                         </Select>
                                     </FormField>
-                                    <FormField label="To" required error={errors.to?.message}>
+                                    <FormField label="To" required error={templateErrors.to?.message}>
                                         <Controller
-                                            control={control}
+                                            control={templateControl}
                                             name="to"
                                             render={({ field }) => (
                                                 <TagInput value={field.value || []} onChange={field.onChange} placeholder="recipient@example.com" />
@@ -385,10 +406,10 @@ const EmailSend = () => {
                                     </FormField>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <FormField label="CC">
-                                            <Controller control={control} name="cc" render={({ field }) => <TagInput value={field.value || []} onChange={field.onChange} placeholder="cc@example.com" />} />
+                                            <Controller control={templateControl} name="cc" render={({ field }) => <TagInput value={field.value || []} onChange={field.onChange} placeholder="cc@example.com" />} />
                                         </FormField>
                                         <FormField label="BCC">
-                                            <Controller control={control} name="bcc" render={({ field }) => <TagInput value={field.value || []} onChange={field.onChange} placeholder="bcc@example.com" />} />
+                                            <Controller control={templateControl} name="bcc" render={({ field }) => <TagInput value={field.value || []} onChange={field.onChange} placeholder="bcc@example.com" />} />
                                         </FormField>
                                     </div>
                                 </CardContent>
@@ -583,7 +604,7 @@ const EmailSend = () => {
                                         </FormField>
                                         <FormField label="Category" required>
                                             <Controller
-                                                control={control}
+                                                control={directControl}
                                                 name="category"
                                                 render={({ field }) => (
                                                     <Select value={field.value} onValueChange={field.onChange}>
