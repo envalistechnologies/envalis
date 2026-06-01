@@ -54,6 +54,21 @@ const extractVars = (html = "") => {
 const renderLocal = (html, vars) =>
     (html || "").replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, key) => vars[key] ?? `{{${key}}}`);
 
+const buildPreviewDoc = (html = "", emptyMessage = "Nothing to preview yet.") => {
+    const trimmed = (html || "").trim();
+    const content = trimmed || `<p style="color:#64748b;font-family:Arial, sans-serif;">${emptyMessage}</p>`;
+    if (/<html[\s>]/i.test(content)) return content;
+    return `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>html,body{margin:0;padding:0;}body{font-family:Arial, sans-serif;}</style>
+</head>
+<body>${content}</body>
+</html>`;
+};
+
 const EmailSend = () => {
     const navigate = useNavigate();
     const [params] = useSearchParams();
@@ -74,6 +89,10 @@ const EmailSend = () => {
 
     const html = watch("html");
     const subject = watch("subject");
+    const directPreviewDoc = useMemo(
+        () => buildPreviewDoc(html, "Nothing to preview yet."),
+        [html]
+    );
 
     const templatesQ = useQuery({
         queryKey: ["email-templates", "all-active"],
@@ -305,7 +324,14 @@ const EmailSend = () => {
                                             <p className="text-sm font-medium">{subject || "N/A"}</p>
                                         </div>
                                         <ScrollArea className="h-100">
-                                            <div className="p-4 text-sm" dangerouslySetInnerHTML={{ __html: html || "<p class='text-muted-foreground'>Nothing to preview yet.</p>" }} />
+                                            <div className="p-4">
+                                                <iframe
+                                                    title="Email preview"
+                                                    sandbox=""
+                                                    className="w-full h-100 border-0"
+                                                    srcDoc={directPreviewDoc}
+                                                />
+                                            </div>
                                         </ScrollArea>
                                     </div>
                                 </TabsContent>
@@ -374,7 +400,14 @@ const EmailSend = () => {
                                     </CardHeader>
                                     <CardContent className="p-0">
                                         <ScrollArea className="h-100">
-                                            <div className="p-4 text-sm" dangerouslySetInnerHTML={{ __html: renderLocal(templateQ.data.htmlContent || "", templateVars) }} />
+                                            <div className="p-4">
+                                                <iframe
+                                                    title="Template preview"
+                                                    sandbox=""
+                                                    className="w-full h-100 border-0"
+                                                    srcDoc={buildPreviewDoc(renderLocal(templateQ.data.htmlContent || "", templateVars), "Nothing to preview yet.")}
+                                                />
+                                            </div>
                                         </ScrollArea>
                                     </CardContent>
                                 </Card>

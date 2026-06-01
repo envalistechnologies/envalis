@@ -37,7 +37,11 @@ const EmailTemplatesList = () => {
 
     const { data, isLoading } = useQuery({
         queryKey: ["email-templates", { search, category, active, page, limit }],
-        queryFn: () => emailsAPI.getTemplates({ search, category, isActive: active, page, limit }).then((r) => r.data),
+        queryFn: () => {
+            const params = { search, category, page, limit };
+            if (active === "true" || active === "false") params.isActive = active;
+            return emailsAPI.getTemplates(params).then((r) => r.data);
+        },
     });
 
     const remove = useMutation({

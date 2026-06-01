@@ -46,6 +46,21 @@ const extractVars = (html = "") => {
     return Array.from(set);
 };
 
+const buildPreviewDoc = (html = "", emptyMessage = "Start writing HTML to see a preview.") => {
+        const trimmed = (html || "").trim();
+        const content = trimmed || `<p style="color:#64748b;font-family:Arial, sans-serif;">${emptyMessage}</p>`;
+        if (/<html[\s>]/i.test(content)) return content;
+        return `<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>html,body{margin:0;padding:0;}body{font-family:Arial, sans-serif;}</style>
+</head>
+<body>${content}</body>
+</html>`;
+};
+
 const EmailTemplateForm = () => {
     const { id } = useParams();
     const isEdit = !!id;
@@ -127,6 +142,10 @@ const EmailTemplateForm = () => {
     if (isEdit && isLoading) return <PageLoader />;
 
     const livePreview = renderLocal(htmlContent, previewVars);
+    const previewDoc = useMemo(
+        () => buildPreviewDoc(previewHtml || livePreview, "Start writing HTML to see a preview."),
+        [previewHtml, livePreview]
+    );
 
     return (
         <form onSubmit={handleSubmit(onSubmit, onFormError)} className="space-y-6">
@@ -242,7 +261,14 @@ const EmailTemplateForm = () => {
                                             <p className="text-sm font-medium">{renderLocal(subject, previewVars) || "N/A"}</p>
                                         </div>
                                         <ScrollArea className="h-100">
-                                            <div className="p-4 text-sm" dangerouslySetInnerHTML={{ __html: previewHtml || livePreview || "<p class='text-muted-foreground'>Start writing HTML to see a preview.</p>" }} />
+                                            <div className="p-4">
+                                                <iframe
+                                                    title="Email preview"
+                                                    sandbox=""
+                                                    className="w-full h-100 border-0"
+                                                    srcDoc={previewDoc}
+                                                />
+                                            </div>
                                         </ScrollArea>
                                     </div>
                                 </TabsContent>
